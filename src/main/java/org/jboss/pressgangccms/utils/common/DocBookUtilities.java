@@ -156,14 +156,19 @@ public class DocBookUtilities
 		return "<section" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</section>";
 	}
 	
-	public static String addXMLBoilerplate(final String xml)
+	public static String addXMLBoilerplate(final String xml, final String entityFileName, final String rootElementName)
 	{
 		return "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-		"<!DOCTYPE chapter PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [\n" +
-		"<!ENTITY % BOOK_ENTITIES SYSTEM \"Book.ent\">\n" +
+		"<!DOCTYPE " + (rootElementName == null ? "chapter" : rootElementName) + " PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [\n" +
+		"<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n" +
 		"%BOOK_ENTITIES;\n" +
 		"]>\n\n" +
 		xml;
+	}
+	
+	public static String addXMLBoilerplate(final String xml)
+	{
+		return addXMLBoilerplate(xml, "Book.ent", "chapter");
 	}
 	
 	public static String buildXRefListItem(final String xref, final String role)
