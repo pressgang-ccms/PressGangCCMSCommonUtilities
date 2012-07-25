@@ -57,5 +57,13 @@
     	<version>2.3.4.Final</version>
     	<scope>provided</scope>
     </dependency>
+    
+    <!-- Gozirra Libraries -->
+	<dependency>
+		<groupId>germane-software</groupId>
+		<artifactId>gozirra-extended</artifactId>
+		<version>0.5-SNAPSHOT</version>
+		<scope>provided</scope>
+	</dependency>
   </dependencies>
 </project>
