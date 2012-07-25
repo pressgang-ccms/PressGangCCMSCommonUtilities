@@ -38,9 +38,12 @@ public class DocBookUtilities
 	{
 		/* Convert the string to a document to make it easier to get the proper title */
 		Document doc = null;
-		try {
+		try
+		{
 			doc = XMLUtilities.convertStringToDocument(xml);
-		} catch (SAXException ex) {
+		}
+		catch (SAXException ex)
+		{
 			ExceptionUtilities.handleException(ex);
 		}
 		

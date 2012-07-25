@@ -211,7 +211,8 @@ public class CollectionUtilities
 	public static String[] trimStringArray(final String[] input)
 	{
 		final ArrayList<String> output = new ArrayList<String>();
-		for (int i = 0; i < input.length; i++) {
+		for (int i = 0; i < input.length; i++)
+		{
 			String s = input[i].trim();
 			if (!s.equals("")) output.add(s);
 		}

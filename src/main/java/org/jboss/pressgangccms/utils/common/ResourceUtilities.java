@@ -12,57 +12,78 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/*
+/**
  * A set of utilities to read from the local application resources.
  */
-public class ResourceUtilities {
-	
-	/*
+public class ResourceUtilities
+{
+	/**
 	 * Reads a resource file and converts it into a String
 	 * 
 	 * @param location The location of the resource file.
 	 * @param fileName The name of the file.
 	 * @return The string that represents the contents of the file or null if an error occurred.
 	 */
-	public static String resourceFileToString(String location, String fileName) {
-		if (location == null || fileName == null) return null;
-		InputStream in = ResourceUtilities.class.getResourceAsStream(location + fileName);
-		if (in == null) return null;
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	public static String resourceFileToString(final String location, final String fileName)
+	{
+		if (location == null || fileName == null)
+			return null;
+		
+		final InputStream in = ResourceUtilities.class.getResourceAsStream(location + fileName);
+		if (in == null)
+			return null;
+		
+		final BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line;
-		String output = "";
-		try {
-			while ((line = br.readLine()) != null) {
-				output += line + "\n";
+		final StringBuilder output = new StringBuilder("");
+		try
+		{
+			while ((line = br.readLine()) != null)
+			{
+				output.append(line + "\n");
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
-		return output;
+		return output.toString();
 	}
 	
-	/*
+	/**
 	 * Reads a resource file and converts it into a XML based Document object.
 	 * 
 	 * @param location The location of the resource file.
 	 * @param fileName The name of the file.
 	 * @return The Document that represents the contents of the file or null if an error occurred.
 	 */
-	public static Document resourceFileToXMLDocument(String location, String fileName) {
-		if (location == null || fileName == null) return null;
-		InputStream in = ResourceUtilities.class.getResourceAsStream(location + fileName);
-		if (in == null) return null;
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
+	public static Document resourceFileToXMLDocument(final String location, final String fileName)
+	{
+		if (location == null || fileName == null)
+			return null;
+		
+		final InputStream in = ResourceUtilities.class.getResourceAsStream(location + fileName);
+		if (in == null)
+			return null;
+		
+		final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		final DocumentBuilder dBuilder;
 		Document doc = null;
-		try {
+		try
+		{
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(in);
-		} catch (ParserConfigurationException e) {
+		}
+		catch (ParserConfigurationException e)
+		{
 			e.printStackTrace();
-		} catch (SAXException e) {
+		}
+		catch (SAXException e)
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 		return doc;

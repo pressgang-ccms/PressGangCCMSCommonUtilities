@@ -32,9 +32,12 @@ public class HTMLUtilities
 		String retValue = html;
 
 		Document doc = null;
-		try {
+		try
+		{
 			doc = XMLUtilities.convertStringToDocument(html);
-		} catch (SAXException ex) {
+		}
+		catch (SAXException ex)
+		{
 			ExceptionUtilities.handleException(ex);
 		}
 		if (doc != null)

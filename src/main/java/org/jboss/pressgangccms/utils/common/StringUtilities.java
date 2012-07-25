@@ -268,7 +268,8 @@ public class StringUtilities
 	 * @param split The char to be used to split the input string
 	 * @return An array of split strings
 	 */
-	public static String[] split(final String input, final char split) {
+	public static String[] split(final String input, final char split)
+	{
 		int index = indexOf(input, split);
 		int prevIndex = 0;
 		final ArrayList<String> output = new ArrayList<String>();
@@ -337,7 +338,8 @@ public class StringUtilities
 	 * @param input The string to have all its escaped characters replaced.
 	 * @return The input string with the escaped characters replaced back to normal.
 	 */
-	public static String replaceEscapeChars(final String input) {
+	public static String replaceEscapeChars(final String input)
+	{
 		return input.replaceAll("\\\\\\[", "[")
 				.replaceAll("\\\\\\]", "]")
 				.replaceAll("\\\\\\(", "(")
