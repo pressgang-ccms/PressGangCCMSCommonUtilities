@@ -27,7 +27,7 @@ public class DocBookUtilities
 	public static final String TOPIC_ROOT_ID_ATTRIBUTE = "id";
 	/** The name of the title tag */
 	public static final String TOPIC_ROOT_TITLE_NODE_NAME = "title";
-	
+
 	/**
 	 * Finds the first title element in a DocBook XML file.
 	 * 
@@ -49,7 +49,7 @@ public class DocBookUtilities
 		
 		return findTitle(doc);
 	}
-	
+
 	/**
 	 * Finds the first title element in a DocBook XML file.
 	 * 
@@ -87,7 +87,7 @@ public class DocBookUtilities
 	{
 		return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9\\._-]", "");
 	}
-	
+
 	public static void setSectionTitle(final String titleValue, final Document doc)
 	{
 		assert doc != null : "The doc parameter can not be null";
@@ -117,48 +117,47 @@ public class DocBookUtilities
 					docElement.appendChild(newTitle);
 			}
 		}
-		
 	}
-	
+
 	public static String buildChapter(final String contents, final String title)
 	{
 		return buildChapter(contents, title, null);
 	}
-	
+
 	public static String buildChapter(final String contents, final String title, final String id)
 	{
-		final String titleContents = title==null||title.length()==0?"":title;
-		final String chapterContents = contents==null||contents.length()==0?"":contents;
-		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
+		final String titleContents = title == null || title.length() == 0 ? "" : title;
+		final String chapterContents = contents == null || contents.length() == 0 ? "" : contents;
+		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
 		return "<chapter" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</chapter>";
 	}
-	
+
 	public static String buildAppendix(final String contents, final String title)
 	{
 		return buildAppendix(contents, title, null);
 	}
-	
+
 	public static String buildAppendix(final String contents, final String title, final String id)
 	{
-		final String titleContents = title==null||title.length()==0?"":title;
-		final String chapterContents = contents==null||contents.length()==0?"":contents;
-		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
+		final String titleContents = title == null || title.length() == 0 ? "" : title;
+		final String chapterContents = contents == null || contents.length() == 0 ? "" : contents;
+		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
 		return "<appendix" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</appendix>";
 	}
-	
+
 	public static String buildCleanSection(final String contents, final String title)
 	{
 		return buildCleanSection(contents, title, null);
 	}
-	
+
 	public static String buildCleanSection(final String contents, final String title, final String id)
 	{
-		final String titleContents = title==null||title.length()==0?"":title;
-		final String chapterContents = contents==null||contents.length()==0?"":contents;
-		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
+		final String titleContents = title == null || title.length() == 0 ? "" : title;
+		final String chapterContents = contents == null || contents.length() == 0 ? "" : contents;
+		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
 		return "<section" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</section>";
 	}
-	
+
 	public static String addXMLBoilerplate(final String xml, final String entityFileName, final String rootElementName)
 	{
 		return "<?xml version='1.0' encoding='UTF-8' ?>\n" +
@@ -168,23 +167,23 @@ public class DocBookUtilities
 		"]>\n\n" +
 		xml;
 	}
-	
+
 	public static String addXMLBoilerplate(final String xml)
 	{
 		return addXMLBoilerplate(xml, "Book.ent", "chapter");
 	}
-	
+
 	public static String buildXRefListItem(final String xref, final String role)
 	{
 		final String roleAttribute = role==null||role.length()==0?"":" role=\"" + role + "\"";
 		return "<listitem><para><xref" + roleAttribute + " linkend=\"" + xref + "\"/></para></listitem>";
 	}
-	
+
 	public static List<Element> buildXRef(final Document xmlDoc, final String xref)
 	{
 		return buildXRef(xmlDoc, xref, null);
 	}
-	
+
 	public static List<Element> buildXRef(final Document xmlDoc, final String xref, final String xrefStyle)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -201,17 +200,17 @@ public class DocBookUtilities
 		
 		return retValue;
 	}
-	
+
 	public static String buildXRef(final String xref)
 	{
 		return "<xref linkend=\"" + xref + "\" />";
 	}
-	
+
 	public static String buildXRef(final String xref, final String xrefStyle)
 	{
 		return "<xref linkend=\"" + xref + "\" xrefstyle=\"" + xrefStyle + "\" />";
 	}
-	
+
 	public static List<Element> buildULink(final Document xmlDoc, final String url, final String label)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -226,17 +225,17 @@ public class DocBookUtilities
 		
 		return retValue;
 	}
-	
+
 	public static String buildULink(final String url, final String label)
 	{
 		return "<ulink url=\"" + url + "\">" + label + "</ulink>";
 	}
-	
+
 	public static String buildULinkListItem(final String url, final String label)
 	{
 		return "<listitem><para><ulink url=\"" + url + "\">" + label + "</ulink></para></listitem>";
 	}
-	
+
 	public static List<Element> buildEmphasisPrefixedXRef(final Document xmlDoc, final String prefix, final String xref)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -251,7 +250,7 @@ public class DocBookUtilities
 		
 		return retValue;
 	}
-	
+
 	public static List<Element> buildEmphasisPrefixedULink(final Document xmlDoc, final String prefix, final String url, final String label)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -269,7 +268,7 @@ public class DocBookUtilities
 		
 		return retValue;
 	}
-	
+
 	public static Node buildDOMXRefLinkListItem(final String xref, final String title, final Document xmlDoc)
 	{
 		final Element listItem = xmlDoc.createElement("listitem");
@@ -284,7 +283,7 @@ public class DocBookUtilities
 		
 		return listItem;
 	}
-	
+
 	public static Node buildDOMLinkListItem(final List<Node> children, final Document xmlDoc)
 	{
 		final Element listItem = xmlDoc.createElement("listitem");
@@ -297,7 +296,7 @@ public class DocBookUtilities
 		
 		return listItem;
 	}
-	
+
 	public static Node buildDOMXRef(final String xref, final String title, final Document xmlDoc)
 	{
 		final Element linkItem = xmlDoc.createElement("link");
@@ -305,18 +304,18 @@ public class DocBookUtilities
 		linkItem.setTextContent(title);
 		return linkItem;
 	}
-	
+
 	public static Node buildDOMText(final String title, final Document xmlDoc)
 	{
 		final Node textNode = xmlDoc.createTextNode(title);
 		return textNode;
 	}
-	
+
 	public static String buildListItem(final String text)
 	{
 		return "<listitem><para>" + text + "</para></listitem>\n";
 	}
-	
+
 	public static Element buildDOMListItem(final Document doc, final String text)
 	{
 		final Element listItem = doc.createElement("listitem");
@@ -325,27 +324,27 @@ public class DocBookUtilities
 		listItem.appendChild(para);
 		return listItem;
 	}
-	
+
 	public static String buildSection(final String contents, final String title, final String build)
 	{
 		return buildSection(contents, title, build, null, null, null);
 	}
-	
+
 	public static String buildSection(final String contents, final String title, final String build, final String id)
 	{
 		return buildSection(contents, title, build, id, null, null);
 	}
-	
+
 	public static String buildSection(final String contents, final String title, final String build, final String id, final String titleRole)
 	{
 		return buildSection(contents, title, build, id, titleRole, null);
 	}
-	
+
 	public static String buildSection(final String contents, final String title, final String build, final String id, final String titleRole, final String xreflabel)
 	{
-		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
-		final String xreflabelAttribute = xreflabel==null||xreflabel.length()==0?"":" xreflabel=\"" + xreflabel + "\"";
-		final String titleRoleAttribute = titleRole==null||titleRole.length()==0?"":" role=\"" + titleRole + "\"";
+		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
+		final String xreflabelAttribute = xreflabel == null || xreflabel.length() == 0 ? "" : " xreflabel=\"" + xreflabel + "\"";
+		final String titleRoleAttribute = titleRole == null || titleRole.length() == 0 ? "" : " role=\"" + titleRole + "\"";
 		
 		return "<section" + idAttribute + xreflabelAttribute + ">\n" +
 			"<title" + titleRoleAttribute + ">" + title + "</title>\n" +
@@ -360,22 +359,22 @@ public class DocBookUtilities
 			
 			"</section>\n";
 	}
-	
+
 	public static String wrapInListItem(final String content)
 	{
 		return "<listitem>" + content + "</listitem>";
 	}
-	
+
 	public static String wrapListItems(final List<String> listItems)
 	{
 		return wrapListItems(listItems, null, null);
 	}
-	
+
 	public static String wrapListItems(final List<String> listItems, final String title)
 	{
 		return wrapListItems(listItems, title, null);
 	}
-	
+
 	public static String wrapListItems(final List<String> listItems, final String title, final String id)
 	{
 		final String idAttribute = id != null && id.length() != 0 ? " id=\"" + id + "\" " : "";
@@ -387,7 +386,7 @@ public class DocBookUtilities
 		retValue += "</itemizedlist>";
 		return retValue;
 	}
-	
+
 	public static String wrapListItemsInPara(final String listItems)
 	{
 		if (listItems.length() != 0)
@@ -405,22 +404,22 @@ public class DocBookUtilities
 	{
 		return wrapInPara(contents, null, null);
 	}
-	
+
 	public static String wrapInPara(final String contents, final String role)
 	{
 		return wrapInPara(contents, role, null);
 	}
-	
+
 	public static String wrapInPara(final String contents, final String role, final String id)
 	{
-		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
-		final String roleAttribute = role==null||role.length()==0?"":" role=\"" + role + "\"";
+		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
+		final String roleAttribute = role == null || role.length() == 0 ? "" : " role=\"" + role + "\"";
 		return 
 			"<para" + idAttribute + roleAttribute + ">" +
 			contents +
 			"</para>";
 	}
-	
+
 	public static List<Element> wrapItemizedListItemsInPara(final Document xmlDoc, final List<List<Element>> items)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -448,7 +447,7 @@ public class DocBookUtilities
 		
 		return retValue;
 	}
-	
+
 	public static List<Element> wrapOrderedListItemsInPara(final Document xmlDoc, final List<List<Element>> items)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -476,7 +475,7 @@ public class DocBookUtilities
 		
 		return retValue;
 	}
-	
+
 	public static List<Element> wrapItemsInListItems(final Document xmlDoc, final List<List<Element>> items)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -502,16 +501,16 @@ public class DocBookUtilities
 	{
 		return wrapInSimpleSect(contents, null, null);
 	}
-	
+
 	public static String wrapInSimpleSect(final String contents, final String role)
 	{
 		return wrapInSimpleSect(contents, null, null);
 	}
-	
+
 	public static String wrapInSimpleSect(final String contents, final String role, final String id)
 	{
-		final String roleAttribute = role==null||role.length()==0?"":" role=\"" + role + "\"";
-		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
+		final String roleAttribute = role == null || role.length() == 0 ? "" : " role=\"" + role + "\"";
+		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
 		
 		return 
 			"<simplesect" + idAttribute + roleAttribute + ">\n"+
@@ -519,12 +518,12 @@ public class DocBookUtilities
 			contents + "\n" + 
 			"</simplesect>";
 	}
-	
+
 	public static Element wrapListItems(final Document xmlDoc, final List<Node> listItems)
 	{
 		return wrapListItems(xmlDoc, listItems, null);
 	}
-	
+
 	public static Element wrapListItems(final Document xmlDoc, final List<Node> listItems, final String title)
 	{
 		final Element paraElement = xmlDoc.createElement("para");
@@ -544,7 +543,7 @@ public class DocBookUtilities
 		
 		return paraElement;
 	}
-	
+
 	public static void insertNodeAfter(final Node reference, final Node insert)
 	{
 		final Node parent = reference.getParentNode();
@@ -558,7 +557,7 @@ public class DocBookUtilities
 		else
 			parent.appendChild(insert);
 	}
-	
+
 	public static Node createRelatedTopicXRef(final Document xmlDoc, final String xref, final Node parent)
 	{
 		final Element listItem = xmlDoc.createElement("listitem");
@@ -574,12 +573,12 @@ public class DocBookUtilities
 		
 		return listItem;
 	}
-	
+
 	public static Node createRelatedTopicXRef(final Document xmlDoc, final String xref)
 	{
 		return createRelatedTopicXRef(xmlDoc, xref, null);
 	}
-	
+
 	public static Node createRelatedTopicULink(final Document xmlDoc, final String url, final String title, final Node parent)
 	{
 		final Element listItem = xmlDoc.createElement("listitem");
@@ -619,12 +618,12 @@ public class DocBookUtilities
 		
 		return listItem;
 	}
-	
+
 	public static Node createRelatedTopicULink(final Document xmlDoc, final String url, final String title)
 	{
 		return createRelatedTopicULink(xmlDoc, url, title, null);
 	}
-	
+
 	public static Node createRelatedTopicItemizedList(final Document xmlDoc, final String title)
 	{
 		final Node itemizedlist = xmlDoc.createElement("itemizedlist");
@@ -634,24 +633,23 @@ public class DocBookUtilities
 		
 		return itemizedlist;
 	}
-	
+
 	public static Document wrapDocumentInSection(final Document doc)
 	{
 		if (!doc.getDocumentElement().getNodeName().equals("section"))
 		{
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder;
+			final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			Document newDoc = null;
 			try
 			{
-				dBuilder = dbFactory.newDocumentBuilder();	
+				final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();	
 				newDoc = dBuilder.newDocument();
 			}
 			catch(ParserConfigurationException ex)
 			{
 				ExceptionUtilities.handleException(ex);
 			}
-			Element section = newDoc.createElement("section");
+			final Element section = newDoc.createElement("section");
 			section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
 			newDoc.appendChild(section);
 			return newDoc;
@@ -661,7 +659,7 @@ public class DocBookUtilities
 			return doc;
 		}
 	}
-	
+
 	/**
 	 * Wrap a list of Strings in a {@code<row>} element. Each string
 	 * is also wrapped in a {@code<entry>} element.
@@ -680,17 +678,17 @@ public class DocBookUtilities
 		output.append("</row>");
 		return output.toString();
 	}
-	
+
 	public static String wrapInTable(final String title, final List<List<String>> rows)
 	{
 		return wrapInTable(title, null, null, rows);
 	}
-	
+
 	public static String wrapInTable(final String title, final List<String> headers, final List<List<String>> rows)
 	{
 		return wrapInTable(title, headers, null, rows);
 	}
-	
+
 	public static String wrapInTable(final String title, final List<String> headers, final List<String> footers, final List<List<String>> rows)
 	{
 		final StringBuilder output = new StringBuilder("<table>\n");
