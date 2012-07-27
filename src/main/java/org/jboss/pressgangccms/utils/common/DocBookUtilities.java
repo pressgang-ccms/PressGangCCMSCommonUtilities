@@ -723,4 +723,33 @@ public class DocBookUtilities
 		output.append("</table>\n");
 		return output.toString();
 	}
+	
+	public static String wrapInGlossTerm(final String glossTerm)
+	{
+		return "<glossterm>" + glossTerm + "</glossterm>";
+	}
+	
+	/**
+	 * Creates a Glossary Definition element that contains an itemized list.
+	 * Each item specified in the items list is wrapped in a {@code<para>} and
+	 * {@code<listitem>} element and then added to the itemizedlist.
+	 * 
+	 * @param title The title for the itemized list.
+	 * @param items The list of items that should be created in the list.
+	 * @return The {@code<glossdef>} wrapped list of items.
+	 */
+	public static String wrapInItemizedGlossDef(final String title, final List<String> items)
+	{
+		final List<String> itemizedList = new ArrayList<String>();
+		for (final String listItem : items)
+		{
+			itemizedList.add(wrapInListItem(wrapInPara(listItem)));
+		}
+		return "<glossdef>" + DocBookUtilities.wrapListItems(itemizedList) + "</glossdef>";
+	}
+	
+	public static String wrapInGlossEntry(final String glossTerm, final String glossDef)
+	{
+		return "<glossentry>" + glossTerm + glossDef + "</glossentry>";
+	}
 }
