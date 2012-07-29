@@ -65,5 +65,10 @@
 		<version>0.5-SNAPSHOT</version>
 		<scope>provided</scope>
 	</dependency>
+	<dependency>
+		<groupId>com.google.code.regexp</groupId>
+		<artifactId>named-regexp</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</dependency>
   </dependencies>
 </project>

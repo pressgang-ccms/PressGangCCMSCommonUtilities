@@ -26,6 +26,9 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
+import com.google.code.regexp.NamedMatcher;
+import com.google.code.regexp.NamedPattern;
+
 /**
  * A collection of XML related functions. Note to self: See http://www.gnu.org/s/ classpathx/jaxp/apidoc/gnu/xml/dom/ls/DomLSSerializer.html for LSSerializer
  * options
@@ -63,9 +66,9 @@ public class XMLUtilities
 	public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
 	public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
 
-	public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE, Pattern.MULTILINE | Pattern.DOTALL);
-	public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
-	public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
+	public static final NamedPattern TRAILING_WHITESPACE_RE_PATTERN = NamedPattern.compile(TRAILING_WHITESPACE_RE, Pattern.MULTILINE | Pattern.DOTALL);
+	public static final NamedPattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = NamedPattern.compile(TRAILING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
+	public static final NamedPattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = NamedPattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
 
 	public static String findEncoding(final String xml)
 	{
@@ -160,9 +163,9 @@ public class XMLUtilities
 		final Random randomGenerator = new Random();
 
 		/* compile the regular expression */
-		final Pattern injectionSequencePattern = Pattern.compile(XML_ENTITY_RE);
+		final NamedPattern injectionSequencePattern = NamedPattern.compile(XML_ENTITY_RE);
 		/* find any matches */
-		final Matcher injectionSequencematcher = injectionSequencePattern.matcher(xml);
+		final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(xml);
 
 		/* loop over the regular expression matches */
 		while (injectionSequencematcher.find())
@@ -880,7 +883,7 @@ public class XMLUtilities
 							 * making the trailing whitespace important. So we clean up the trailing whitespace here.
 							 */
 
-							final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+							final NamedMatcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
 							if (matcher.matches())
 								translatableString = matcher.group("content");
 
