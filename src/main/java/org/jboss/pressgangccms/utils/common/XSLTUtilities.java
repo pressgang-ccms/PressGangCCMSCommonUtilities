@@ -64,7 +64,8 @@ public class XSLTUtilities
 					 * org.apache.xalan.xsltc.trax.TransformerFactoryImpl. The
 					 * latter doesn't work for docbook xsl.
 					 */
-					final TransformerFactory transformerFactory = TransformerFactory.newInstance("org.apache.xalan.processor.TransformerFactoryImpl", null);
+					System.setProperty("javax.xml.transform.TransformerFactory", "org.apache.xalan.processor.TransformerFactoryImpl");
+					final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
 					/*
 					 * Set the URIResolver that will handle request to external
