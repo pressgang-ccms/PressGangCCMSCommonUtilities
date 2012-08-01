@@ -12,6 +12,11 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.pressgangccms.utils.sort.EntitySubstitutionBoundaryDataBoundaryStartSort;
 import org.jboss.pressgangccms.utils.structures.EntitySubstitutionBoundaryData;
@@ -146,6 +151,34 @@ public class XMLUtilities
 			childNode.getParentNode().removeChild(childNode);
 		}
     }
+
+	/**
+     * Clones a document object.
+     * 
+     * @param doc The document to be cloned.
+     * @return The new document object that contains the same data 
+     * as the original document.
+     * @throws TransformerException Thrown if the document can't be 
+     */
+	public static Document cloneDocument(final Document doc) throws TransformerException
+    {
+    	final Node rootNode = doc.getDocumentElement();
+    	
+    	// Copy the doctype and xml version type data
+    	final TransformerFactory tfactory = TransformerFactory.newInstance();
+    	final Transformer tx   = tfactory.newTransformer();
+    	final DOMSource source = new DOMSource(doc);
+		final DOMResult result = new DOMResult();
+		tx.transform(source, result);
+
+		// Copy the actual content into the new document
+		final Document copy = (Document)result.getNode();
+		copy.removeChild(copy.getDocumentElement());
+		final Node copyRootNode = copy.importNode(rootNode, true);
+		copy.appendChild(copyRootNode);
+
+		return copy;
+	}
 
 	/**
 	 * This function will return a map that contains entity names as keys, and random integer strings as values. The values are guaranteed not to have appeared
