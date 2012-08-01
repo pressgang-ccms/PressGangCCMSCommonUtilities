@@ -1,12 +1,37 @@
 package org.jboss.pressgangccms.utils.common;
 
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtilities
 {
+	private static char[] randomStringCharacters = new char[]
+	{ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+	
+	public static String generateRandomString(final int length)
+	{
+		final StringBuilder text = new StringBuilder();
+
+		try
+		{
+			final SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+
+			for (int i = 0; i < length; i++)
+			{
+				text.append(randomStringCharacters[random.nextInt(randomStringCharacters.length)]);
+			}
+		}
+		catch (final Exception ex)
+		{
+			return null;
+		}
+
+		return text.toString();
+	}
+	
 	public static int rtrimCount(final String input)
 	{
 		if (input == null)

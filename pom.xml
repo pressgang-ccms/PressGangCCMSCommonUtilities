@@ -68,7 +68,7 @@
 	<dependency>
 		<groupId>com.google.code.regexp</groupId>
 		<artifactId>named-regexp</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</dependency>
   </dependencies>
 </project>
