@@ -1,6 +1,7 @@
 package org.jboss.pressgangccms.utils.common;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.code.regexp.NamedMatcher;
@@ -138,41 +141,42 @@ public class XMLUtilities
 
 		return null;
 	}
-	
+
 	/**
-     * Removes all of the child nodes from a parent node.
-     */
-    public static void emptyNode(final Node parent)
-    {
-    	final NodeList childNodes = parent.getChildNodes();
+	 * Removes all of the child nodes from a parent node.
+	 */
+	public static void emptyNode(final Node parent)
+	{
+		final NodeList childNodes = parent.getChildNodes();
 		for (int i = childNodes.getLength() - 1; i >= 0; i--)
 		{
 			final Node childNode = childNodes.item(i);
 			childNode.getParentNode().removeChild(childNode);
 		}
-    }
+	}
 
 	/**
-     * Clones a document object.
-     * 
-     * @param doc The document to be cloned.
-     * @return The new document object that contains the same data 
-     * as the original document.
-     * @throws TransformerException Thrown if the document can't be 
-     */
+	 * Clones a document object.
+	 * 
+	 * @param doc
+	 *            The document to be cloned.
+	 * @return The new document object that contains the same data as the original document.
+	 * @throws TransformerException
+	 *             Thrown if the document can't be
+	 */
 	public static Document cloneDocument(final Document doc) throws TransformerException
-    {
-    	final Node rootNode = doc.getDocumentElement();
-    	
-    	// Copy the doctype and xml version type data
-    	final TransformerFactory tfactory = TransformerFactory.newInstance();
-    	final Transformer tx   = tfactory.newTransformer();
-    	final DOMSource source = new DOMSource(doc);
+	{
+		final Node rootNode = doc.getDocumentElement();
+
+		// Copy the doctype and xml version type data
+		final TransformerFactory tfactory = TransformerFactory.newInstance();
+		final Transformer tx = tfactory.newTransformer();
+		final DOMSource source = new DOMSource(doc);
 		final DOMResult result = new DOMResult();
 		tx.transform(source, result);
 
 		// Copy the actual content into the new document
-		final Document copy = (Document)result.getNode();
+		final Document copy = (Document) result.getNode();
 		copy.removeChild(copy.getDocumentElement());
 		final Node copyRootNode = copy.importNode(rootNode, true);
 		copy.appendChild(copyRootNode);
@@ -410,10 +414,22 @@ public class XMLUtilities
 			final String fixedXML = replaceEntities(replacements, xml);
 
 			final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-			builderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-			builderFactory.setValidating(false);
+			// This was causing an exception... Se below with the EntityResolver for an alternative.
+			// builderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			// this is the default, but set it anyway
+			// builderFactory.setValidating(false);
 
 			final DocumentBuilder builder = builderFactory.newDocumentBuilder();
+
+			// disable the resolution of any entities. see http://stackoverflow.com/a/155330/157605
+			builder.setEntityResolver(new EntityResolver()
+			{
+				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
+				{
+					return null;
+				}
+			});
+
 			final Document document = builder.parse(new ByteArrayInputStream(fixedXML.getBytes(encoding)));
 
 			restoreEntities(replacements, document.getDocumentElement());
@@ -422,6 +438,7 @@ public class XMLUtilities
 		}
 		catch (SAXException ex)
 		{
+			ExceptionUtilities.handleException(ex);
 			throw ex;
 		}
 		catch (Exception ex)
