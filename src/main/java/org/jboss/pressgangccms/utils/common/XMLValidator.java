@@ -13,6 +13,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.SAXException;
 
 /**
  * This class is used to validate XML, optionally also validating the XML against a DDT schema
@@ -45,6 +46,11 @@ public class XMLValidator implements DOMErrorHandler, LSResourceResolver
 		try
 		{
 			return validateTopicXML(XMLUtilities.convertStringToDocument(xml), dtdFileName, dtdData);
+		}
+		catch (final SAXException ex)
+		{
+			errorsDetected = true;
+			errorText = ex.getMessage();
 		}
 		catch (final Exception ex)
 		{
