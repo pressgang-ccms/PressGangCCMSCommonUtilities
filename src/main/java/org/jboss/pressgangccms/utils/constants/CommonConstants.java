@@ -1,10 +1,5 @@
 package org.jboss.pressgangccms.utils.constants;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import org.jboss.pressgangccms.utils.common.CollectionUtilities;
-
 /**
  * This class defines the constants that are used between Skynet and its various
  * components
@@ -50,20 +45,26 @@ public class CommonConstants
 	/** The ISO8601 date format, used for SQL queries */
 	public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 	/**
-	 * The system property that defines the XML elements that should be
-	 * serialized verbatim
+	 * The StringConstant ID that contains the properties file for all of the 
+	 * verbatim, inline and inline contents XML elements.
 	 */
-	public static final String VERBATIM_XML_ELEMENTS_SYSTEM_PROPERTY = "topicIndex.verbatimXMLElements";
+	public static final Integer XML_ELEMENTS_STRING_CONSTANT_ID = 37;
 	/**
-	 * The system property that defines the XML elements that should be
-	 * serialized inline
+	 * The StringConstant ID that contains the list of locales to be used.
 	 */
-	public static final String INLINE_XML_ELEMENTS_SYSTEM_PROPERTY = "topicIndex.inlineXMLElements";
+	public static final Integer LOCALES_STRING_CONSTANT_ID = 38;
 	/**
-	 * The system property that defines the XML elements that should be
-	 * serialized inline, but on a new line
+	 * The Verbatim property key for the XML Elements StringConstant properties file.
 	 */
-	public static final String CONTENTS_INLINE_XML_ELEMENTS_SYSTEM_PROPERTY = "topicIndex.contentsInlineXMLElements";
+	public static final String VERBATIM_XML_ELEMENTS_PROPERTY_KEY = "VERBATIM_XML_ELEMENTS";
+	/**
+	 * The Inline property key for the XML Elements StringConstant properties file.
+	 */
+	public static final String INLINE_XML_ELEMENTS_PROPERTY_KEY = "INLINE_XML_ELEMENTS";
+	/**
+	 * The Contents Inline property key for the XML Elements StringConstant properties file.
+	 */
+	public static final String CONTENTS_INLINE_XML_ELEMENTS_PROPERTY_KEY = "CONTENTS_INLINE_XML_ELEMENTS";
 	/**
 	 * The system property that defines the STOMP message server
 	 */
@@ -97,13 +98,6 @@ public class CommonConstants
 	
 	/** The encoding of the XML, used when converting a DOM object to a string */
 	public static final String XML_ENCODING = "UTF-8";
-	
-	/**
-	 * A collection of the all the locales supported by Java.
-	 * Replace all the Underscores (_) to match the normal locale
-	 * representation.
-	 */
-	public static final List<String> LOCALES = CollectionUtilities.replaceStrings(CollectionUtilities.sortAndReturn(CollectionUtilities.toStringArrayList((Object[]) SimpleDateFormat.getAvailableLocales())), "_", "-");
 
 	/**
 	 * The URL of the main web Skynet instance. This is used when generating
