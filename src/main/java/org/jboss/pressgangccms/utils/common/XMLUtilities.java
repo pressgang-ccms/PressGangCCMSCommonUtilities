@@ -714,7 +714,7 @@ public class XMLUtilities
 			if (nodeTextContent.length() == 0)
 			{
 				if (includeElementName)
-					stringBuffer.append("/>");
+					stringBuffer.append(" />");
 			}
 			else
 			{
