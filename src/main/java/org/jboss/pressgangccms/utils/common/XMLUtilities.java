@@ -822,22 +822,14 @@ public class XMLUtilities
 
 				/* this child node is itself translatable, so return true */
 				if (TRANSLATABLE_ELEMENTS.contains(childName))
-					return true;
-			}
-
-			/*
-			 * now check to see if any of the child have children that are translatable
-			 */
-			for (int j = 0; j < children.getLength(); ++j)
-			{
-				final Node child = children.item(j);
-				final NodeList grandChildren = child.getChildNodes();
-				for (int k = 0; k < grandChildren.getLength(); ++k)
 				{
-					final Node grandChild = grandChildren.item(k);
-					final boolean result = doesElementContainTranslatableContent(grandChild);
-					if (result)
-						return true;
+					return true;
+				}
+				
+				/* check if this child contains translatable nodes */
+				if (doesElementContainTranslatableContent(child))
+				{
+				    return true;
 				}
 			}
 		}
@@ -954,8 +946,11 @@ public class XMLUtilities
 
 						final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
 
-						translatableString += thisTranslatableString;
-						nodes.add(child);
+						if (!thisTranslatableString.matches("^\\s+$"))
+						{
+    						translatableString += thisTranslatableString;
+    						nodes.add(child);
+						}
 					}
 
 				}
