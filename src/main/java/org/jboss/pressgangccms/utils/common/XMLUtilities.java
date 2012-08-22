@@ -899,7 +899,8 @@ public class XMLUtilities
 			{
 				ArrayList<Node> nodes = new ArrayList<Node>();
 				String translatableString = "";
-
+				boolean removeWhitespaceFromStart = true;
+				
 				final int childrenLength = children.getLength();
 				for (int i = 0; i < childrenLength; ++i)
 				{
@@ -932,6 +933,7 @@ public class XMLUtilities
 
 							translatableString = "";
 							nodes = new ArrayList<Node>();
+							removeWhitespaceFromStart = true;
 						}
 
 						getTranslatableStringsFromNode(child, translationStrings, allowDuplicates, xmlProperites);
@@ -941,7 +943,7 @@ public class XMLUtilities
 						final String childName = child.getNodeName();
 						final String childText = convertNodeToString(child, true);
 
-						final String cleanedChildText = cleanTranslationText(childText, i == 0, i == childrenLength - 1);
+						final String cleanedChildText = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
 						final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
 
 						final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
@@ -950,9 +952,11 @@ public class XMLUtilities
 						{
     						translatableString += thisTranslatableString;
     						nodes.add(child);
+    						
+    						/* We've processed the first element in the string so now we don't want to remove whitespace from the start of the String */
+                            removeWhitespaceFromStart = false;
 						}
 					}
-
 				}
 
 				/* save the last translated string */
