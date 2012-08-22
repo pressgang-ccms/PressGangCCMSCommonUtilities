@@ -885,7 +885,7 @@ public class XMLUtilities
 				{
 					addTranslationToNodeDetailsToCollection(nodeText, node, allowDuplicates, translationStrings);
 				}
-				else if (!cleanedNodeText.isEmpty())
+				else if (!cleanedNodeText.isEmpty() && !cleanedNodeText.matches("^\\s+$"))
 				{
 					addTranslationToNodeDetailsToCollection(cleanedNodeText, node, allowDuplicates, translationStrings);
 				}
@@ -905,16 +905,18 @@ public class XMLUtilities
 				for (int i = 0; i < childrenLength; ++i)
 				{
 					final Node child = children.item(i);
+					final String childNodeName = child.getNodeName();
 
 					/*
 					 * does this child have another level of translatable tags?
 					 */
-					boolean containsTranslatableTags = doesElementContainTranslatableContent(child);
+					final boolean containsTranslatableTags = doesElementContainTranslatableContent(child);
+					final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
 
 					/*
 					 * if so, save the string we have been building up, process the child, and start building up a new string
 					 */
-					if (containsTranslatableTags)
+					if (containsTranslatableTags || childTranslatableElement)
 					{
 						if (nodes.size() != 0)
 						{
@@ -948,7 +950,7 @@ public class XMLUtilities
 
 						final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
 
-						if (!thisTranslatableString.matches("^\\s+$"))
+						if (!thisTranslatableString.isEmpty() && !thisTranslatableString.matches("^\\s+$"))
 						{
     						translatableString += thisTranslatableString;
     						nodes.add(child);
