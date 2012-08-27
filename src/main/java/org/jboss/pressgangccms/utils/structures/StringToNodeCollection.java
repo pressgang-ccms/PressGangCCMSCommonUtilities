@@ -76,4 +76,19 @@ public class StringToNodeCollection
 		this.nodeCollections.add(CollectionUtilities.toArrayList(new Node[] {node}));
 		return this;
 	}
+	
+	@Override
+	public boolean equals(final Object o)
+	{
+	    if (o == null) return false;
+	    if (!(o instanceof StringToNodeCollection)) return false;
+	    if (o == this) return true;
+	    
+	    final StringToNodeCollection stringToNodeCollection = (StringToNodeCollection) o;
+	    if (this.translationString == null && stringToNodeCollection.translationString != null) return false;
+	    if (this.translationString == null && stringToNodeCollection.translationString == null) return true;
+	    if (!this.translationString.equals(stringToNodeCollection.translationString)) return false;
+	    
+	    return false;
+	}
 }
