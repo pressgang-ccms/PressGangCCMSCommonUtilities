@@ -998,18 +998,16 @@ public class XMLUtilities
                 for (int i = 0; i < childrenLength; ++i)
                 {
                     final Node child = children.item(i);
-                    final String childNodeName = child.getNodeName();
 
                     /*
                      * does this child have another level of translatable tags?
                      */
                     final boolean containsTranslatableTags = doesElementContainTranslatableContentV1(child);
-                    final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
 
                     /*
                      * if so, save the string we have been building up, process the child, and start building up a new string
                      */
-                    if (containsTranslatableTags || childTranslatableElement)
+                    if (containsTranslatableTags)
                     {
                         if (nodes.size() != 0)
                         {
@@ -1064,7 +1062,7 @@ public class XMLUtilities
             for (int i = 0; i < nodeList.getLength(); ++i)
             {
                 final Node child = nodeList.item(i);
-                getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperites);
+                getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperites);
             }
         }
     }

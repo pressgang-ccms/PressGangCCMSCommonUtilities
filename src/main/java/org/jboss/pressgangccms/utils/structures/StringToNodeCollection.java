@@ -89,6 +89,6 @@ public class StringToNodeCollection
 	    if (this.translationString == null && stringToNodeCollection.translationString == null) return true;
 	    if (!this.translationString.equals(stringToNodeCollection.translationString)) return false;
 	    
-	    return false;
+	    return true;
 	}
 }
