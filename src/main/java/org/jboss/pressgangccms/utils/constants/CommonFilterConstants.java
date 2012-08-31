@@ -265,8 +265,8 @@ public class CommonFilterConstants {
     public static final String TAG_IDS_FILTER_VAR = "tagIds";
     public static final String TAG_IDS_FILTER_VAR_DESC = "Tag IDs";
     
-    public static final String TAG_TITLE_FILTER_VAR = "tagTitle";
-    public static final String TAG_TITLE_FILTER_VAR_DESC = "Tag Title";
+    public static final String TAG_NAME_FILTER_VAR = "tagName";
+    public static final String TAG_NAME_FILTER_VAR_DESC = "Tag Name";
     
     public static final String TAG_DESCRIPTION_FILTER_VAR = "tagDesc";
     public static final String TAG_DESCRIPTION_FILTER_VAR_DESC = "Tag Description";
@@ -275,8 +275,8 @@ public class CommonFilterConstants {
     public static final String CATEGORY_IDS_FILTER_VAR = "catIds";
     public static final String CATEGORY_IDS_FILTER_VAR_DESC = "Category IDs";
     
-    public static final String CATEGORY_TITLE_FILTER_VAR = "catTitle";
-    public static final String CATEGORY_TITLE_FILTER_VAR_DESC = "Category Title";
+    public static final String CATEGORY_NAME_FILTER_VAR = "catName";
+    public static final String CATEGORY_NAME_FILTER_VAR_DESC = "Category Name";
     
     public static final String CATEGORY_DESCRIPTION_FILTER_VAR = "catDesc";
     public static final String CATEGORY_DESCRIPTION_FILTER_VAR_DESC = "Category Description";
@@ -310,9 +310,19 @@ public class CommonFilterConstants {
     public static final String PROJECT_IDS_FILTER_VAR = "projectIds";
     public static final String PROJECT_IDS_FILTER_VAR_DESC = "Project IDs";
     
-    public static final String PROJECT_TITLE_FILTER_VAR = "projectTitle";
-    public static final String PROJECT_TITLE_FILTER_VAR_DESC = "Project Title";
+    public static final String PROJECT_NAME_FILTER_VAR = "projectName";
+    public static final String PROJECT_NAME_FILTER_VAR_DESC = "Project Name";
     
     public static final String PROJECT_DESCRIPTION_FILTER_VAR = "projectDesc";
-    public static final String PROEJCT_DESCRIPTION_FILTER_VAR_DESC = "Project Description";
+    public static final String PROJECT_DESCRIPTION_FILTER_VAR_DESC = "Project Description";
+    
+    /* Filter Constants */
+    public static final String FILTER_IDS_FILTER_VAR = "filterIds";
+    public static final String FILTER_IDS_FILTER_VAR_DESC = "Filter IDs";
+    
+    public static final String FILTER_NAME_FILTER_VAR = "filterName";
+    public static final String FILTER_NAME_FILTER_VAR_DESC = "Filter Name";
+    
+    public static final String FILTER_DESCRIPTION_FILTER_VAR = "filterDesc";
+    public static final String FILTER_DESCRIPTION_FILTER_VAR_DESC = "Filter Description";
 }
