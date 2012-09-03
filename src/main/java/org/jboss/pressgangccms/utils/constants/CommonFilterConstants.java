@@ -2,6 +2,10 @@ package org.jboss.pressgangccms.utils.constants;
 
 public class CommonFilterConstants {
 
+    /** The Filter logic keyword to use when two conditions need to be and'ed */
+    public static final String AND_LOGIC = "And";
+    /** The Filter logic keyword to use when two conditions need to be or'ed */
+    public static final String OR_LOGIC = "Or";
     /** The url variable prefix to indicate that a tag needs to be matched */
     public static final String MATCH_TAG = "tag";
     /** The url variable prefix to indicate that a tag will be used for grouping */
@@ -325,4 +329,14 @@ public class CommonFilterConstants {
     
     public static final String FILTER_DESCRIPTION_FILTER_VAR = "filterDesc";
     public static final String FILTER_DESCRIPTION_FILTER_VAR_DESC = "Filter Description";
+    
+    /* Property tag Constants */
+    public static final String PROP_TAG_IDS_FILTER_VAR = "propTagIds";
+    public static final String PROP_TAG_IDS_FILTER_VAR_DESC = "Property Tag IDs";
+    
+    public static final String PROP_TAG_NAME_FILTER_VAR = "propTagName";
+    public static final String PROP_TAG_NAME_FILTER_VAR_DESC = "Property Tag Name";
+    
+    public static final String PROP_TAG_DESCRIPTION_FILTER_VAR = "propTagDesc";
+    public static final String PROP_TAG_DESCRIPTION_FILTER_VAR_DESC = "Property Tag Description";
 }
