@@ -330,7 +330,7 @@ public class CommonFilterConstants {
     public static final String FILTER_DESCRIPTION_FILTER_VAR = "filterDesc";
     public static final String FILTER_DESCRIPTION_FILTER_VAR_DESC = "Filter Description";
     
-    /* Property tag Constants */
+    /* PropertyTag Constants */
     public static final String PROP_TAG_IDS_FILTER_VAR = "propTagIds";
     public static final String PROP_TAG_IDS_FILTER_VAR_DESC = "Property Tag IDs";
     
@@ -339,4 +339,31 @@ public class CommonFilterConstants {
     
     public static final String PROP_TAG_DESCRIPTION_FILTER_VAR = "propTagDesc";
     public static final String PROP_TAG_DESCRIPTION_FILTER_VAR_DESC = "Property Tag Description";
+    
+    /* BlobConstant Constants */
+    public static final String BLOB_CONSTANT_IDS_FILTER_VAR = "blobConstantIds";
+    public static final String BLOB_CONSTANT_IDS_FILTER_VAR_DESC = "Blob Constant IDs";
+    
+    public static final String BLOB_CONSTANT_NAME_FILTER_VAR = "blobConstantName";
+    public static final String BLOB_CONSTANT_NAME_FILTER_VAR_DESC = "Blob Constant Name";
+    
+    /* StringConstant Constants */
+    public static final String STRING_CONSTANT_IDS_FILTER_VAR = "stringConstantIds";
+    public static final String STRING_CONSTANT_IDS_FILTER_VAR_DESC = "String Constant IDs";
+    
+    public static final String STRING_CONSTANT_NAME_FILTER_VAR = "stringConstantName";
+    public static final String STRING_CONSTANT_NAME_FILTER_VAR_DESC = "String Constant Name";
+    
+    public static final String STRING_CONSTANT_VALUE_FILTER_VAR = "stringConstantValue";
+    public static final String STRING_CONSTANT_VALUE_FILTER_VAR_DESC = "String Constant Value";
+    
+    /* Role Constants */
+    public static final String ROLE_IDS_FILTER_VAR = "roleIds";
+    public static final String ROLE_IDS_FILTER_VAR_DESC = "Role IDs";
+    
+    public static final String ROLE_NAME_FILTER_VAR = "roleName";
+    public static final String ROLE_NAME_FILTER_VAR_DESC = "Role Name";
+    
+    public static final String ROLE_DESCRIPTION_FILTER_VAR = "roleDesc";
+    public static final String ROLE_DESCRIPTION_FILTER_VAR_DESC = "Role Description";
 }
