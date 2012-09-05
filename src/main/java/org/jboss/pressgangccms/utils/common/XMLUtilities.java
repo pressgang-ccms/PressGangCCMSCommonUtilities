@@ -1249,68 +1249,71 @@ public class XMLUtilities
                 {
                     final String translation = translations.get(fixedStringDetails.getFixedString());
 
-                    /* Build up the padding that Zanata removed */
-                    final StringBuilder leftTrimPadding = new StringBuilder();
-                    final StringBuilder rightTrimPadding = new StringBuilder();
-
-                    for (int i = 0; i < fixedStringDetails.getLeftTrimCount(); ++i)
-                        leftTrimPadding.append(" ");
-
-                    for (int i = 0; i < fixedStringDetails.getRightTrimCount(); ++i)
-                        rightTrimPadding.append(" ");
-
-                    /* wrap the returned translation in a root element */
-                    final String wrappedTranslation = "<tempRoot>" + leftTrimPadding + translation + rightTrimPadding + "</tempRoot>";
-
-                    /* convert the wrapped translation into an XML document */
-                    Document translationDocument = null;
-                    try
+                    if (translation != null && !translation.isEmpty())
                     {
-                        translationDocument = convertStringToDocument(wrappedTranslation);
-                    }
-                    catch (SAXException ex)
-                    {
-                        ExceptionUtilities.handleException(ex);
-                    }
-
-                    /* was the conversion successful */
-                    if (translationDocument != null)
-                    {
-                        for (final ArrayList<Node> nodes : nodeCollections)
+                        /* Build up the padding that Zanata removed */
+                        final StringBuilder leftTrimPadding = new StringBuilder();
+                        final StringBuilder rightTrimPadding = new StringBuilder();
+    
+                        for (int i = 0; i < fixedStringDetails.getLeftTrimCount(); ++i)
+                            leftTrimPadding.append(" ");
+    
+                        for (int i = 0; i < fixedStringDetails.getRightTrimCount(); ++i)
+                            rightTrimPadding.append(" ");
+    
+                        /* wrap the returned translation in a root element */
+                        final String wrappedTranslation = "<tempRoot>" + leftTrimPadding + translation + rightTrimPadding + "</tempRoot>";
+    
+                        /* convert the wrapped translation into an XML document */
+                        Document translationDocument = null;
+                        try
                         {
-                            if (nodes != null && nodes.size() != 0)
+                            translationDocument = convertStringToDocument(wrappedTranslation);
+                        }
+                        catch (SAXException ex)
+                        {
+                            ExceptionUtilities.handleException(ex);
+                        }
+    
+                        /* was the conversion successful */
+                        if (translationDocument != null)
+                        {
+                            for (final ArrayList<Node> nodes : nodeCollections)
                             {
-                                /*
-                                 * All nodes in a collection should share the same parent
-                                 */
-                                final Node parent = nodes.get(0).getParentNode();
-
-                                if (parent != null)
+                                if (nodes != null && nodes.size() != 0)
                                 {
                                     /*
-                                     * Start by inserting the nodes created when we converted the translated text into XML. Do it in reverse order, because
-                                     * that's the easiest solution for appending to the start of the element in the original order.
+                                     * All nodes in a collection should share the same parent
                                      */
-                                    final NodeList translatedChildren = translationDocument.getDocumentElement().getChildNodes();
-                                    for (int i = translatedChildren.getLength() - 1; i >= 0; --i)
+                                    final Node parent = nodes.get(0).getParentNode();
+    
+                                    if (parent != null)
                                     {
                                         /*
-                                         * import the node from the translated xml "fragment"
+                                         * Start by inserting the nodes created when we converted the translated text into XML. Do it in reverse order, because
+                                         * that's the easiest solution for appending to the start of the element in the original order.
                                          */
-                                        final Node translatedNode = xml.importNode(translatedChildren.item(i), true);
+                                        final NodeList translatedChildren = translationDocument.getDocumentElement().getChildNodes();
+                                        for (int i = translatedChildren.getLength() - 1; i >= 0; --i)
+                                        {
+                                            /*
+                                             * import the node from the translated xml "fragment"
+                                             */
+                                            final Node translatedNode = xml.importNode(translatedChildren.item(i), true);
+                                            /*
+                                             * insert it into the xml doc to be translated
+                                             */
+                                            parent.insertBefore(translatedNode, parent.getFirstChild());
+                                        }
+    
                                         /*
-                                         * insert it into the xml doc to be translated
+                                         * remove the original nodes that the translated text came from
                                          */
-                                        parent.insertBefore(translatedNode, parent.getFirstChild());
-                                    }
-
-                                    /*
-                                     * remove the original nodes that the translated text came from
-                                     */
-                                    for (final Node node : nodes)
-                                    {
-                                        if (parent == node.getParentNode())
-                                            parent.removeChild(node);
+                                        for (final Node node : nodes)
+                                        {
+                                            if (parent == node.getParentNode())
+                                                parent.removeChild(node);
+                                        }
                                     }
                                 }
                             }
