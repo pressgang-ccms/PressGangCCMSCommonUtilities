@@ -49,7 +49,8 @@ public class XMLValidator implements DOMErrorHandler, LSResourceResolver
 		}
 		catch (final SAXException ex)
 		{
-			this.errorText = ex.getMessage();
+			errorsDetected = true;
+			errorText = ex.getMessage();
 		}
 		catch (final Exception ex)
 		{

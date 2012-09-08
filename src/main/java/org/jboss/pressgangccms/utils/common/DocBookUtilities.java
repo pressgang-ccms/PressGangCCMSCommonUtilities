@@ -691,6 +691,10 @@ public class DocBookUtilities
 
 	public static String wrapInTable(final String title, final List<String> headers, final List<String> footers, final List<List<String>> rows)
 	{
+		if (headers == null) throw new IllegalArgumentException("headers cannot be null");
+		if (footers == null) throw new IllegalArgumentException("footers cannot be null");
+		if (rows == null) throw new IllegalArgumentException("rows cannot be null");
+		
 		final StringBuilder output = new StringBuilder("<table>\n");
 		output.append("\t<title>" + title + "</title>\n");
 		
