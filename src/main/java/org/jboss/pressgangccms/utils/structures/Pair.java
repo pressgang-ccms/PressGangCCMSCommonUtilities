@@ -60,4 +60,12 @@ public class Pair<X, Y>
 
 		return true;
 	}
+	
+	public int hashCode()
+	{
+		int hash =  1;
+		hash = 31 * hash + (this.first == null ? 0 : this.first.hashCode() * 31);
+		hash = 31 * hash + (this.second == null ? 0 : this.second.hashCode()); 
+		return hash;
+	}
 }

@@ -62,16 +62,14 @@
 	<dependency>
 		<groupId>germane-software</groupId>
 		<artifactId>gozirra-extended</artifactId>
-		<version>0.5-SNAPSHOT</version>
-		<scope>provided</scope>
+		<version>0.5</version>
 	</dependency>
 	
 	<!-- Named-Regexp Library -->
 	<dependency>
 		<groupId>com.google.code.regexp</groupId>
 		<artifactId>named-regexp</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
-		<scope>provided</scope>
+		<version>0.0.2</version>
 	</dependency>
   </dependencies>
 </project>
