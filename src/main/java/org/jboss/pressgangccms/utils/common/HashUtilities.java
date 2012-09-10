@@ -4,6 +4,10 @@ import java.security.MessageDigest;
 
 import org.jboss.resteasy.util.Hex;
 
+/**
+ * A collection of static methods for working with has codes.
+ * @author Matthew Casperson
+ */
 public class HashUtilities
 {
 	/**

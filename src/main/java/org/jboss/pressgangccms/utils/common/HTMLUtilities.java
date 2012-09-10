@@ -10,6 +10,11 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+/**
+ * A collection of static methods for manipulating HTML documents.
+ * @author Matthew Casperson
+ *
+ */
 public class HTMLUtilities
 {
 	/** A regular expression that identifies the start of a CSS import statement */

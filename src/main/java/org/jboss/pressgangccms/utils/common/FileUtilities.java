@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+/**
+ * A collection of static methods for working with local files.
+ * @author Matthew Casperson
+ */
 public class FileUtilities
 {
 	/**
