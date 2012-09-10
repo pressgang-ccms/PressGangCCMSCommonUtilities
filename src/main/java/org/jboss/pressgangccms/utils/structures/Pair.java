@@ -61,6 +61,7 @@ public class Pair<X, Y>
 		return true;
 	}
 	
+	@Override
 	public int hashCode()
 	{
 		int hash =  1;
