@@ -1,77 +1,162 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <groupId>org.jboss.pressgangccms</groupId>
-  <artifactId>pressgang-ccms-utils</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jboss.pressgangccms</groupId>
+	<artifactId>pressgang-ccms-utils</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>PressGang CCMS Common Utilities</name>
+	<url>https://community.jboss.org/en/pressgang</url>
+	<description>A set of common utilities used within the JBoss Pressgang CCMS project</description>
+	<developers>
+		<developer>
+			<id>mcasperson</id>
+			<name>Matthew Casperson</name>
+			<email>mcaspers@redhat.com</email>
+		</developer>
+		<developer>
+			<id>lnewson</id>
+			<name>Lee Newson</name>
+			<email>lnewson@redhat.com</email>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>LGPL 2.1 license</name>
+			<url>http://www.opensource.org/licenses/lgpl-2.1.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>https://github.com/mcasperson/PressGangCCMSCommonUtilities</url>
+		<connection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</connection>
+		<developerConnection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</developerConnection>
+	</scm>
 
-  <name>PressGang CCMS Common Utilities</name>
-  <url>http://maven.apache.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.directory.studio</groupId>
-    	<artifactId>org.apache.commons.lang</artifactId>
-    	<version>2.6</version>
-    	<scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.ant</groupId>
-    	<artifactId>ant-apache-xalan2</artifactId>
-    	<version>1.8.4</version>
-    	<scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>javax.servlet</groupId>
-    	<artifactId>servlet-api</artifactId>
-    	<version>3.0-alpha-1</version>
-    	<scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>javax.faces</groupId>
-    	<artifactId>javax.faces-api</artifactId>
-    	<version>2.1</version>
-    	<scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.directory.studio</groupId>
-    	<artifactId>org.apache.commons.codec</artifactId>
-    	<version>1.6</version>
-    	<scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.jboss.resteasy</groupId>
-    	<artifactId>resteasy-jaxrs</artifactId>
-    	<version>2.3.4.Final</version>
-    	<scope>provided</scope>
-    </dependency>
-    
-    <!-- Gozirra Libraries -->
-	<dependency>
-		<groupId>germane-software</groupId>
-		<artifactId>gozirra-extended</artifactId>
-		<version>0.5-SNAPSHOT</version>
-		<scope>provided</scope>
-	</dependency>
-	
-	<!-- Named-Regexp Library -->
-	<dependency>
-		<groupId>com.google.code.regexp</groupId>
-		<artifactId>named-regexp</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
-		<scope>provided</scope>
-	</dependency>
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.lang</artifactId>
+			<version>2.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant-apache-xalan2</artifactId>
+			<version>1.8.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>3.0-alpha-1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>javax.faces-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.codec</artifactId>
+			<version>1.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>2.3.4.Final</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Gozirra Libraries -->
+		<dependency>
+			<groupId>germane-software</groupId>
+			<artifactId>gozirra-extended</artifactId>
+			<version>0.5</version>
+		</dependency>
+
+		<!-- Named-Regexp Library -->
+		<dependency>
+			<groupId>com.google.code.regexp</groupId>
+			<artifactId>named-regexp</artifactId>
+			<version>0.0.2</version>
+		</dependency>
+	</dependencies>
+
+	<!-- https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven#HowToGeneratePGPSignaturesWithMaven-MavenGPGPlugin -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+                            <keyname>62B72888</keyname> 
+                        </configuration> 
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- http://maven.apache.org/plugin-developers/cookbook/attach-source-javadoc-artifacts.html -->
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

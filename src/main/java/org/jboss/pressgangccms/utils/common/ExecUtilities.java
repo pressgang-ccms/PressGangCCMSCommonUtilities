@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A collection of static methods to make running native commands easier.
+ * @author Matthew Casperson
+ */
 public class ExecUtilities
 {
 	/**
