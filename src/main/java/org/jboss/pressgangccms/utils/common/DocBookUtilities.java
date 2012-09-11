@@ -27,6 +27,8 @@ public class DocBookUtilities
 	public static final String TOPIC_ROOT_ID_ATTRIBUTE = "id";
 	/** The name of the title tag */
 	public static final String TOPIC_ROOT_TITLE_NODE_NAME = "title";
+	/** The name of the sectioninfo tag */
+    public static final String TOPIC_ROOT_SECTIONINFO_NODE_NAME = "sectioninfo";
 
 	/**
 	 * Finds the first title element in a DocBook XML file.
@@ -111,13 +113,55 @@ public class DocBookUtilities
 			else
 			{
 				final Node firstNode = docElement.getFirstChild();
-				if (firstNode != null)
+				if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME))
+				{
+				    final Node nextNode = firstNode.getNextSibling();
+				    if (nextNode != null)
+				    {
+				        docElement.insertBefore(newTitle, nextNode);
+				    }
+				    else
+				    {
+				        docElement.appendChild(newTitle);
+				    }
+				}
+				else if (firstNode != null)
+				{
 					docElement.insertBefore(newTitle, firstNode);
+				}
 				else
+				{
 					docElement.appendChild(newTitle);
+				}
 			}
 		}
 	}
+	
+	public static void setSectionInfo(final Element sectionInfo, final Document doc)
+    {
+        assert doc != null : "The doc parameter can not be null";
+        assert sectionInfo != null : "The sectionInfo parameter can not be null";
+
+        final Element docElement = doc.getDocumentElement();
+        if (docElement != null && docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME))
+        {
+            final NodeList sectionInfoNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME);
+            /* see if we have a sectioninfo node whose parent is the section */
+            if (sectionInfoNodes.getLength() != 0 && sectionInfoNodes.item(0).getParentNode().equals(docElement))
+            {
+                final Node sectionInfoNode = sectionInfoNodes.item(0);
+                sectionInfoNode.getParentNode().replaceChild(sectionInfo, sectionInfoNode);
+            }
+            else
+            {
+                final Node firstNode = docElement.getFirstChild();
+                if (firstNode != null)
+                    docElement.insertBefore(sectionInfo, firstNode);
+                else
+                    docElement.appendChild(sectionInfo);
+            }
+        }
+    }
 
 	public static String buildChapter(final String contents, final String title)
 	{
