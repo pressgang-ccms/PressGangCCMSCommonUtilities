@@ -20,6 +20,11 @@
 			<name>Lee Newson</name>
 			<email>lnewson@redhat.com</email>
 		</developer>
+		<developer>
+			<id>codemiller</id>
+			<name>Katie Miller</name>
+			<email>kamiller@redhat.com</email>
+		</developer>
 	</developers>
 	<licenses>
 		<license>
@@ -34,15 +39,15 @@
 		<developerConnection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</developerConnection>
 	</scm>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -90,16 +95,16 @@
 
 		<!-- Gozirra Libraries -->
 		<dependency>
-			<groupId>germane-software</groupId>
+			<groupId>org.jboss.pressgangccms</groupId>
 			<artifactId>gozirra-extended</artifactId>
-			<version>0.5</version>
+			<version>0.5-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Named-Regexp Library -->
 		<dependency>
-			<groupId>com.google.code.regexp</groupId>
+			<groupId>com.github.tony19</groupId>
 			<artifactId>named-regexp</artifactId>
-			<version>0.0.2</version>
+			<version>0.1.6</version>
 		</dependency>
 	</dependencies>
 
@@ -117,14 +122,14 @@
 							<goal>sign</goal>
 						</goals>
 						<configuration>
-                            <keyname>62B72888</keyname> 
-                        </configuration> 
+							<keyname>62B72888</keyname>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<!-- http://maven.apache.org/plugin-developers/cookbook/attach-source-javadoc-artifacts.html -->
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
