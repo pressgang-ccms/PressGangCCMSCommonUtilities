@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A collection of static methods to make running native commands easier.
@@ -89,9 +90,9 @@ public class ExecUtilities
 
 		int i = 0;
 
-		for (final String key : env.keySet())
+		for (final Entry<String, String> entry : env.entrySet())
 		{
-			envArray[i] = key + "=" + env.get(key);
+			envArray[i] = entry.getKey() + "=" + entry.getValue();
 			++i;
 		}
 

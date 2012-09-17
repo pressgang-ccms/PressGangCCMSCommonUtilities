@@ -19,7 +19,7 @@ public class FileUtilities
 	 */
 	public static String readFileContents(final File file)
 	{
-		String output = "";
+		final StringBuilder output = new StringBuilder("");
 		Scanner scanner = null;
 		try
 		{
@@ -27,7 +27,7 @@ public class FileUtilities
 			{
 				scanner = new Scanner(new FileReader(file));
 				while (scanner.hasNextLine())
-					output += scanner.nextLine() + "\n";
+					output.append(scanner.nextLine() + "\n");
 			}
 
 		}
@@ -40,7 +40,7 @@ public class FileUtilities
 			if (scanner != null)
 				scanner.close();
 		}
-		return output;
+		return output.toString();
 	}
 
 	/**

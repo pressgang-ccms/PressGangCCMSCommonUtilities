@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.transform.Source;
@@ -101,8 +102,8 @@ public class XSLTUtilities
 
 			/* set the global variables */
 			if (globalParameters != null)
-				for (final String varibleName : globalParameters.keySet())
-					transformer.setParameter(varibleName, globalParameters.get(varibleName));
+				for (final Entry<String, String> paramEntry : globalParameters.entrySet())
+					transformer.setParameter(paramEntry.getKey(), paramEntry.getValue());
 
 			/*
 			 * Use the Transformer to transform an XML Source and send the

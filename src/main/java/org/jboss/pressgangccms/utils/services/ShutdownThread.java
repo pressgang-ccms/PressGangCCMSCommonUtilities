@@ -26,6 +26,8 @@ public class ShutdownThread extends Thread
 		/* exit the service loop */
 		if (serviceThread != null)
 			serviceThread.shutdown();
+		else
+		    return;
 
 		/* wait for a certain amount of time for the service thread to shutdown */
 		final long startTime = System.currentTimeMillis();

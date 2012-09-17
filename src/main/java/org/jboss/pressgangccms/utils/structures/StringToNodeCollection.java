@@ -86,6 +86,7 @@ public class StringToNodeCollection
 	    
 	    final StringToNodeCollection stringToNodeCollection = (StringToNodeCollection) o;
 	    if (this.translationString == null && stringToNodeCollection.translationString != null) return false;
+	    if (this.translationString != null && stringToNodeCollection.translationString == null) return false;
 	    if (this.translationString == null && stringToNodeCollection.translationString == null) return true;
 	    if (!this.translationString.equals(stringToNodeCollection.translationString)) return false;
 	    

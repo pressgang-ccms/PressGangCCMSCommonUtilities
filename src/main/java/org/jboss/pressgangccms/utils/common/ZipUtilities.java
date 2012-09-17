@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -27,11 +28,11 @@ public class ZipUtilities
 		{
 			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			final ZipOutputStream zipfile = new ZipOutputStream(bos);
-			for (final String fileName : files.keySet())
+			for (final Entry<String, byte[]> fileEntry : files.entrySet())
 			{
-				final ZipEntry zipentry = new ZipEntry(fileName);
+				final ZipEntry zipentry = new ZipEntry(fileEntry.getKey());
 				zipfile.putNextEntry(zipentry);
-				zipfile.write(files.get(fileName));
+				zipfile.write(fileEntry.getValue());
 			}
 			zipfile.close();
 			return bos.toByteArray();
@@ -195,14 +196,15 @@ public class ZipUtilities
 		File file = null;
 		FileOutputStream fos = null;
     
-		for (final ZipEntry entry: zipEntries.keySet())
+		for (final Entry<ZipEntry, byte[]> entry: zipEntries.entrySet())
 		{
+		    final ZipEntry zipEntry = entry.getKey();
 			try
 			{
-				file = new File(dir.getAbsolutePath() + File.separator + stripZipFileName(entry.getName()));
+				file = new File(dir.getAbsolutePath() + File.separator + stripZipFileName(zipEntry.getName()));
         
 				// If the ZipEntry is a directory then create it
-				if (entry.isDirectory())
+				if (zipEntry.isDirectory())
 				{
 					file.mkdirs();
 					continue;
@@ -214,10 +216,10 @@ public class ZipUtilities
 					file.getParentFile().mkdirs();
 					file.createNewFile();
 				}
-        
+
 				// Write the contents of the zip entry into the File
 				fos = new FileOutputStream(file);
-				fos.write(zipEntries.get(entry));
+				fos.write(entry.getValue());
 			}
 			catch (IOException e)
 			{

@@ -424,11 +424,12 @@ public class DocBookUtilities
 		final String idAttribute = id != null && id.length() != 0 ? " id=\"" + id + "\" " : "";
 		final String titleElement = title == null || title.length() == 0 ? "" : "<title>" + title + "</title>";
 		
-		String retValue = "<itemizedlist" + idAttribute + ">" + titleElement;
+		final StringBuilder retValue = new StringBuilder("<itemizedlist" + idAttribute + ">" + titleElement);
 		for (final String listItem : listItems)
-			retValue += listItem;
-		retValue += "</itemizedlist>";
-		return retValue;
+			retValue.append(listItem);
+		retValue.append("</itemizedlist>");
+
+		return retValue.toString();
 	}
 
 	public static String wrapListItemsInPara(final String listItems)
@@ -692,6 +693,7 @@ public class DocBookUtilities
 			catch(ParserConfigurationException ex)
 			{
 				ExceptionUtilities.handleException(ex);
+				return null;
 			}
 			final Element section = newDoc.createElement("section");
 			section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
@@ -735,13 +737,11 @@ public class DocBookUtilities
 
 	public static String wrapInTable(final String title, final List<String> headers, final List<String> footers, final List<List<String>> rows)
 	{
-		if (headers == null) throw new IllegalArgumentException("headers cannot be null");
-		if (footers == null) throw new IllegalArgumentException("footers cannot be null");
 		if (rows == null) throw new IllegalArgumentException("rows cannot be null");
-		
+
 		final StringBuilder output = new StringBuilder("<table>\n");
 		output.append("\t<title>" + title + "</title>\n");
-		
+
 		final int numColumns = headers == null ? (rows == null || rows.size() == 0 ? 0 : rows.get(0).size()) : Math.max(headers.size(), (rows == null || rows.size() == 0 ? 0 : rows.get(0).size()));
 		output.append("\t<tgroup cols=\"" + numColumns + "\">\n");
 		// Add the headers

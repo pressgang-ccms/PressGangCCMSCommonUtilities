@@ -238,8 +238,8 @@ public class XMLUtilities
 	private static String replaceEntities(final Map<String, String> replacements, final String xml)
 	{
 		String retValue = xml;
-		for (final String entity : replacements.keySet())
-			retValue = retValue.replaceAll("\\&" + entity + ";", replacements.get(entity));
+		for (final Entry<String, String> entry : replacements.entrySet())
+			retValue = retValue.replaceAll("\\&" + entry.getKey() + ";", entry.getValue());
 		return retValue;
 	}
 
@@ -662,10 +662,10 @@ public class XMLUtilities
 				 */
 				else if (node.getNodeValue() != null && node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null)
 				{
-					return new String(" ");
+					return " ";
 				}
 
-				return new String();
+				return "";
 			}
 			else
 			{
@@ -1051,7 +1051,6 @@ public class XMLUtilities
                     addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
 
                     translatableString = "";
-                    nodes = new ArrayList<Node>();
                 }
             }
         }
@@ -1205,7 +1204,6 @@ public class XMLUtilities
 					addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
 
 					translatableString = "";
-					nodes = new ArrayList<Node>();
 				}
 			}
 		}
