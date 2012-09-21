@@ -1412,6 +1412,35 @@ public class XMLUtilities
 		retValue.append("]]>");
 		return retValue.toString();
 	}
+	
+	/**
+	 * Find all child nodes of a DOM node, whose name matches a specified name or exists in a list of names.
+	 * 
+	 * @param node The node to find the matching child nodes for.
+	 * @param names The names to be matched against the node name.
+	 * @return A list of child nodes, whose name matched a name in names.
+	 */
+	public static List<Node> findChildNodesWithName(final Node node, final String... names)
+	{
+	    final List<Node> nodes = new ArrayList<Node>();
+	    
+	    // Find all nodes that match the supplied names
+        final NodeList tgroupChildren = node.getChildNodes();
+        for (int i = 0; i < tgroupChildren.getLength(); i++)
+        {
+            final Node childNode = tgroupChildren.item(i);
+            
+            for (final String name : names)
+            {
+                if (name.equals(childNode.getNodeName()))
+                {
+                    nodes.add(childNode);
+                }
+            }
+        }
+        
+        return nodes;
+	}
 }
 
 /** Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match it to the source XML. */
