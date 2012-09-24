@@ -67,6 +67,8 @@ public class XMLUtilities
 	public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);";
 	public static final String DOCTYPE_START = "<!DOCTYPE";
 	public static final String DOCTYPE_END = ">";
+	public static final String ENTITY_START = "<!ENTITY";
+	public static final String ENTITY_END = ">";
 	public static final String PREAMBLE_START = "<?xml";
 	public static final String PREAMBLE_END = ">";
 	public static final String TRAILING_WHITESPACE_RE = "^(?<content>.*?)\\s+$";
@@ -109,7 +111,30 @@ public class XMLUtilities
 		// make sure we found the encoding attribute
 		if (indexStart != -1)
 		{
-			final int indexEnd = xml.indexOf(DOCTYPE_END, indexStart + DOCTYPE_START.length());
+		    // Find the end of the doctype ignoring entity definitions.
+		    int entityStart = xml.indexOf(ENTITY_START, indexStart + DOCTYPE_START.length());
+		    int lastEntityEnd = -1;
+		    
+		    while (entityStart != -1)
+		    {
+		        int entityEnd = xml.indexOf(ENTITY_END, entityStart + ENTITY_START.length());
+		        
+		        // Ensure that we found the matchinf entity end tag
+		        if (entityEnd != -1)
+		        {
+		            lastEntityEnd = entityEnd;
+		            entityStart = xml.indexOf(ENTITY_START, lastEntityEnd + ENTITY_END.length());
+		        }
+		    }
+			final int indexEnd;
+			if (lastEntityEnd != -1)
+			{
+			    indexEnd = xml.indexOf(DOCTYPE_END, lastEntityEnd + ENTITY_END.length());
+			}
+			else
+			{
+			    indexEnd = xml.indexOf(DOCTYPE_END, indexStart + DOCTYPE_START.length());
+			}
 
 			// make sure we found the end of the attribute
 			if (indexEnd != -1)
