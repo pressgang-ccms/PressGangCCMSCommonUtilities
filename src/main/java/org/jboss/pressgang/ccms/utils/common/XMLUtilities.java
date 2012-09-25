@@ -812,7 +812,7 @@ public class XMLUtilities
 	 *            The node name to search for
 	 * @return a List of all the nodes found matching the nodeName under the parent
 	 */
-	public static List<Node> getNodes(final Node parent, final String nodeName)
+	public static List<Node> getNodes(final Node parent, final String... nodeNames)
 	{
 		final List<Node> nodes = new ArrayList<Node>();
 		final NodeList children = parent.getChildNodes();
@@ -820,13 +820,16 @@ public class XMLUtilities
 		{
 			final Node child = children.item(i);
 
-			if (child.getNodeName().equals(nodeName))
+			for (final String nodeName : nodeNames)
 			{
-				nodes.add(child);
-			}
-			else
-			{
-				nodes.addAll(getNodes(child, nodeName));
+    			if (child.getNodeName().equals(nodeName))
+    			{
+    				nodes.add(child);
+    			}
+    			else
+    			{
+    				nodes.addAll(getNodes(child, nodeName));
+    			}
 			}
 		}
 		return nodes;
