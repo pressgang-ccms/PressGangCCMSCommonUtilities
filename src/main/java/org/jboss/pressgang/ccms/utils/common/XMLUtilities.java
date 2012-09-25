@@ -285,9 +285,17 @@ public class XMLUtilities
 		final NodeList nodeList = node.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++)
 			restoreEntities(replacements, nodeList.item(i));
+		
+		/* make the substitutions for all attributes */
+        final NamedNodeMap attrList = node.getAttributes();
+        if (attrList != null)
+        {
+            for (int i = 0; i < attrList.getLength(); i++)
+                restoreEntities(replacements, attrList.item(i));
+        }
 
 		/* cdata sections just use a straight text replace */
-		if (node.getNodeType() == Node.CDATA_SECTION_NODE)
+		if (node.getNodeType() == Node.CDATA_SECTION_NODE || node.getNodeType() == Node.COMMENT_NODE)
 		{
 			for (final Entry<String, String> entityReplacement : replacements.entrySet())
 			{
@@ -349,8 +357,22 @@ public class XMLUtilities
 					final EntitySubstitutionBoundaryData boundary = boundaries.get(i);
 					final EntitySubstitutionBoundaryData lastBoundary = i != 0 ? boundaries.get(i - 1) : null;
 
-					/* the entity node */
-					final Node entityNode = parentNode.getOwnerDocument().createEntityReference(boundary.getEntityName());
+					/* 
+					 * The entity reference node.
+					 * 
+					 * Normal Elements can contain EntityReference nodes, however attributes appear
+					 * to be unable to handle EntityReference nodes as children, so just convert the
+					 * EntityReference to a normal text node in the Attribute.
+					 */
+					final Node entityNode;
+					if (parentNode.getNodeType() == Node.ATTRIBUTE_NODE)
+					{
+                        entityNode = parentNode.getOwnerDocument().createTextNode("&" + boundary.getEntityName() + ";");
+                    }
+					else
+					{
+					    entityNode = parentNode.getOwnerDocument().createEntityReference(boundary.getEntityName());
+					}
 
 					/* the first substitution where text proceeds it */
 					if (i == 0)
@@ -400,9 +422,6 @@ public class XMLUtilities
 				parentNode.removeChild(node);
 			}
 		}
-
-		// TODO: deal with entities in attributes
-		// TODO: deal with entities in comments
 	}
 
 	/**
@@ -451,7 +470,8 @@ public class XMLUtilities
 			{
 				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
 				{
-					return null;
+				    // Return an empty source so that File Not Found errors aren't generated.
+					return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
 				}
 			});
 
