@@ -95,7 +95,29 @@ public class DocBookUtilities
 		assert doc != null : "The doc parameter can not be null";
 		
 		final Element newTitle = doc.createElement(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
-		newTitle.appendChild(doc.createTextNode(titleValue));
+		
+		/* 
+         * Attempt to parse the title as XML. If this fails
+         * then just set the title as plain text.
+         */
+        try
+        {
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            final Document tempDoc = docBuilder.parse(new ByteArrayInputStream(("<title>" + titleValue + "</title>").getBytes("UTF-8")));
+            final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
+            
+            /* Add the child elements to the ulink node */
+            final NodeList nodes = titleEle.getChildNodes();
+            while (nodes.getLength() > 0)
+            {
+                newTitle.appendChild(nodes.item(0));
+            }
+        }
+        catch (Exception e)
+        {
+            newTitle.appendChild(doc.createTextNode(titleValue));
+        }
 
 		final Element docElement = doc.getDocumentElement();
 		if (docElement != null && docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME))
