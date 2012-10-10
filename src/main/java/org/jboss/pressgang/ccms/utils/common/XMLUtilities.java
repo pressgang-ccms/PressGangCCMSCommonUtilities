@@ -622,7 +622,7 @@ public class XMLUtilities
 		/* Find out of this node is the document root node */
 		final boolean documentRoot = node.getOwnerDocument().getDocumentElement() == node;
 
-		final boolean firstNode = node.getPreviousSibling() == null;
+		final boolean firstNode = previousNode == null;
 
 		if (Node.CDATA_SECTION_NODE == nodeType)
 		{
