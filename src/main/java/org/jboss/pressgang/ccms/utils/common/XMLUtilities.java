@@ -76,8 +76,8 @@ public class XMLUtilities
 	public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
 
 	public static final NamedPattern TRAILING_WHITESPACE_RE_PATTERN = NamedPattern.compile(TRAILING_WHITESPACE_RE, Pattern.MULTILINE | Pattern.DOTALL);
-	public static final NamedPattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = NamedPattern.compile(TRAILING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
-	public static final NamedPattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = NamedPattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
+	public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
+	public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
 
 	public static String findEncoding(final String xml)
 	{

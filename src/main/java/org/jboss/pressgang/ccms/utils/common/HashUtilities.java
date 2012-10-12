@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.utils.common;
 
 import java.security.MessageDigest;
 
-import org.jboss.resteasy.util.Hex;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * A collection of static methods for working with has codes.
@@ -22,7 +22,7 @@ public class HashUtilities
 			final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 			messageDigest.reset();
 			byte[] digest = messageDigest.digest(input.getBytes("UTF-8"));
-			return Hex.encodeHex(digest);
+			return new String(Hex.encodeHex(digest));
 		}
 		catch (Exception e)
 		{

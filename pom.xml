@@ -16,54 +16,63 @@
 	<name>PressGang CCMS Common Utilities</name>
 	<url>https://community.jboss.org/en/pressgang</url>
 	<description>A set of common utilities used within the JBoss Pressgang CCMS project</description>
-	
+
 	<scm>
 		<url>https://github.com/mcasperson/PressGangCCMSCommonUtilities</url>
 		<connection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</connection>
 		<developerConnection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</developerConnection>
 	</scm>
 
+	<properties>
+		<xalan.version>1.8.2</xalan.version>
+		<javax.faces.version>2.1</javax.faces.version>
+		<javax.servlet.version>3.0-alpha-1</javax.servlet.version>
+		<apache.commonslang.version>2.6</apache.commonslang.version>
+		<apache.commonscodec.version>1.7</apache.commonscodec.version>
+		<gozirra.version>0.5-SNAPSHOT</gozirra.version>
+		<namedregexp.version>0.1.8</namedregexp.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>oss-sonatype-repo</id>
+			<name>OSS Sonatype repository</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.directory.studio</groupId>
 			<artifactId>org.apache.commons.lang</artifactId>
-			<version>2.6</version>
-			<scope>provided</scope>
+			<version>${apache.commonslang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${apache.commonscodec.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant-apache-xalan2</artifactId>
-			<version>1.8.4</version>
-			<scope>provided</scope>
+			<version>${xalan.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>3.0-alpha-1</version>
+			<version>${javax.servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>javax.faces-api</artifactId>
-			<version>2.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.studio</groupId>
-			<artifactId>org.apache.commons.codec</artifactId>
-			<version>1.6</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>2.3.4.Final</version>
+			<version>${javax.faces.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -71,14 +80,14 @@
 		<dependency>
 			<groupId>org.jboss.pressgang.ccms</groupId>
 			<artifactId>gozirra-extended</artifactId>
-			<version>0.5-SNAPSHOT</version>
+			<version>${gozirra.version}</version>
 		</dependency>
 
 		<!-- Named-Regexp Library -->
 		<dependency>
 			<groupId>com.github.tony19</groupId>
 			<artifactId>named-regexp</artifactId>
-			<version>0.1.6</version>
+			<version>${namedregexp.version}</version>
 		</dependency>
 	</dependencies>
 </project>
