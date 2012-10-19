@@ -9,13 +9,13 @@ import java.util.jar.Manifest;
 
 public class VersionUtilities {
     /**
-     * Get the Version Information from a properties file in the Application Classpath.
+     * Get the Version Number from a properties file in the Application Classpath.
      * 
      * @param resourceFileName The name of the properties file.
      * @param versionProperty The name of the version property in the properties file.
      * @return The Version number or "unknown" if the version couldn't be found.
      */
-    public static String getVersionInfo(final String resourceFileName, final String versionProperty) {
+    public static String getAPIVersion(final String resourceFileName, final String versionProperty) {
         final Properties props = new Properties();
         final URL url = ClassLoader.getSystemResource(resourceFileName);
         if (url != null) {
@@ -30,9 +30,32 @@ public class VersionUtilities {
 
         return version;
     }
+    
+    /**
+     * Get the Build Date Information from a properties file in the Application Classpath.
+     * 
+     * @param resourceFileName The name of the properties file.
+     * @param builddateProperty The name of the version property in the properties file.
+     * @return The build timestamp or "unknown" if the build timestamp couldn't be found.
+     */
+    public static String getAPIBuildTimestamp(final String resourceFileName, final String builddateProperty) {
+        final Properties props = new Properties();
+        final URL url = ClassLoader.getSystemResource(resourceFileName);
+        if (url != null) {
+            try {
+                props.load(url.openStream());
+            } catch (IOException ex) {
+                ExceptionUtilities.handleException(ex);
+            }
+        }
+
+        String version = props.getProperty(builddateProperty, "unknown");
+
+        return version;
+    }
 
     /**
-     * Get the Version Information for a specific class. The archive the class belows to must have been built with maven and the
+     * Get the Version Number for a specific class. The archive the class belongs to must have been built with maven and the
      * "Implementation-Version" must exist in the MANIFEST.MF. This can be set by adding the following to the pom:
      * 
      * <pre>
@@ -59,7 +82,7 @@ public class VersionUtilities {
      * @param clazz The class to find the Version Information for.
      * @return The Version number or "unknown" if the version couldn't be found.
      */
-    public static String getVersionInfo(final Class<?> clazz) {
+    public static String getAPIVersion(final Class<?> clazz) {
         Attributes atts = null;
         String version = null;
         try {
@@ -81,6 +104,51 @@ public class VersionUtilities {
         if (version == null)
             version = "unknown";
         return version;
+    }
+    
+    /**
+     * Get the Build Date for a specific class. The archive the class belongs to must have been built with maven and the
+     * "Implementation-Build" must exist in the MANIFEST.MF. This can be set by adding the following to the pom:
+     * 
+     * <pre>
+     * {@code
+     * <build>
+     *     <plugins>
+     *         <plugin>
+     *             <artifactId>maven-jar-plugin</artifactId>
+     *             <configuration>
+     *                 <archive>
+     *                     <manifestEntries>
+     *                          <Implementation-Build>}${maven.build.timestamp}{@code</Implementation-Build>
+     *                     </manifestEntries>
+     *                 </archive>
+     *             </configuration>
+     *         </plugin>
+     *     </plugins>
+     * </build>}
+     * </pre>
+     * 
+     * Thanks to the Zanata Team for this method, it has just been edited for this libraries needs.
+     * 
+     * @param clazz The class to find the Version Information for.
+     * @return The build timestamp or "unknown" if the timestamp couldn't be found.
+     */
+    public static String getAPIBuildTimestamp(final Class<?> clazz) {
+        Attributes atts = null;
+        String buildTimestamp = null;
+        try {
+            atts = getJarAttributesForClass(clazz);
+        } catch (IOException ex) {
+            ExceptionUtilities.handleException(ex);
+        }
+
+        if (atts != null) {
+            buildTimestamp = atts.getValue("Implementation-Build");
+        }
+
+        if (buildTimestamp == null)
+            buildTimestamp = "unknown";
+        return buildTimestamp;
     }
 
     /**
