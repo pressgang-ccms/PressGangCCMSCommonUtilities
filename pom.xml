@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.jboss.pressgang</groupId>
         <artifactId>pressgang-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
 
     <groupId>org.jboss.pressgang.ccms</groupId>
@@ -32,14 +32,6 @@
         <gozirra.version>0.5-SNAPSHOT</gozirra.version>
         <namedregexp.version>0.1.8</namedregexp.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>oss-sonatype-repo</id>
-            <name>OSS Sonatype repository</name>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
