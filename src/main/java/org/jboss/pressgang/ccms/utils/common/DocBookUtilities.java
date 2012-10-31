@@ -159,6 +159,52 @@ public class DocBookUtilities
 		}
 	}
 	
+	public static void setRootElementTitle(final String titleValue, final Document doc)
+    {
+        assert doc != null : "The doc parameter can not be null";
+        
+        final Element newTitle = doc.createElement(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
+        
+        /* 
+         * Attempt to parse the title as XML. If this fails
+         * then just set the title as plain text.
+         */
+        try
+        {
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            final Document tempDoc = docBuilder.parse(new ByteArrayInputStream(("<title>" + titleValue + "</title>").getBytes("UTF-8")));
+            final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
+            
+            /* Add the child elements to the ulink node */
+            final NodeList nodes = titleEle.getChildNodes();
+            while (nodes.getLength() > 0)
+            {
+                newTitle.appendChild(nodes.item(0));
+            }
+        }
+        catch (Exception e)
+        {
+            newTitle.appendChild(doc.createTextNode(titleValue));
+        }
+
+        final Element docElement = doc.getDocumentElement();
+        if (docElement != null)
+        {
+            final NodeList titleNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
+            /* see if we have a title node whose parent is the section */
+            if (titleNodes.getLength() != 0 && titleNodes.item(0).getParentNode().equals(docElement))
+            {
+                final Node title = titleNodes.item(0);
+                title.getParentNode().replaceChild(newTitle, title);
+            }
+            else
+            {
+                docElement.appendChild(newTitle);
+            }
+        }
+    }
+	
 	public static void setSectionInfo(final Element sectionInfo, final Document doc)
     {
         assert doc != null : "The doc parameter can not be null";
@@ -224,20 +270,87 @@ public class DocBookUtilities
 		return "<section" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</section>";
 	}
 
-	public static String addXMLBoilerplate(final String xml, final String entityFileName, final String rootElementName)
+	/**
+    * Add/Set the PUBLIC DOCTYPE for some XML content.
+    * 
+    * @param xml The XML to add or set the DOCTYPE for.
+    * @param publicName The PUBLIC name for the DOCTTYPE.
+    * @param publicLocation The PUBLIC location/url for the DOCTYPE.
+    * @param rootElementName The root Element Name for the DOCTYPE.
+    * @return The XML with the DOCTYPE added.
+    */
+	public static String addXMLPublicDoctype(final String xml, final String publicName, final String publicLocation, final String rootElementName)
+    {
+	    return addXMLPublicDoctype(xml, publicName, publicLocation, null, rootElementName);
+    }
+	
+	/**
+	 * Add/Set the PUBLIC DOCTYPE for some XML content.
+	 * 
+	 * @param xml The XML to add or set the DOCTYPE for.
+	 * @param publicName The PUBLIC name for the DOCTTYPE.
+	 * @param publicLocation The PUBLIC location/url for the DOCTYPE.
+	 * @param entityFileName A name for a local entity to set in the doctype.
+	 * @param rootElementName The root Element Name for the DOCTYPE.
+	 * @return The XML with the DOCTYPE added.
+	 */
+	public static String addXMLPublicDoctype(final String xml, final String publicName, final String publicLocation, final String entityFileName, final String rootElementName)
 	{
-		return "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-		"<!DOCTYPE " + (rootElementName == null ? "chapter" : rootElementName) + " PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [\n" +
-		"<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n" +
-		"%BOOK_ENTITIES;\n" +
-		"]>\n\n" +
-		xml;
+	    final String preamble = XMLUtilities.findPreamble(xml);
+	    final String docType = XMLUtilities.findDocumentType(xml);
+        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+        
+        final String fixedXML;
+        if (docType != null)
+        {
+            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            fixedXML = tempFixedXML.replace(docType, "");
+        } else {
+            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+        }
+	    
+	    final StringBuilder retValue = new StringBuilder(fixedPreamble);
+		retValue.append("<!DOCTYPE ");
+		if (rootElementName == null) {
+		    retValue.append("chapter");
+		} else {
+		    retValue.append(rootElementName);
+		}
+		retValue.append(" PUBLIC \"" + publicName + "\" \"" + publicLocation + "\" ");
+		
+		// Add the local entity file
+		if (entityFileName != null) {
+		    retValue.append("[\n");
+		    retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
+		    retValue.append( "%BOOK_ENTITIES;\n");
+	        retValue.append("]");
+		}
+		
+		retValue.append(">\n\n");
+		retValue.append(fixedXML);
+		
+		return retValue.toString();
 	}
 
-	public static String addXMLBoilerplate(final String xml)
+	public static String addDocbook45XMLDoctype(final String xml)
+    {
+	    return addDocbook45XMLDoctype(xml, null, "chapter");
+    }
+	
+	public static String addDocbook45XMLDoctype(final String xml, final String entityFileName, final String rootElementName)
 	{
-		return addXMLBoilerplate(xml, "Book.ent", "chapter");
+		return addXMLPublicDoctype(xml, "-//OASIS//DTD DocBook XML V4.5//EN", "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd", entityFileName, rootElementName);
 	}
+	
+	public static String addDocbook50XMLDoctype(final String xml)
+    {
+        return addDocbook50XMLDoctype(xml, null, "chapter");
+    }
+	
+	public static String addDocbook50XMLDoctype(final String xml, final String entityFileName, final String rootElementName)
+    {
+        return addXMLPublicDoctype(xml, "-//OASIS//DTD DocBook XML V5.0//EN", "http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd", entityFileName, rootElementName);
+    }
 
 	public static String buildXRefListItem(final String xref, final String role)
 	{
