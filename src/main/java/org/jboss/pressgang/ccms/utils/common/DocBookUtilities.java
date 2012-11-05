@@ -158,8 +158,8 @@ public class DocBookUtilities
 			}
 		}
 	}
-	
-	public static void setElementTitle(final String titleValue, final Document doc)
+
+	public static void setRootElementTitle(final String titleValue, final Document doc)
     {
         assert doc != null : "The doc parameter can not be null";
         
