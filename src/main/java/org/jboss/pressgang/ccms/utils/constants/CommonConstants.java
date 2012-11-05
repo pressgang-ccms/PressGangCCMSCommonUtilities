@@ -36,6 +36,8 @@ public class CommonConstants
 	public static final String BUGZILLA_USERNAME_PROPERTY = "topicIndex.bugzillaUsername";
 	/** The bugzilla password */
 	public static final String BUGZILLA_PASSWORD_PROPERTY = "topicIndex.bugzillaPassword";
+	/** The bugzilla minimum time between calls property name */
+    public static final String BUGZILLA_MIN_API_CALL_INTERVAL_PROPERTY = "topicIndex.bugzillaMinCallInterval";
 	/**
 	 * The system property that identifies this Skynet instance
 	 */
