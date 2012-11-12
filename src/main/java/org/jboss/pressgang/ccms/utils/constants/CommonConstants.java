@@ -24,7 +24,7 @@ public class CommonConstants
 	/** The Regular Expression the defines the search format for a property tag */
 	public static String PROPERTY_TAG_SEARCH_RE = "propertyTag(?<PropertyTagID>\\d+)";		
 	/** The regular expression that matches the Build ID field, without the prefixed topic id */
-	public static String BUGZILLA_BUILD_ID_RE = "-[0-9]+ [0-9]{2} [A-Za-z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}";
+	public static String BUGZILLA_BUILD_ID_RE = "-[0-9]+ [0-9]{2} [A-Za-z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}( \\[\\w+\\])?";
 	/** The regular expression that matches the Build ID field, with the individual fields grouped and named */
 	public static String BUGZILLA_BUILD_ID_NAMED_RE = "(?<TopicID>\\d+)-(?<TopicRevision>\\d+) (?<TopicRevisionDay>\\d{2}) (?<TopicRevisionMonth>\\w{3}) (?<TopicRevisionYear>\\d{4}) (?<TopicRevisionHour>\\d{2}):(?<TopicRevisionMinute>\\d{2})\\s*(?<TopicLocale>\\w*)";
 	
