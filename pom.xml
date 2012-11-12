@@ -24,7 +24,7 @@
     </scm>
 
     <properties>
-        <xalan.version>1.8.2</xalan.version>
+        <xalan.version>2.7.1</xalan.version>
         <javax.faces.version>2.1</javax.faces.version>
         <javax.servlet.version>3.0-alpha-1</javax.servlet.version>
         <apache.commonslang.version>2.6</apache.commonslang.version>
@@ -67,8 +67,8 @@
             <version>${apache.commonscodec.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-apache-xalan2</artifactId>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
             <version>${xalan.version}</version>
         </dependency>
         <dependency>
