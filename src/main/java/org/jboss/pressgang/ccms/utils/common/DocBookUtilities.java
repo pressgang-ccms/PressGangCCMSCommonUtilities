@@ -504,22 +504,22 @@ public class DocBookUtilities
 		return listItem;
 	}
 
-	public static String buildSection(final String contents, final String title, final String build)
+	public static String buildSection(final String contents, final String title)
 	{
-		return buildSection(contents, title, build, null, null, null);
+		return buildSection(contents, title, null, null, null);
 	}
 
-	public static String buildSection(final String contents, final String title, final String build, final String id)
+	public static String buildSection(final String contents, final String title, final String id)
 	{
-		return buildSection(contents, title, build, id, null, null);
+		return buildSection(contents, title, id, null, null);
 	}
 
-	public static String buildSection(final String contents, final String title, final String build, final String id, final String titleRole)
+	public static String buildSection(final String contents, final String title, final String id, final String titleRole)
 	{
-		return buildSection(contents, title, build, id, titleRole, null);
+		return buildSection(contents, title, id, titleRole, null);
 	}
 
-	public static String buildSection(final String contents, final String title, final String build, final String id, final String titleRole, final String xreflabel)
+	public static String buildSection(final String contents, final String title, final String id, final String titleRole, final String xreflabel)
 	{
 		final String idAttribute = id == null || id.length() == 0 ? "" : " id=\"" + id + "\"";
 		final String xreflabelAttribute = xreflabel == null || xreflabel.length() == 0 ? "" : " xreflabel=\"" + xreflabel + "\"";
@@ -528,14 +528,6 @@ public class DocBookUtilities
 		return "<section" + idAttribute + xreflabelAttribute + ">\n" +
 			"<title" + titleRoleAttribute + ">" + title + "</title>\n" +
 			contents + "\n" +
-			
-			"	<simplesect>\n" +
-			"		<title></title>\n" +
-			"		<para>\n" + 
-			"			<remark>Built with Skynet version " + build + "</remark>\n" +
-			"		</para>\n" +
-			"	</simplesect>" +
-			
 			"</section>\n";
 	}
 

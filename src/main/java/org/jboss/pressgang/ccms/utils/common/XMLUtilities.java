@@ -483,7 +483,6 @@ public class XMLUtilities
 		}
 		catch (SAXException ex)
 		{
-			ExceptionUtilities.handleException(ex);
 			throw ex;
 		}
 		catch (Exception ex)
