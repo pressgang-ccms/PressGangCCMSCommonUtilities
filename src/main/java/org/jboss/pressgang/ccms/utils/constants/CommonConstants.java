@@ -34,6 +34,26 @@ public class CommonConstants {
      */
     public static final Integer CONTENT_SPEC_TAG_ID = 268;
 
+    public static final int CS_BOOK = 0;
+    public static final int CS_ARTICLE = 1;
+
+    public static final int CS_NODE_TOPIC = 0;
+    public static final int CS_NODE_SECTION = 1;
+    public static final int CS_NODE_CHAPTER = 2;
+    public static final int CS_NODE_APPENDIX = 3;
+    public static final int CS_NODE_PART = 4;
+    public static final int CS_NODE_PROCESS = 5;
+    public static final int CS_NODE_COMMENT = 6;
+
+    public static final int CS_RELATIONSHIP_PREREQUISITE = 0;
+    public static final int CS_RELATIONSHIP_REFER_TO = 1;
+    public static final int CS_RELATIONSHIP_LINK_LIST = 2;
+    public static final int CS_RELATIONSHIP_NEXT = 3;
+    public static final int CS_RELATIONSHIP_PREVIOUS = 4;
+
+    public static final int DOCBOOK_45 = 0;
+    public static final int DOCBOOK_50 = 1;
+
     /**
      * The Regular Expression the defines the search format for a property tag
      */
@@ -158,7 +178,8 @@ public class CommonConstants {
     /**
      * The regular expression string used to check if an email is valid.
      */
-    public static final String EMAIL_REGEX = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+    public static final String EMAIL_REGEX = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1," +
+            "3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
     /**
      * A prefix for error xref ids
      */

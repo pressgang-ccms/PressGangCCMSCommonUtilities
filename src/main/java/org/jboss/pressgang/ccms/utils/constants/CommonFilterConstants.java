@@ -342,11 +342,11 @@ public class CommonFilterConstants {
     /**
      * The URL variable that defines the topic property tag
      */
-    public static final String TOPIC_PROPERTY_TAG = "propertyTag";
+    public static final String PROPERTY_TAG = "propertyTag";
     /**
      * The description of the property tag search field
      */
-    public static final String TOPIC_PROPERTY_TAG_DESC = "Property Tag";
+    public static final String PROPERTY_TAG_DESC = "Property Tag";
     /**
      * The URL variable that defines the has relationships search field
      */
