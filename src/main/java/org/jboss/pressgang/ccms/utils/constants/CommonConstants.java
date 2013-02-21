@@ -44,6 +44,7 @@ public class CommonConstants {
     public static final int CS_NODE_PART = 4;
     public static final int CS_NODE_PROCESS = 5;
     public static final int CS_NODE_COMMENT = 6;
+    public static final int CS_NODE_META_DATA = 7;
 
     public static final int CS_RELATIONSHIP_PREREQUISITE = 0;
     public static final int CS_RELATIONSHIP_REFER_TO = 1;
@@ -53,6 +54,9 @@ public class CommonConstants {
 
     public static final int DOCBOOK_45 = 0;
     public static final int DOCBOOK_50 = 1;
+    public static final int META_DATA_TITLE_ID = 1;
+    public static final int META_DATA_PRODUCT_ID = 2;
+    public static final int META_DATA_VERSION_ID = 3;
 
     /**
      * The Regular Expression the defines the search format for a property tag
@@ -179,7 +183,7 @@ public class CommonConstants {
      * The regular expression string used to check if an email is valid.
      */
     public static final String EMAIL_REGEX = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1," +
-            "3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+            "" + "3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
     /**
      * A prefix for error xref ids
      */

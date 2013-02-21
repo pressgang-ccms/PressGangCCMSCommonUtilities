@@ -1,5 +1,12 @@
 package org.jboss.pressgang.ccms.utils.common;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,14 +18,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-
+import com.google.code.regexp.NamedMatcher;
+import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.utils.sort.EntitySubstitutionBoundaryDataBoundaryStartSort;
 import org.jboss.pressgang.ccms.utils.structures.EntitySubstitutionBoundaryData;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
@@ -33,35 +34,36 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
-
 /**
  * A collection of XML related functions. Note to self: See http://www.gnu.org/s/
  * classpathx/jaxp/apidoc/gnu/xml/dom/ls/DomLSSerializer.html for LSSerializer options
  */
 public class XMLUtilities {
-    /** The Docbook elements that contain translatable text */
-    public static final ArrayList<String> TRANSLATABLE_ELEMENTS = CollectionUtilities.toArrayList(new String[] { "ackno",
-            "bridgehead", "caption", "conftitle", "contrib", "entry", "firstname", "glossterm", "indexterm", "jobtitle",
-            "keyword", "label", "lastname", "lineannotation", "lotentry", "member", "orgdiv", "orgname", "othername", "para",
-            "phrase", "productname", "refclass", "refdescriptor", "refentrytitle", "refmiscinfo", "refname", "refpurpose",
-            "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg", "segtitle", "simpara",
-            "subtitle", "surname", "term", "termdef", "tertiaryie", "title", "titleabbrev", "screen", "programlisting",
-            "literallayout" });
+    /**
+     * The Docbook elements that contain translatable text
+     */
+    public static final ArrayList<String> TRANSLATABLE_ELEMENTS = CollectionUtilities.toArrayList(
+            new String[]{"ackno", "bridgehead", "caption", "conftitle", "contrib", "entry", "firstname", "glossterm", "indexterm",
+                    "jobtitle", "keyword", "label", "lastname", "lineannotation", "lotentry", "member", "orgdiv", "orgname", "othername",
+                    "para", "phrase", "productname", "refclass", "refdescriptor", "refentrytitle", "refmiscinfo", "refname",
+                    "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg", "segtitle",
+                    "simpara", "subtitle", "surname", "term", "termdef", "tertiaryie", "title", "titleabbrev", "screen",
+                    "programlisting", "literallayout"});
     /**
      * The Docbook elements that contain translatable text, and need to be kept inline
      */
-    public static final ArrayList<String> INLINE_ELEMENTS = CollectionUtilities.toArrayList(new String[] { "footnote",
-            "citerefentry", "indexterm", "productname", "phrase" });
-    /** The Docbook elements that should not have their text reformatted */
-    public static final ArrayList<String> VERBATIM_ELEMENTS = CollectionUtilities.toArrayList(new String[] { "screen",
-            "programlisting", "literallayout" });
+    public static final ArrayList<String> INLINE_ELEMENTS = CollectionUtilities.toArrayList(
+            new String[]{"footnote", "citerefentry", "indexterm", "productname", "phrase"});
+    /**
+     * The Docbook elements that should not have their text reformatted
+     */
+    public static final ArrayList<String> VERBATIM_ELEMENTS = CollectionUtilities.toArrayList(
+            new String[]{"screen", "programlisting", "literallayout"});
     /**
      * The Docbook elements that should be translated only if their parent is not listed in TRANSLATABLE_ELEMENTS
      */
-    public static final ArrayList<String> TRANSLATABLE_IF_STANDALONE_ELEMENTS = CollectionUtilities.toArrayList(new String[] {
-            "indexterm", "productname", "phrase" });
+    public static final ArrayList<String> TRANSLATABLE_IF_STANDALONE_ELEMENTS = CollectionUtilities.toArrayList(
+            new String[]{"indexterm", "productname", "phrase"});
     public static final String ENCODING_START = "encoding=\"";
     public static final String START_CDATA = "<![CDATA[";
     public static final String END_CDATA_RE = "\\]\\]>";
@@ -171,7 +173,7 @@ public class XMLUtilities {
 
     /**
      * Clones a document object.
-     * 
+     *
      * @param doc The document to be cloned.
      * @return The new document object that contains the same data as the original document.
      * @throws TransformerException Thrown if the document can't be
@@ -198,7 +200,7 @@ public class XMLUtilities {
     /**
      * This function will return a map that contains entity names as keys, and random integer strings as values. The values are
      * guaranteed not to have appeared in the original xml.
-     * 
+     *
      * @param xml The xml to generate the replacements for
      * @return a map of entity names to unique random strings
      */
@@ -233,9 +235,9 @@ public class XMLUtilities {
      * This function takes the Map generated by the calculateEntityReplacements function, and uses those values to replace any
      * entities in the XML string with their unique random integer replacements. The end results is an XML string that contains
      * no entities, but contains identifiable strings that can be used to replace those entities at a later point.
-     * 
+     *
      * @param replacements The Map generated by the calculateEntityReplacements function
-     * @param xml The XML string to modify
+     * @param xml          The XML string to modify
      * @return The modified XML
      */
     private static String replaceEntities(final Map<String, String> replacements, final String xml) {
@@ -248,13 +250,12 @@ public class XMLUtilities {
     /**
      * This function takes a parsed Document, along with the Map generated by the calculateEntityReplacements function, and
      * restores all the entities.
-     * 
+     *
      * @param replacements The Map generated by the calculateEntityReplacements function
-     * @param node The node to modify
+     * @param node         The node to modify
      */
     private static void restoreEntities(final Map<String, String> replacements, final Node node) {
-        if (node == null || replacements == null || replacements.size() == 0)
-            return;
+        if (node == null || replacements == null || replacements.size() == 0) return;
 
         /* make the substitutions for all children nodes */
         final NodeList nodeList = node.getChildNodes();
@@ -356,8 +357,7 @@ public class XMLUtilities {
 
                         if (lastBoundary.getBoundary().getSecond() + 1 != boundary.getBoundary().getFirst()) {
                             final Node textNode = parentNode.getOwnerDocument().createTextNode(
-                                    originalText.substring(lastBoundary.getBoundary().getSecond() + 1, boundary.getBoundary()
-                                            .getFirst()));
+                                    originalText.substring(lastBoundary.getBoundary().getSecond() + 1, boundary.getBoundary().getFirst()));
                             parentNode.insertBefore(textNode, node);
                         }
                     }
@@ -392,14 +392,12 @@ public class XMLUtilities {
      * @throws SAXException
      */
     public static Document convertStringToDocument(final String xml) throws SAXException {
-        if (xml == null)
-            return null;
+        if (xml == null) return null;
 
         try {
             // find the encoding, defaulting to UTF-8
             String encoding = findEncoding(xml);
-            if (encoding == null)
-                encoding = "UTF-8";
+            if (encoding == null) encoding = "UTF-8";
 
             /*
              * Xerces does not seem to have any way of simply importing entities "as is". It will try to expand them, which we
@@ -450,7 +448,7 @@ public class XMLUtilities {
 
     /**
      * Converts a Document to a String
-     * 
+     *
      * @param doc The Document to be converted
      * @return The String representation of the Document
      */
@@ -464,17 +462,16 @@ public class XMLUtilities {
          */
 
         final String docEncoding = findEncoding(retValue);
-        if (docEncoding != null)
-            retValue = retValue.replace(docEncoding, encoding);
+        if (docEncoding != null) retValue = retValue.replace(docEncoding, encoding);
 
         return retValue;
     }
 
     /**
      * Convert an XML document to a string.
-     * 
-     * @param doc The Document to be converted
-     * @param encoding The encoding of the XML
+     *
+     * @param doc       The Document to be converted
+     * @param encoding  The encoding of the XML
      * @param entityDec Any additional XML entity declarations
      * @return The String representation of the XML Document
      */
@@ -482,15 +479,14 @@ public class XMLUtilities {
         String retValue = convertDocumentToString(doc, encoding);
 
         final String docEncoding = findPreamble(retValue);
-        if (docEncoding != null)
-            retValue = retValue.replace(docEncoding, docEncoding + "\n" + entityDec);
+        if (docEncoding != null) retValue = retValue.replace(docEncoding, docEncoding + "\n" + entityDec);
 
         return retValue;
     }
 
     /**
      * Converts a Document to a String
-     * 
+     *
      * @param doc The Document to be converted
      * @return The String representation of the Document
      */
@@ -516,22 +512,22 @@ public class XMLUtilities {
     }
 
     public static String convertNodeToString(final Node startNode, final boolean includeElementName) {
-        return convertNodeToString(startNode, includeElementName, true, false, new ArrayList<String>(),
-                new ArrayList<String>(), new ArrayList<String>(), true, 0, 0);
+        return convertNodeToString(startNode, includeElementName, true, false, new ArrayList<String>(), new ArrayList<String>(),
+                new ArrayList<String>(), true, 0, 0);
     }
 
-    public static String convertNodeToString(final Node startNode, final List<String> verbatimElements,
-            final List<String> inlineElements, final List<String> contentsInlineElements, final boolean tabIndent) {
-        return convertNodeToString(startNode, true, false, false, verbatimElements, inlineElements, contentsInlineElements,
-                tabIndent, 1, 0);
+    public static String convertNodeToString(final Node startNode, final List<String> verbatimElements, final List<String> inlineElements,
+            final List<String> contentsInlineElements, final boolean tabIndent) {
+        return convertNodeToString(startNode, true, false, false, verbatimElements, inlineElements, contentsInlineElements, tabIndent, 1,
+                0);
     }
 
     /**
      * Converts a Node to a String.
-     * 
-     * @param node The Node to be converted
+     *
+     * @param node               The Node to be converted
      * @param includeElementName true if the string should include the name of the node, or false if it is just to include the
-     *        contents of the node
+     *                           contents of the node
      * @return The String representation of the Node
      */
     public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
@@ -572,14 +568,11 @@ public class XMLUtilities {
         if (Node.CDATA_SECTION_NODE == nodeType) {
             final StringBuffer retValue = new StringBuffer();
 
-            if (!verbatim && !inline)
-                appendIndent(retValue, tabIndent, indentLevel, indentCount);
+            if (!verbatim && !inline) appendIndent(retValue, tabIndent, indentLevel, indentCount);
 
-            if (includeElementName)
-                retValue.append("<![CDATA[");
+            if (includeElementName) retValue.append("<![CDATA[");
             retValue.append(node.getNodeValue());
-            if (includeElementName)
-                retValue.append("]]>");
+            if (includeElementName) retValue.append("]]>");
 
             return retValue.toString();
         }
@@ -587,14 +580,11 @@ public class XMLUtilities {
         if (Node.COMMENT_NODE == nodeType) {
             final StringBuffer retValue = new StringBuffer();
 
-            if (!verbatim && !inline)
-                appendIndent(retValue, tabIndent, indentLevel, indentCount);
+            if (!verbatim && !inline) appendIndent(retValue, tabIndent, indentLevel, indentCount);
 
-            if (includeElementName)
-                retValue.append("<!--");
+            if (includeElementName) retValue.append("<!--");
             retValue.append(node.getNodeValue());
-            if (includeElementName)
-                retValue.append("-->");
+            if (includeElementName) retValue.append("-->");
 
             return retValue.toString();
         }
@@ -628,12 +618,10 @@ public class XMLUtilities {
                         trimmedNodeValue = trimmedNodeValue.substring(0, trimmedNodeValue.length() - 1);
                     }
 
-                    if (startedWithWhiteSpace && !firstNotInlinedTextNode)
-                        trimmedNodeValue = " " + trimmedNodeValue;
+                    if (startedWithWhiteSpace && !firstNotInlinedTextNode) trimmedNodeValue = " " + trimmedNodeValue;
 
                     /* Only add whitespace if the node isn't the last node */
-                    if (endedWithWhitespace && node.getNextSibling() != null)
-                        trimmedNodeValue += " ";
+                    if (endedWithWhitespace && node.getNextSibling() != null) trimmedNodeValue += " ";
 
                     retValue.append(trimmedNodeValue);
 
@@ -654,11 +642,9 @@ public class XMLUtilities {
 
         if (Node.ENTITY_REFERENCE_NODE == nodeType) {
             final StringBuffer retValue = new StringBuffer();
-            if (includeElementName)
-                retValue.append("&");
+            if (includeElementName) retValue.append("&");
             retValue.append(node.getNodeName());
-            if (includeElementName)
-                retValue.append(";");
+            if (includeElementName) retValue.append(";");
 
             return retValue.toString();
         }
@@ -666,8 +652,8 @@ public class XMLUtilities {
         /* open the tag */
         if (includeElementName) {
 
-            if (!verbatim && !documentRoot
-                    && ((!inline && !inlineElements.contains(nodeName)) || previousNodeWasComment || (firstNode && !inline)))
+            if (!verbatim && !documentRoot && ((!inline && !inlineElements.contains(
+                    nodeName)) || previousNodeWasComment || (firstNode && !inline)))
                 appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
 
             stringBuffer.append('<').append(nodeName);
@@ -687,8 +673,7 @@ public class XMLUtilities {
         if (children.getLength() == 0) {
             final String nodeTextContent = node.getTextContent();
             if (nodeTextContent.length() == 0) {
-                if (includeElementName)
-                    stringBuffer.append("/>");
+                if (includeElementName) stringBuffer.append("/>");
             } else {
                 stringBuffer.append(nodeTextContent);
 
@@ -697,29 +682,24 @@ public class XMLUtilities {
                     appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
 
                 /* close that tag */
-                if (includeElementName)
-                    stringBuffer.append("</").append(nodeName).append('>');
+                if (includeElementName) stringBuffer.append("</").append(nodeName).append('>');
             }
         } else {
-            if (includeElementName)
-                stringBuffer.append(">");
+            if (includeElementName) stringBuffer.append(">");
 
-            final boolean inlineMyChildren = inline || inlineElements.contains(nodeName)
-                    || contentsInlineElements.contains(nodeName);
+            final boolean inlineMyChildren = inline || inlineElements.contains(nodeName) || contentsInlineElements.contains(nodeName);
             final boolean verbatimMyChildren = verbatim || verbatimElements.contains(nodeName);
 
             for (int i = 0; i < children.getLength(); ++i) {
                 final String childToString = convertNodeToString(children.item(i), true, verbatimMyChildren, inlineMyChildren,
                         verbatimElements, inlineElements, contentsInlineElements, tabIndent, indentCount, indentLevel + 1);
-                if (childToString.length() != 0)
-                    stringBuffer.append(childToString);
+                if (childToString.length() != 0) stringBuffer.append(childToString);
             }
 
             /* close that tag */
             if (includeElementName) {
                 /* indent */
-                if (!verbatimMyChildren && !inlineMyChildren)
-                    appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
+                if (!verbatimMyChildren && !inlineMyChildren) appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
 
                 stringBuffer.append("</").append(nodeName).append('>');
             }
@@ -730,8 +710,8 @@ public class XMLUtilities {
 
     /**
      * Scans a node and all of its children for nodes of a particular type.
-     * 
-     * @param parent The parent node
+     *
+     * @param parent   The parent node
      * @param nodeName The node name to search for
      * @return a List of all the nodes found matching the nodeName under the parent
      */
@@ -761,15 +741,14 @@ public class XMLUtilities {
      * the XML Document. <br />
      * <br />
      * Note: This function has a flaw when breaking up strings if the Child Nodes contain translatable elements.
-     * 
-     * @param xml The XML to get the translatable strings from.
+     *
+     * @param xml             The XML to get the translatable strings from.
      * @param allowDuplicates If duplicate translation strings should be created in the returned list.
      * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
      */
     @Deprecated
     public static List<StringToNodeCollection> getTranslatableStringsV1(final Document xml, final boolean allowDuplicates) {
-        if (xml == null)
-            return null;
+        if (xml == null) return null;
 
         final List<StringToNodeCollection> retValue = new ArrayList<StringToNodeCollection>();
 
@@ -785,14 +764,13 @@ public class XMLUtilities {
     /**
      * Get the Translatable Strings from an XML Document. This method will return of Translation strings to XML DOM nodes within
      * the XML Document.
-     * 
-     * @param xml The XML to get the translatable strings from.
+     *
+     * @param xml             The XML to get the translatable strings from.
      * @param allowDuplicates If duplicate translation strings should be created in the returned list.
      * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
      */
     public static List<StringToNodeCollection> getTranslatableStringsV2(final Document xml, final boolean allowDuplicates) {
-        if (xml == null)
-            return null;
+        if (xml == null) return null;
 
         final List<StringToNodeCollection> retValue = new ArrayList<StringToNodeCollection>();
 
@@ -807,7 +785,7 @@ public class XMLUtilities {
 
     /**
      * Check if a node has child translatable elements.
-     * 
+     *
      * @param node The node to check for child translatable elements.
      * @return True if the node has translatable child Elements.
      */
@@ -821,8 +799,7 @@ public class XMLUtilities {
                 final String childName = child.getNodeName();
 
                 /* this child node is itself translatable, so return true */
-                if (TRANSLATABLE_ELEMENTS.contains(childName))
-                    return true;
+                if (TRANSLATABLE_ELEMENTS.contains(childName)) return true;
             }
 
             /*
@@ -834,8 +811,7 @@ public class XMLUtilities {
                 for (int k = 0; k < grandChildren.getLength(); ++k) {
                     final Node grandChild = grandChildren.item(k);
                     final boolean result = doesElementContainTranslatableContentV1(grandChild);
-                    if (result)
-                        return true;
+                    if (result) return true;
                 }
             }
         }
@@ -845,7 +821,7 @@ public class XMLUtilities {
 
     /**
      * Check if a node has child translatable elements.
-     * 
+     *
      * @param node The node to check for child translatable elements.
      * @return True if the node has translatable child Elements.
      */
@@ -874,17 +850,16 @@ public class XMLUtilities {
 
     /**
      * Get the Translatable String to Node collections from an XML DOM Node.
-     * 
-     * @param node The node to get the translatable elements from.
+     *
+     * @param node               The node to get the translatable elements from.
      * @param translationStrings The list of translation StringToNodeCollection objects to add to.
-     * @param allowDuplicates If duplicate translation strings should be created in the translationStrings list.
-     * @param props A set of XML Properties for the Node.
+     * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
+     * @param props              A set of XML Properties for the Node.
      */
     @Deprecated
-    private static void getTranslatableStringsFromNodeV1(final Node node,
-            final List<StringToNodeCollection> translationStrings, final boolean allowDuplicates, final XMLProperties props) {
-        if (node == null || translationStrings == null)
-            return;
+    private static void getTranslatableStringsFromNodeV1(final Node node, final List<StringToNodeCollection> translationStrings,
+            final boolean allowDuplicates, final XMLProperties props) {
+        if (node == null || translationStrings == null) return;
 
         XMLProperties xmlProperites = new XMLProperties(props);
 
@@ -895,10 +870,8 @@ public class XMLUtilities {
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
-        if (!xmlProperites.isInline() && INLINE_ELEMENTS.contains(nodeName))
-            xmlProperites.setInline(true);
-        if (!xmlProperites.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName))
-            xmlProperites.setVerbatim(true);
+        if (!xmlProperites.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperites.setInline(true);
+        if (!xmlProperites.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperites.setVerbatim(true);
 
         /*
          * this element has translatable strings if:
@@ -914,9 +887,8 @@ public class XMLUtilities {
          * 4. not a standaloneElement and not an inlineElement
          */
 
-        if (textElement
-                || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement && !xmlProperites
-                        .isInline())))) {
+        if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
+                !xmlProperites.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
@@ -964,11 +936,9 @@ public class XMLUtilities {
                              */
 
                             final NamedMatcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
-                            if (matcher.matches())
-                                translatableString = matcher.group("content");
+                            if (matcher.matches()) translatableString = matcher.group("content");
 
-                            addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates,
-                                    translationStrings);
+                            addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
 
                             translatableString = "";
                             nodes = new ArrayList<Node>();
@@ -982,8 +952,7 @@ public class XMLUtilities {
                         final String cleanedChildText = cleanTranslationText(childText, i == 0, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
 
-                        final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText
-                                : cleanedChildText;
+                        final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
 
                         translatableString += thisTranslatableString;
                         nodes.add(child);
@@ -1009,16 +978,15 @@ public class XMLUtilities {
 
     /**
      * Get the Translatable String to Node collections from an XML DOM Node.
-     * 
-     * @param node The node to get the translatable elements from.
+     *
+     * @param node               The node to get the translatable elements from.
      * @param translationStrings The list of translation StringToNodeCollection objects to add to.
-     * @param allowDuplicates If duplicate translation strings should be created in the translationStrings list.
-     * @param props A set of XML Properties for the Node.
+     * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
+     * @param props              A set of XML Properties for the Node.
      */
-    private static void getTranslatableStringsFromNodeV2(final Node node,
-            final List<StringToNodeCollection> translationStrings, final boolean allowDuplicates, final XMLProperties props) {
-        if (node == null || translationStrings == null)
-            return;
+    private static void getTranslatableStringsFromNodeV2(final Node node, final List<StringToNodeCollection> translationStrings,
+            final boolean allowDuplicates, final XMLProperties props) {
+        if (node == null || translationStrings == null) return;
 
         XMLProperties xmlProperites = new XMLProperties(props);
 
@@ -1029,10 +997,8 @@ public class XMLUtilities {
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
-        if (!xmlProperites.isInline() && INLINE_ELEMENTS.contains(nodeName))
-            xmlProperites.setInline(true);
-        if (!xmlProperites.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName))
-            xmlProperites.setVerbatim(true);
+        if (!xmlProperites.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperites.setInline(true);
+        if (!xmlProperites.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperites.setVerbatim(true);
 
         /*
          * this element has translatable strings if:
@@ -1048,9 +1014,8 @@ public class XMLUtilities {
          * 4. not a standaloneElement and not an inlineElement
          */
 
-        if (textElement
-                || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement && !xmlProperites
-                        .isInline())))) {
+        if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
+                !xmlProperites.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
@@ -1101,11 +1066,9 @@ public class XMLUtilities {
                              */
 
                             final NamedMatcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
-                            if (matcher.matches())
-                                translatableString = matcher.group("content");
+                            if (matcher.matches()) translatableString = matcher.group("content");
 
-                            addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates,
-                                    translationStrings);
+                            addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
 
                             translatableString = "";
                             nodes = new ArrayList<Node>();
@@ -1117,12 +1080,10 @@ public class XMLUtilities {
                         final String childName = child.getNodeName();
                         final String childText = convertNodeToString(child, true);
 
-                        final String cleanedChildText = cleanTranslationText(childText, removeWhitespaceFromStart,
-                                i == childrenLength - 1);
+                        final String cleanedChildText = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
 
-                        final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText
-                                : cleanedChildText;
+                        final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
 
                         if (!thisTranslatableString.isEmpty() && !thisTranslatableString.matches("^\\s+$")) {
                             translatableString += thisTranslatableString;
@@ -1156,8 +1117,8 @@ public class XMLUtilities {
 
     public static void replaceTranslatedStrings(final Document xml, final Map<String, String> translations,
             final List<StringToNodeCollection> stringToNodeCollections) {
-        if (xml == null || translations == null || translations.size() == 0 || stringToNodeCollections == null
-                || stringToNodeCollections.size() == 0)
+        if (xml == null || translations == null || translations.size() == 0 || stringToNodeCollections == null || stringToNodeCollections
+                .size() == 0)
             return;
 
         /*
@@ -1166,8 +1127,7 @@ public class XMLUtilities {
          * strings supplied as the keys in the translations parameter.
          */
 
-        if (stringToNodeCollections == null || stringToNodeCollections.size() == 0)
-            return;
+        if (stringToNodeCollections == null || stringToNodeCollections.size() == 0) return;
 
         for (final StringToNodeCollection stringToNodeCollection : stringToNodeCollections) {
             final String originalString = stringToNodeCollection.getTranslationString();
@@ -1192,8 +1152,7 @@ public class XMLUtilities {
                             rightTrimPadding.append(" ");
 
                         /* wrap the returned translation in a root element */
-                        final String wrappedTranslation = "<tempRoot>" + leftTrimPadding + translation + rightTrimPadding
-                                + "</tempRoot>";
+                        final String wrappedTranslation = "<tempRoot>" + leftTrimPadding + translation + rightTrimPadding + "</tempRoot>";
 
                         /* convert the wrapped translation into an XML document */
                         Document translationDocument = null;
@@ -1234,8 +1193,7 @@ public class XMLUtilities {
                                          * remove the original node that the translated text came from
                                          */
                                         for (final Node node : nodes) {
-                                            if (parent == node.getParentNode())
-                                                parent.removeChild(node);
+                                            if (parent == node.getParentNode()) parent.removeChild(node);
                                         }
                                     }
                                 }
@@ -1247,18 +1205,16 @@ public class XMLUtilities {
         }
     }
 
-    private static StringToNodeCollection findExistingText(final String text,
-            final List<StringToNodeCollection> translationStrings) {
+    private static StringToNodeCollection findExistingText(final String text, final List<StringToNodeCollection> translationStrings) {
         for (final StringToNodeCollection stringToNodeCollection : translationStrings) {
-            if (stringToNodeCollection.getTranslationString().equals(text))
-                return stringToNodeCollection;
+            if (stringToNodeCollection.getTranslationString().equals(text)) return stringToNodeCollection;
         }
 
         return null;
     }
 
-    private static void addTranslationToNodeDetailsToCollection(final String text, final Node node,
-            final boolean allowDuplicates, final List<StringToNodeCollection> translationStrings) {
+    private static void addTranslationToNodeDetailsToCollection(final String text, final Node node, final boolean allowDuplicates,
+            final List<StringToNodeCollection> translationStrings) {
         final ArrayList<Node> nodes = new ArrayList<Node>();
         nodes.add(node);
         addTranslationToNodeDetailsToCollection(text, nodes, allowDuplicates, translationStrings);
@@ -1272,14 +1228,14 @@ public class XMLUtilities {
         } else {
             final StringToNodeCollection stringToNodeCollection = findExistingText(text, translationStrings);
 
-            if (stringToNodeCollection == null)
-                translationStrings.add(new StringToNodeCollection(text).addNodeCollection(nodes));
-            else
-                stringToNodeCollection.addNodeCollection(nodes);
+            if (stringToNodeCollection == null) translationStrings.add(new StringToNodeCollection(text).addNodeCollection(nodes));
+            else stringToNodeCollection.addNodeCollection(nodes);
         }
     }
 
-    /** Cleans a string for presentation to a translator */
+    /**
+     * Cleans a string for presentation to a translator
+     */
     private static String cleanTranslationText(final String input, final boolean removeWhitespaceFromStart,
             final boolean removeWhitespaceFromEnd) {
         String retValue = cleanText(input);
@@ -1294,27 +1250,25 @@ public class XMLUtilities {
          * When building up a translatable string from a succession of text nodes, whitespace becomes important.
          */
         if (!removeWhitespaceFromStart) {
-            if (hasStartWhiteSpace)
-                retValue = " " + retValue;
+            if (hasStartWhiteSpace) retValue = " " + retValue;
         }
 
         if (!removeWhitespaceFromEnd) {
-            if (hasEndWhiteSpace)
-                retValue += " ";
+            if (hasEndWhiteSpace) retValue += " ";
         }
 
         return retValue;
     }
 
-    /** Cleans a string for of insignificant whitespace */
+    /**
+     * Cleans a string for of insignificant whitespace
+     */
     private static String cleanText(final String input) {
-        if (input == null)
-            return "";
+        if (input == null) return "";
         /* get rid of line breaks */
         String retValue = input.replaceAll("\\r\\n|\\r|\\n|\\t", " ");
         /* get rid of double spaces */
-        while (retValue.indexOf("  ") != -1)
-            retValue = retValue.replaceAll("  ", " ");
+        while (retValue.indexOf("  ") != -1) retValue = retValue.replaceAll("  ", " ");
 
         return retValue;
     }
@@ -1332,8 +1286,8 @@ public class XMLUtilities {
 
     /**
      * Find all child nodes of a DOM node, whose name matches a specified name or exists in a list of names.
-     * 
-     * @param node The node to find the matching child nodes for.
+     *
+     * @param node  The node to find the matching child nodes for.
      * @param names The names to be matched against the node name.
      * @return A list of child nodes, whose name matched a name in names.
      */
@@ -1361,11 +1315,17 @@ public class XMLUtilities {
  * and match it to the source XML.
  */
 class ZanataStringDetails {
-    /** The number of spaces that Zanata removed from the left */
+    /**
+     * The number of spaces that Zanata removed from the left
+     */
     private final int leftTrimCount;
-    /** The number of spaces that Zanata removed from the right */
+    /**
+     * The number of spaces that Zanata removed from the right
+     */
     private final int rightTrimCount;
-    /** The string that was matched to the one returned by Zanata. This will be null if there was no match. */
+    /**
+     * The string that was matched to the one returned by Zanata. This will be null if there was no match.
+     */
     private final String fixedString;
 
     ZanataStringDetails(final Map<String, String> translations, final String originalString) {

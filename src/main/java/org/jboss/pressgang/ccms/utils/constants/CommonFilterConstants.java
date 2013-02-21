@@ -556,7 +556,14 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_NODE_TITLE_FILTER_VAR = "csNodeTitle";
     public static final String CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC = "Content Specification Node Title";
 
+    public static final String CONTENT_SPEC_NODE_TYPE_FILTER_VAR = "csNodeType";
+    public static final String CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC = "Content Specification Node Type";
+
     /* CSNode Constants */
+    public static final String CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR = "csTranslatedNodeIds";
+    public static final String CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC = "Content Specification Translated Node IDs";
+
+    /* CSMetaData Constants */
     public static final String CONTENT_SPEC_META_DATA_IDS_FILTER_VAR = "csMetaDataIds";
     public static final String CONTENT_SPEC_META_DATA_IDS_FILTER_VAR_DESC = "Content Specification IDs";
 
