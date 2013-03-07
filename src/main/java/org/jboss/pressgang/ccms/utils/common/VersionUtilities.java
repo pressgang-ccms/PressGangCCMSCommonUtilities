@@ -10,9 +10,9 @@ import java.util.jar.Manifest;
 public class VersionUtilities {
     /**
      * Get the Version Number from a properties file in the Application Classpath.
-     * 
+     *
      * @param resourceFileName The name of the properties file.
-     * @param versionProperty The name of the version property in the properties file.
+     * @param versionProperty  The name of the version property in the properties file.
      * @return The Version number or "unknown" if the version couldn't be found.
      */
     public static String getAPIVersion(final String resourceFileName, final String versionProperty) {
@@ -30,11 +30,11 @@ public class VersionUtilities {
 
         return version;
     }
-    
+
     /**
      * Get the Build Date Information from a properties file in the Application Classpath.
-     * 
-     * @param resourceFileName The name of the properties file.
+     *
+     * @param resourceFileName  The name of the properties file.
      * @param builddateProperty The name of the version property in the properties file.
      * @return The build timestamp or "unknown" if the build timestamp couldn't be found.
      */
@@ -57,7 +57,7 @@ public class VersionUtilities {
     /**
      * Get the Version Number for a specific class. The archive the class belongs to must have been built with maven and the
      * "Implementation-Version" must exist in the MANIFEST.MF. This can be set by adding the following to the pom:
-     * 
+     * <p/>
      * <pre>
      * {@code
      * <build>
@@ -76,9 +76,9 @@ public class VersionUtilities {
      *     </plugins>
      * </build>}
      * </pre>
-     * 
+     * <p/>
      * Thanks to the Zanata Team for this method, it has just been edited for this libraries needs.
-     * 
+     *
      * @param clazz The class to find the Version Information for.
      * @return The Version number or "unknown" if the version couldn't be found.
      */
@@ -86,7 +86,7 @@ public class VersionUtilities {
         Attributes atts = null;
         String version = null;
         try {
-            atts = getJarAttributesForClass(clazz);
+            atts = getAttributesForClass(clazz);
         } catch (IOException ex) {
             ExceptionUtilities.handleException(ex);
         }
@@ -98,18 +98,16 @@ public class VersionUtilities {
         // if we can't get version from the jar, try for the package version
         if (version == null) {
             Package pkg = clazz.getPackage();
-            if (pkg != null)
-                version = pkg.getImplementationVersion();
+            if (pkg != null) version = pkg.getImplementationVersion();
         }
-        if (version == null)
-            version = "unknown";
+        if (version == null) version = "unknown";
         return version;
     }
-    
+
     /**
      * Get the Build Date for a specific class. The archive the class belongs to must have been built with maven and the
      * "Implementation-Build" must exist in the MANIFEST.MF. This can be set by adding the following to the pom:
-     * 
+     * <p/>
      * <pre>
      * {@code
      * <build>
@@ -127,9 +125,9 @@ public class VersionUtilities {
      *     </plugins>
      * </build>}
      * </pre>
-     * 
+     * <p/>
      * Thanks to the Zanata Team for this method, it has just been edited for this libraries needs.
-     * 
+     *
      * @param clazz The class to find the Version Information for.
      * @return The build timestamp or "unknown" if the timestamp couldn't be found.
      */
@@ -137,7 +135,7 @@ public class VersionUtilities {
         Attributes atts = null;
         String buildTimestamp = null;
         try {
-            atts = getJarAttributesForClass(clazz);
+            atts = getAttributesForClass(clazz);
         } catch (IOException ex) {
             ExceptionUtilities.handleException(ex);
         }
@@ -146,31 +144,33 @@ public class VersionUtilities {
             buildTimestamp = atts.getValue("Implementation-Build");
         }
 
-        if (buildTimestamp == null)
-            buildTimestamp = "unknown";
+        if (buildTimestamp == null) buildTimestamp = "unknown";
         return buildTimestamp;
     }
 
     /**
      * Get the Manifest Attributes from a JAR Archive for a specific class.
-     * 
+     * <p/>
      * Thanks to the Zanata Team for this method, it has just been edited for this libraries needs.
-     * 
+     *
      * @param clazz The class to find the version information for.
      * @return The Attributes that exist in the Jars Manifest for the spcified class.
      * @throws MalformedURLException
      * @throws IOException
      */
-    public static Attributes getJarAttributesForClass(final Class<?> clazz) throws MalformedURLException, IOException {
+    public static Attributes getAttributesForClass(final Class<?> clazz) throws MalformedURLException, IOException {
         // thanks to
         // http://stackoverflow.com/questions/1272648/need-to-read-own-jars-manifest-and-not-root-classloaders-manifest/1273432#1273432
         final String className = clazz.getSimpleName() + ".class";
         final String classPath = clazz.getResource(className).toString();
+
+        final String type = classPath.contains(".war") ? ".war/" : ".jar/";
+
         final String manifestPath;
         if (classPath.startsWith("vfszip:")) {
-            manifestPath = classPath.substring(0, classPath.lastIndexOf(".jar/") + ".jar/".length()) + "META-INF/MANIFEST.MF";
+            manifestPath = classPath.substring(0, classPath.lastIndexOf(type) + type.length()) + "META-INF/MANIFEST.MF";
         } else if (classPath.startsWith("vfs:")) {
-            manifestPath = classPath.substring(0, classPath.lastIndexOf(".jar/") + ".jar/".length()) + "META-INF/MANIFEST.MF";
+            manifestPath = classPath.substring(0, classPath.lastIndexOf(type) + type.length()) + "META-INF/MANIFEST.MF";
         } else if (classPath.startsWith("jar:")) {
             manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + "!".length()) + "/META-INF/MANIFEST.MF";
         } else {
