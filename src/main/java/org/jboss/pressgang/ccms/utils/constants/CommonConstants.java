@@ -36,6 +36,8 @@ public class CommonConstants {
 
     public static final int CS_BOOK = 0;
     public static final int CS_ARTICLE = 1;
+    public static final int CS_BOOK_DRAFT = 2;
+    public static final int CS_ARTICLE_DRAFT = 3;
 
     public static final int CS_NODE_TOPIC = 0;
     public static final int CS_NODE_SECTION = 1;
@@ -54,9 +56,6 @@ public class CommonConstants {
 
     public static final int DOCBOOK_45 = 0;
     public static final int DOCBOOK_50 = 1;
-    public static final int META_DATA_TITLE_ID = 1;
-    public static final int META_DATA_PRODUCT_ID = 2;
-    public static final int META_DATA_VERSION_ID = 3;
 
     /**
      * The Regular Expression the defines the search format for a property tag
