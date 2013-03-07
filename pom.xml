@@ -4,23 +4,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jboss.pressgang</groupId>
-        <artifactId>pressgang-parent</artifactId>
-        <version>1.5</version>
+        <groupId>org.jboss.pressgang.ccms</groupId>
+        <artifactId>pressgang-ccms-parent</artifactId>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-utils</artifactId>
-    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>PressGang CCMS Common Utilities</name>
     <url>https://community.jboss.org/en/pressgang</url>
     <description>A set of common utilities used within the JBoss Pressgang CCMS project</description>
 
     <scm>
-        <url>https://github.com/mcasperson/PressGangCCMSCommonUtilities</url>
-        <connection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</connection>
-        <developerConnection>scm:git@github.com:mcasperson/PressGangCCMSCommonUtilities.git</developerConnection>
+        <url>https://github.com/pressgang-ccms/PressGangCCMSCommonUtilities</url>
+        <connection>scm:git@github.com:pressgang-ccms/PressGangCCMSCommonUtilities.git</connection>
+        <developerConnection>scm:git@github.com:pressgang-ccms/PressGangCCMSCommonUtilities.git</developerConnection>
     </scm>
 
     <properties>
