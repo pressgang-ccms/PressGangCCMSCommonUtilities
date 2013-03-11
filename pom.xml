@@ -12,6 +12,7 @@
     <artifactId>pressgang-ccms-utils</artifactId>
     <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>PressGang CCMS Common Utilities</name>
     <url>https://community.jboss.org/en/pressgang</url>
     <description>A set of common utilities used within the JBoss Pressgang CCMS project</description>
