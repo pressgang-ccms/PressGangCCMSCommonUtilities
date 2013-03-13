@@ -848,7 +848,7 @@ public class DocBookUtilities {
         final Integer numColumns = Integer.parseInt(tgroup.getAttribute("cols"));
 
         // Check that all the thead, tbody and tfoot elements have the correct number of entries.
-        final List<Node> nodes = XMLUtilities.findChildNodesWithName(tgroup, "thead", "tbody", "tfoot");
+        final List<Node> nodes = XMLUtilities.getDirectChildNodes(tgroup, "thead", "tbody", "tfoot");
         for (final Node ele : nodes) {
             // Find all child nodes that are a row
             final NodeList children = ele.getChildNodes();
@@ -875,8 +875,8 @@ public class DocBookUtilities {
         assert row.getNodeName().equals("row") || row.getNodeName().equals("tr");
 
         if (row.getNodeName().equals("row")) {
-            final List<Node> entries = XMLUtilities.findChildNodesWithName(row, "entry");
-            final List<Node> entryTbls = XMLUtilities.findChildNodesWithName(row, "entrytbl");
+            final List<Node> entries = XMLUtilities.getDirectChildNodes(row, "entry");
+            final List<Node> entryTbls = XMLUtilities.getDirectChildNodes(row, "entrytbl");
 
             if ((entries.size() + entryTbls.size()) <= numColumns) {
                 for (final Node entryTbl : entryTbls) {
@@ -887,7 +887,7 @@ public class DocBookUtilities {
                 return false;
             }
         } else {
-            final List<Node> nodes = XMLUtilities.findChildNodesWithName(row, "td", "th");
+            final List<Node> nodes = XMLUtilities.getDirectChildNodes(row, "td", "th");
 
             return nodes.size() <= numColumns;
         }
@@ -906,7 +906,7 @@ public class DocBookUtilities {
         final Integer numColumns = Integer.parseInt(entryTbl.getAttribute("cols"));
 
         // Check that all the thead and tbody elements have the correct number of entries.
-        final List<Node> nodes = XMLUtilities.findChildNodesWithName(entryTbl, "thead", "tbody");
+        final List<Node> nodes = XMLUtilities.getDirectChildNodes(entryTbl, "thead", "tbody");
         for (final Node ele : nodes) {
             // Find all child nodes that are a row
             final NodeList children = ele.getChildNodes();

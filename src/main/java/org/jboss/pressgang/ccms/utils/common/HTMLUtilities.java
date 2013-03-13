@@ -74,7 +74,7 @@ public class HTMLUtilities
 
 			final String fixedBasePath = basePath == null ? "" : basePath;
 
-			final List<Node> nodes = XMLUtilities.getNodes(doc.getDocumentElement(), "object");
+			final List<Node> nodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "object");
 			for (final Node node : nodes)
 			{
 				final NamedNodeMap attributes = node.getAttributes();
@@ -131,7 +131,7 @@ public class HTMLUtilities
 
 			final String fixedBasePath = basePath == null ? "" : basePath;
 
-			final List<Node> nodes = XMLUtilities.getNodes(doc.getDocumentElement(), "link");
+			final List<Node> nodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "link");
 			for (final Node node : nodes)
 			{
 				final NamedNodeMap attributes = node.getAttributes();
@@ -223,7 +223,7 @@ public class HTMLUtilities
 
 			final String fixedBasePath = basePath == null ? "" : basePath;
 
-			final List<Node> imageNodes = XMLUtilities.getNodes(doc.getDocumentElement(), "img");
+			final List<Node> imageNodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "img");
 			for (final Node node : imageNodes)
 			{
 				final NamedNodeMap attributes = node.getAttributes();

@@ -711,11 +711,39 @@ public class XMLUtilities {
     /**
      * Scans a node and all of its children for nodes of a particular type.
      *
-     * @param parent   The parent node
-     * @param nodeName The node name to search for
+     * @param parent    The parent node to search from.
+     * @param nodeNames A single node name or list of node names to search for
+     * @return A List of all the nodes found matching the nodeName(s) under the parent
+     */
+    public static List<Node> getChildNodes(final Node parent, final String... nodeNames) {
+        return getChildNodes(parent, true, nodeNames);
+    }
+
+    public static List<Node> getComments(final Node parent) {
+        return getChildNodes(parent, "#comment");
+    }
+
+    /**
+     * Scans a node for directly related child nodes of a particular type. This method will not scan for nodes that aren't a child of the
+     * parent node.
+     *
+     * @param parent  The parent node to search from.
+     * @param nodeNames A single node name or list of node names to search for
+     * @return A List of all the nodes found matching the nodeName(s) under the parent
+     */
+    public static List<Node> getDirectChildNodes(final Node parent, final String... nodeNames) {
+        return getChildNodes(parent, false, nodeNames);
+    }
+
+    /**
+     * Scans a node and all of its children for nodes of a particular type.
+     *
+     * @param parent          The parent node to search from.
+     * @param recursiveSearch If the child nodes should be recursively searched.
+     * @param nodeNames       A single node name or list of node names to search for
      * @return a List of all the nodes found matching the nodeName under the parent
      */
-    public static List<Node> getNodes(final Node parent, final String... nodeNames) {
+    protected static List<Node> getChildNodes(final Node parent, boolean recursiveSearch, final String... nodeNames) {
         final List<Node> nodes = new ArrayList<Node>();
         final NodeList children = parent.getChildNodes();
         for (int i = 0; i < children.getLength(); ++i) {
@@ -724,16 +752,12 @@ public class XMLUtilities {
             for (final String nodeName : nodeNames) {
                 if (child.getNodeName().equals(nodeName)) {
                     nodes.add(child);
-                } else {
-                    nodes.addAll(getNodes(child, nodeName));
+                } else if (recursiveSearch) {
+                    nodes.addAll(getChildNodes(child, true, nodeName));
                 }
             }
         }
         return nodes;
-    }
-
-    public static List<Node> getComments(final Node parent) {
-        return getNodes(parent, "#comment");
     }
 
     /**
@@ -1282,31 +1306,6 @@ public class XMLUtilities {
         retValue.append(input.replaceAll(END_CDATA_RE, END_CDATA_RE + END_CDATA_REPLACE + START_CDATA));
         retValue.append("]]>");
         return retValue.toString();
-    }
-
-    /**
-     * Find all child nodes of a DOM node, whose name matches a specified name or exists in a list of names.
-     *
-     * @param node  The node to find the matching child nodes for.
-     * @param names The names to be matched against the node name.
-     * @return A list of child nodes, whose name matched a name in names.
-     */
-    public static List<Node> findChildNodesWithName(final Node node, final String... names) {
-        final List<Node> nodes = new ArrayList<Node>();
-
-        // Find all nodes that match the supplied names
-        final NodeList tgroupChildren = node.getChildNodes();
-        for (int i = 0; i < tgroupChildren.getLength(); i++) {
-            final Node childNode = tgroupChildren.item(i);
-
-            for (final String name : names) {
-                if (name.equals(childNode.getNodeName())) {
-                    nodes.add(childNode);
-                }
-            }
-        }
-
-        return nodes;
     }
 }
 
