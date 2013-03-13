@@ -956,7 +956,7 @@ public class DocBookUtilities {
             for (final String nodeCondition : nodeConditions) {
                 if (condition != null && nodeCondition.matches(condition)) {
                     matched = true;
-                } else if (condition == null && nodeCondition.matches(defaultCondition)) {
+                } else if (condition == null && defaultCondition!= null && nodeCondition.matches(defaultCondition)) {
                     matched = true;
                 }
             }
@@ -978,7 +978,7 @@ public class DocBookUtilities {
      * @param node The node to collect condition elements from.
      * @return A mapping of nodes to their conditions.
      */
-    private static Map<Node, List<String>> getConditionNodes(final Node node) {
+    public static Map<Node, List<String>> getConditionNodes(final Node node) {
         final Map<Node, List<String>> conditionalNodes = new HashMap<Node, List<String>>();
         getConditionNodes(node, conditionalNodes);
         return conditionalNodes;
