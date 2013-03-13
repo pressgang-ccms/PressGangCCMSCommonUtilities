@@ -16,7 +16,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
 
 /**
  * A collection of static variables and functions that can be used when working
@@ -46,12 +45,12 @@ public class DocBookUtilities {
      * @param xml The docbook xml file to find the title from.
      * @return The first title found in the xml.
      */
-    public static String findTitle(final String xml) {        /* Convert the string to a document to make it easier to get the proper
-    title */
+    public static String findTitle(final String xml) {
+        // Convert the string to a document to make it easier to get the proper title
         Document doc = null;
         try {
             doc = XMLUtilities.convertStringToDocument(xml);
-        } catch (SAXException ex) {
+        } catch (Exception ex) {
             ExceptionUtilities.handleException(ex);
         }
 
@@ -66,13 +65,13 @@ public class DocBookUtilities {
      */
     public static String findTitle(final Document doc) {
         if (doc == null) return null;
-        
-        /* loop through the child nodes until the title element is found */
+
+        // loop through the child nodes until the title element is found
         final NodeList childNodes = doc.getDocumentElement().getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node node = childNodes.item(i);
-            
-            /* check if the node is the title and if its parent is the document root element */
+
+            // check if the node is the title and if its parent is the document root element
             if (node.getNodeName().equals(TOPIC_ROOT_TITLE_NODE_NAME) && node.getParentNode().equals(doc.getDocumentElement())) {
                 return ((Element) node).getTextContent();
             }
@@ -927,8 +926,8 @@ public class DocBookUtilities {
      * matches the passed condition string. If they don't match
      * then remove the nodes.
      *
-     * @param condition        The condition regex to be tested against.
-     * @param doc              The Document to check for conditional statements.
+     * @param condition The condition regex to be tested against.
+     * @param doc       The Document to check for conditional statements.
      */
     public static void processConditions(final String condition, final Document doc) {
         processConditions(condition, doc, "default");

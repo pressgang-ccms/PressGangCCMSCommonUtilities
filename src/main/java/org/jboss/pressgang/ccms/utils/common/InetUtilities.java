@@ -1,95 +1,73 @@
 package org.jboss.pressgang.ccms.utils.common;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 
-public class InetUtilities
-{
-	/**
-	 * Downloads a file as a byte array
-	 * @param url The URL of the resource to download
-	 * @return The byte array containing the data of the downloaded file
-	 */
-	public static byte[] getURLData(final String url)
-	{
-		final int readBytes = 1000;
+public class InetUtilities {
+    /**
+     * Downloads a file as a byte array
+     *
+     * @param url The URL of the resource to download
+     * @return The byte array containing the data of the downloaded file
+     */
+    public static byte[] getURLData(final String url) {
+        final int readBytes = 1000;
 
-		URL u;
-		InputStream is = null;
-		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        URL u;
+        InputStream is = null;
+        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-		// See http://www.exampledepot.com/egs/javax.net.ssl/TrustAll.html
+        // See http://www.exampledepot.com/egs/javax.net.ssl/TrustAll.html
 
-		// Create a trust manager that does not validate certificate chains
-		final TrustManager[] trustAllCerts = new TrustManager[]
-		{ 
-			new X509TrustManager()
-			{
-				public java.security.cert.X509Certificate[] getAcceptedIssuers()
-				{
-					return null;
-				}
-	
-				public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
-				{
-				}
-	
-				public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
-				{
-				}
-			} 
-		};
+        // Create a trust manager that does not validate certificate chains
+        final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
 
-		// Install the all-trusting trust manager
-		try
-		{
-			final SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		}
-		catch (final Exception ex)
-		{
-			ExceptionUtilities.handleException(ex);
-		}
+            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+            }
 
-		try
-		{
-			u = new URL(url);
-			is = u.openStream(); // throws an IOException
+            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }};
 
-			int nRead;
-			byte[] data = new byte[readBytes];
+        // Install the all-trusting trust manager
+        try {
+            final SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (final Exception ex) {
+            ExceptionUtilities.handleException(ex);
+        }
 
-			while ((nRead = is.read(data, 0, readBytes)) != -1)
-			{
-				buffer.write(data, 0, nRead);
-			}
-		}
-		catch (final Exception ex)
-		{
-			ExceptionUtilities.handleException(ex);
-		}
-		finally
-		{
-			try
-			{
-				buffer.flush();
+        try {
+            u = new URL(url);
+            is = u.openStream(); // throws an IOException
 
-				if (is != null)
-					is.close();
-			}
-			catch (final Exception ex)
-			{
-				ExceptionUtilities.handleException(ex);
-			}
-		}
+            int nRead;
+            byte[] data = new byte[readBytes];
 
-		return buffer.toByteArray();
-	}
+            while ((nRead = is.read(data, 0, readBytes)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+        } catch (final Exception ex) {
+            ExceptionUtilities.handleException(ex);
+        } finally {
+            try {
+                buffer.flush();
+
+                if (is != null) is.close();
+            } catch (final Exception ex) {
+                ExceptionUtilities.handleException(ex);
+            }
+        }
+
+        return buffer.toByteArray();
+    }
 }

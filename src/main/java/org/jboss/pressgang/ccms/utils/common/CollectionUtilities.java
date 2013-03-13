@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * A collection of static methods to create and manipulate collections
- * 
+ *
  * @author Matthew Casperson
  */
 public class CollectionUtilities {
@@ -63,8 +63,8 @@ public class CollectionUtilities {
     }
 
     /**
-     * @param input The original collection of Strings
-     * @param originalRE The regular expression to match
+     * @param input       The original collection of Strings
+     * @param originalRE  The regular expression to match
      * @param replacement The String to be replace any instance of <code>originalRE</code> with
      * @return A collection of strings where <code>originalRE</code> has been replaced with </code>replacement</code>
      */
@@ -77,7 +77,8 @@ public class CollectionUtilities {
     }
 
     /**
-     * Merge arrays 
+     * Merge arrays
+     *
      * @param array The source arrays
      * @return A collection that contains the contents of all the arrays passed to <code>array</code>
      */
@@ -112,8 +113,7 @@ public class CollectionUtilities {
     public static <T> String toSeperatedString(final List<T> list) {
         final StringBuffer stringBuffer = new StringBuffer();
         for (final T element : list) {
-            if (stringBuffer.length() != 0)
-                stringBuffer.append(",");
+            if (stringBuffer.length() != 0) stringBuffer.append(",");
             stringBuffer.append(element.toString());
         }
         return stringBuffer.toString();
@@ -122,8 +122,7 @@ public class CollectionUtilities {
     public static <T> String toSeperatedString(final List<T> list, final String separator) {
         final StringBuffer stringBuffer = new StringBuffer();
         for (final T element : list) {
-            if (stringBuffer.length() != 0)
-                stringBuffer.append(separator);
+            if (stringBuffer.length() != 0) stringBuffer.append(separator);
             stringBuffer.append(element.toString());
         }
         return stringBuffer.toString();
@@ -131,19 +130,16 @@ public class CollectionUtilities {
 
     /**
      * Merges two arrays together
-     * 
-     * @param first The first source array
+     *
+     * @param first  The first source array
      * @param second The second source array
      * @return An array that combines the two arrays
      */
     public static <T> T[] concat(final T[] first, final T[] second) {
         /* deal with null inputs */
-        if (first == null && second == null)
-            return null;
-        if (first == null)
-            return second;
-        if (second == null)
-            return first;
+        if (first == null && second == null) return null;
+        if (first == null) return second;
+        if (second == null) return first;
 
         final T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
@@ -152,38 +148,33 @@ public class CollectionUtilities {
 
     /**
      * Provides an easy way to compare two possibly null comparable objects
-     * 
-     * @param first The first object to compare
+     *
+     * @param first  The first object to compare
      * @param second The second object to compare
      * @return < 0 if the first object is less than the second object, 0 if they are equal, and > 0 otherwise
      */
     public static <T extends Comparable<? super T>> Integer getSortOrder(final T first, final T second) {
-        if (first == null && second == null)
-            return null;
+        if (first == null && second == null) return null;
 
-        if (first == null && second != null)
-            return -1;
+        if (first == null && second != null) return -1;
 
-        if (first != null && second == null)
-            return 1;
+        if (first != null && second == null) return 1;
 
         return first.compareTo(second);
     }
 
     /**
      * Provides an easy way to see if two possibly null objects are equal
-     * 
-     * @param first The first object to test
+     *
+     * @param first  The first object to test
      * @param second The second to test
      * @return true if both objects are equal, false otherwise
      */
     public static <T> boolean isEqual(final T first, final T second) {
         /* test to see if they are both null, or both reference the same object */
-        if (first == second)
-            return true;
+        if (first == second) return true;
 
-        if (first == null && second != null)
-            return false;
+        if (first == null && second != null) return false;
 
         return first.equals(second);
     }
@@ -197,7 +188,7 @@ public class CollectionUtilities {
 
     /**
      * Trims an array of Strings to remove the whitespace. If the string is empty then its removed from the array.
-     * 
+     *
      * @param input The array of strings to be trimmed
      * @return The same array of strings but all elements have been trimmed of whitespace
      */
@@ -205,8 +196,7 @@ public class CollectionUtilities {
         final ArrayList<String> output = new ArrayList<String>();
         for (int i = 0; i < input.length; i++) {
             String s = input[i].trim();
-            if (!s.equals(""))
-                output.add(s);
+            if (!s.equals("")) output.add(s);
         }
         return output.toArray(new String[0]);
     }

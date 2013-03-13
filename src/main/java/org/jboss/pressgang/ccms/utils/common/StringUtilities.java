@@ -125,7 +125,7 @@ public class StringUtilities {
 
 		/* compile the regular expression */
         final Pattern injectionSequencePattern = Pattern.compile("\\s");
-		
+
 		/* find any matches */
         final Matcher injectionSequencematcher = injectionSequencePattern.matcher(input.substring(0, 1));
 		

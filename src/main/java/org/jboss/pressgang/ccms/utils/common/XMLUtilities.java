@@ -2,6 +2,7 @@ package org.jboss.pressgang.ccms.utils.common;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -9,6 +10,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -120,7 +122,7 @@ public class XMLUtilities {
             while (entityStart != -1) {
                 int entityEnd = xml.indexOf(ENTITY_END, entityStart + ENTITY_START.length());
 
-                // Ensure that we found the matchinf entity end tag
+                // Ensure that we found the matching entity end tag
                 if (entityEnd != -1) {
                     lastEntityEnd = entityEnd;
                     entityStart = xml.indexOf(ENTITY_START, lastEntityEnd + ENTITY_END.length());
@@ -409,15 +411,15 @@ public class XMLUtilities {
              * At this point the XML has no entities, and so Xerces will parse the string without trying to expand the entities.
              * 
              * Once we have a Document object, we run the restoreEntities() function, which replaces the substitution markers
-             * with entity reference nodes. Xerces does not try to expand entites when serializing a Document object to a
-             * string, nor does it try to extand entity reference nodes when they are added. In this way we can parse any XML
+             * with entity reference nodes. Xerces does not try to expand entities when serializing a Document object to a
+             * string, nor does it try to extend entity reference nodes when they are added. In this way we can parse any XML
              * and retain the entities without having to link to any DTDs or implement any EntityResolvers.
              */
             final Map<String, String> replacements = calculateEntityReplacements(xml);
             final String fixedXML = replaceEntities(replacements, xml);
 
             final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            // This was causing an exception... Se below with the EntityResolver for an alternative.
+            // This was causing an exception... See below with the EntityResolver for an alternative.
             // builderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             // this is the default, but set it anyway
             // builderFactory.setValidating(false);
@@ -439,11 +441,13 @@ public class XMLUtilities {
             return document;
         } catch (SAXException ex) {
             throw ex;
-        } catch (Exception ex) {
-            ExceptionUtilities.handleException(ex);
+        } catch (ParserConfigurationException ex) {
+            throw new RuntimeException(ex);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-
-        return null;
     }
 
     /**
@@ -727,7 +731,7 @@ public class XMLUtilities {
      * Scans a node for directly related child nodes of a particular type. This method will not scan for nodes that aren't a child of the
      * parent node.
      *
-     * @param parent  The parent node to search from.
+     * @param parent    The parent node to search from.
      * @param nodeNames A single node name or list of node names to search for
      * @return A List of all the nodes found matching the nodeName(s) under the parent
      */
@@ -1182,7 +1186,7 @@ public class XMLUtilities {
                         Document translationDocument = null;
                         try {
                             translationDocument = convertStringToDocument(wrappedTranslation);
-                        } catch (SAXException ex) {
+                        } catch (Exception ex) {
                             ExceptionUtilities.handleException(ex);
                         }
 
