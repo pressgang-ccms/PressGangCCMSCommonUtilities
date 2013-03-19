@@ -147,9 +147,13 @@ public class CommonConstants {
      */
     public static final String STOMP_MESSAGE_SERVER_QUEUE_SYSTEM_PROPERTY = "topicIndex.stompMessageServerQueue";
     /**
-     * The system property that defines the Skynet REST Server
+     * The system property that defines the PressGang REST Server
      */
-    public static final String SKYNET_SERVER_SYSTEM_PROPERTY = "topicIndex.skynetServer";
+    public static final String PRESS_GANG_REST_SERVER_SYSTEM_PROPERTY = "topicIndex.skynetServer";
+    /**
+     * The system property that defines the PressGang REST Server
+     */
+    public static final String PRESS_GANG_UI_SYSTEM_PROPERTY = "topicIndex.ui";
 
     /**
      * The ZIP file MIME type
@@ -160,17 +164,6 @@ public class CommonConstants {
      * The encoding of the XML, used when converting a DOM object to a string
      */
     public static final String XML_ENCODING = "UTF-8";
-
-    /**
-     * The URL of the main web Skynet instance. This is used when generating
-     * links in the documentation.
-     */
-    public static final String SERVER_URL = "http://skynet.usersys.redhat.com:8080";
-
-    /**
-     * The live Skynet URL
-     */
-    public static final String FULL_SERVER_URL = "http://skynet.usersys.redhat.com:8080/TopicIndex";
 
     /**
      * The default locale to be used on all new topics
