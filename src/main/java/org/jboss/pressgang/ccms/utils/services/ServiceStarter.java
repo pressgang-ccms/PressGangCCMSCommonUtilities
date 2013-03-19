@@ -65,7 +65,7 @@ public class ServiceStarter
 		messageServerUser = System.getProperty(CommonConstants.STOMP_MESSAGE_SERVER_USER_SYSTEM_PROPERTY);
 		messageServerPass = System.getProperty(CommonConstants.STOMP_MESSAGE_SERVER_PASS_SYSTEM_PROPERTY);
 		messageServerQueue = System.getProperty(CommonConstants.STOMP_MESSAGE_SERVER_QUEUE_SYSTEM_PROPERTY);
-		skynetServer = System.getProperty(CommonConstants.SKYNET_SERVER_SYSTEM_PROPERTY);
+		skynetServer = System.getProperty(CommonConstants.PRESS_GANG_REST_SERVER_SYSTEM_PROPERTY);
 
 		int convertedPort = DEFAULT_PORT;
 		try
@@ -83,7 +83,7 @@ public class ServiceStarter
 		NotificationUtilities.dumpMessageToStdOut("Message Server Port (" + CommonConstants.STOMP_MESSAGE_SERVER_PORT_SYSTEM_PROPERTY + "): " + port);
 		NotificationUtilities.dumpMessageToStdOut("Message Server User (" + CommonConstants.STOMP_MESSAGE_SERVER_USER_SYSTEM_PROPERTY + "): " + messageServerUser);
 		NotificationUtilities.dumpMessageToStdOut("Message Server Queue (" + CommonConstants.STOMP_MESSAGE_SERVER_QUEUE_SYSTEM_PROPERTY + "): " + messageServerQueue);
-		NotificationUtilities.dumpMessageToStdOut("REST Server (" + CommonConstants.SKYNET_SERVER_SYSTEM_PROPERTY + "): " + skynetServer);
+		NotificationUtilities.dumpMessageToStdOut("REST Server (" + CommonConstants.PRESS_GANG_REST_SERVER_SYSTEM_PROPERTY + "): " + skynetServer);
 	}
 
 	public void start(final BaseServiceThread serviceThread)
