@@ -967,6 +967,9 @@ public class DocBookUtilities {
                 if (parentNode != null) {
                     parentNode.removeChild(node);
                 }
+            } else {
+                // Remove the condition attribute so that it can't get processed by something else downstream
+                ((Element) node).removeAttribute("condition");
             }
         }
     }
