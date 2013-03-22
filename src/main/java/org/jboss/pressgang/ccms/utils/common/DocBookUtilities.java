@@ -101,7 +101,7 @@ public class DocBookUtilities {
          * then just set the title as plain text.
          */
         try {
-            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + titleValue + "</title>");
+            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeTitleString(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
 
             // Add the child elements to the ulink node
@@ -157,7 +157,7 @@ public class DocBookUtilities {
          * then just set the title as plain text.
          */
         try {
-            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + titleValue + "</title>");
+            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeTitleString(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
             
             /* Add the child elements to the ulink node */
@@ -180,6 +180,21 @@ public class DocBookUtilities {
                 docElement.appendChild(newTitle);
             }
         }
+    }
+
+    /**
+     * Escapes a String so that it can be used in a Docbook Title Element
+     *
+     * @param title The title string to be escaped.
+     * @return The escaped title string.
+     */
+    protected static String escapeTitleString(final String title) {
+        if (title == null) return "";
+
+        return title.replaceAll("&(?![#\\w\\d]*?;)", "&")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;");
     }
 
     public static void setSectionInfo(final Element sectionInfo, final Document doc) {
