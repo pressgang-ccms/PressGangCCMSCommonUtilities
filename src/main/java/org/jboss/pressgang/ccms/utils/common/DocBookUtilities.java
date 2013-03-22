@@ -101,9 +101,7 @@ public class DocBookUtilities {
          * then just set the title as plain text.
          */
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            final Document tempDoc = docBuilder.parse(new ByteArrayInputStream(("<title>" + titleValue + "</title>").getBytes("UTF-8")));
+            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + titleValue + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
 
             // Add the child elements to the ulink node
@@ -159,9 +157,7 @@ public class DocBookUtilities {
          * then just set the title as plain text.
          */
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            final Document tempDoc = docBuilder.parse(new ByteArrayInputStream(("<title>" + titleValue + "</title>").getBytes("UTF-8")));
+            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + titleValue + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
             
             /* Add the child elements to the ulink node */
