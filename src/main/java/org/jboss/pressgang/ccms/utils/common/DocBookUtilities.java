@@ -3,10 +3,10 @@ package org.jboss.pressgang.ccms.utils.common;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -160,7 +160,7 @@ public class DocBookUtilities {
             final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeTitleString(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
             
-            /* Add the child elements to the ulink node */
+            // Add the child elements to the ulink node
             final NodeList nodes = titleEle.getChildNodes();
             while (nodes.getLength() > 0) {
                 newTitle.appendChild(nodes.item(0));
@@ -172,7 +172,7 @@ public class DocBookUtilities {
         final Element docElement = doc.getDocumentElement();
         if (docElement != null) {
             final NodeList titleNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
-            /* see if we have a title node whose parent is the section */
+            // See if we have a title node whose parent is the section
             if (titleNodes.getLength() != 0 && titleNodes.item(0).getParentNode().equals(docElement)) {
                 final Node title = titleNodes.item(0);
                 title.getParentNode().replaceChild(newTitle, title);
@@ -183,7 +183,7 @@ public class DocBookUtilities {
     }
 
     /**
-     * Escapes a String so that it can be used in a Docbook Title Element
+     * Escapes a String so that it can be used in a Docbook Title Element.
      *
      * @param title The title string to be escaped.
      * @return The escaped title string.
@@ -191,10 +191,58 @@ public class DocBookUtilities {
     protected static String escapeTitleString(final String title) {
         if (title == null) return "";
 
-        return title.replaceAll("&(?![#\\w\\d]*?;)", "&")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;");
+        /*
+         * Note: The following characters should be escaped: & < > " '
+         *
+         * However, all but ampersand pose issues when other elements are included in the title.
+         *
+         * eg <title>Product A > Product B<phrase condition="beta">-Beta</phrase></title>
+         *
+         * should become
+         *
+         * <title>Product A &gt; Product B<phrase condition="beta">-Beta</phrase></title>
+         */
+
+        String fixedTitle = title.replaceAll("&(?![#\\w\\d]*?;)", "&amp;");
+
+        // Loop over and find all the XML Elements as they should remain untouched.
+        final LinkedList<String> elements = new LinkedList<String>();
+        if (fixedTitle.indexOf('<') != -1) {
+            int index = -1;
+            while ((index = fixedTitle.indexOf('<', index + 1)) != -1){
+                int endIndex = fixedTitle.indexOf('>', index);
+                int nextIndex = fixedTitle.indexOf('<', index + 1);
+
+                /*
+                  * If the next opening tag is less than the next ending tag, than the current opening tag isn't a match for the next
+                  * ending tag, so continue to the next one
+                  */
+                if (endIndex == -1 || (nextIndex != -1 && nextIndex < endIndex)) {
+                    continue;
+                } else {
+                    elements.add(fixedTitle.substring(index, endIndex + 1));
+                }
+
+            }
+        }
+
+        // Find all the elements and replace them with a marker
+        String escapedTitle = fixedTitle;
+        for (int count  = 0; count < elements.size(); count++) {
+            escapedTitle = escapedTitle.replace(elements.get(count), "###" + count + "###");
+        }
+
+        // Perform the replacements on what's left
+        escapedTitle = escapedTitle.replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&qout;");
+
+        // Replace the markers
+        for (int count  = 0; count < elements.size(); count++) {
+            escapedTitle = escapedTitle.replace("###" + count + "###", elements.get(count));
+        }
+
+        return escapedTitle;
     }
 
     public static void setSectionInfo(final Element sectionInfo, final Document doc) {
@@ -204,7 +252,7 @@ public class DocBookUtilities {
         final Element docElement = doc.getDocumentElement();
         if (docElement != null && docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME)) {
             final NodeList sectionInfoNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME);
-            /* see if we have a sectioninfo node whose parent is the section */
+            // See if we have a sectioninfo node whose parent is the section
             if (sectionInfoNodes.getLength() != 0 && sectionInfoNodes.item(0).getParentNode().equals(docElement)) {
                 final Node sectionInfoNode = sectionInfoNodes.item(0);
                 sectionInfoNode.getParentNode().replaceChild(sectionInfo, sectionInfoNode);
@@ -267,7 +315,7 @@ public class DocBookUtilities {
      * Add/Set the PUBLIC DOCTYPE for some XML content.
      *
      * @param xml             The XML to add or set the DOCTYPE for.
-     * @param publicName      The PUBLIC name for the DOCTTYPE.
+     * @param publicName      The PUBLIC name for the DOCTYPE.
      * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
      * @param entityFileName  A name for a local entity to set in the doctype.
      * @param rootElementName The root Element Name for the DOCTYPE.
@@ -685,17 +733,12 @@ public class DocBookUtilities {
         xrefItem.setAttribute("url", url);
         paraItem.appendChild(xrefItem);
         
-        /* 
-         * Attempt to parse the title as XML. If this fails
-         * then just set the title as plain text.
-         */
+        // Attempt to parse the title as XML. If this fails then just set the title as plain text.
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            final Document doc = docBuilder.parse(new ByteArrayInputStream(("<title>" + title + "</title>").getBytes("UTF-8")));
+            final Document doc = XMLUtilities.convertStringToDocument("<title>" + title + "</title>");
             final Node titleEle = xmlDoc.importNode(doc.getDocumentElement(), true);
 
-	        /* Add the child elements to the ulink node */
+            // Add the child elements to the ulink node
             final NodeList nodes = titleEle.getChildNodes();
             while (nodes.getLength() > 0) {
                 xrefItem.appendChild(nodes.item(0));
@@ -955,6 +998,22 @@ public class DocBookUtilities {
      * @param defaultCondition The default condition to allow a default block when processing conditions.
      */
     public static void processConditions(final String condition, final Document doc, final String defaultCondition) {
+        processConditions(condition, doc, defaultCondition, true);
+    }
+
+    /**
+     * Check the XML Document and it's children for condition
+     * statements. If any are found then check if the condition
+     * matches the passed condition string. If they don't match
+     * then remove the nodes.
+     *
+     * @param condition        The condition regex to be tested against.
+     * @param doc              The Document to check for conditional statements.
+     * @param defaultCondition The default condition to allow a default block when processing conditions.
+     * @param removeConditionAttr  Remove the condition attribute from any matching/leftover nodes.
+     */
+    public static void processConditions(final String condition, final Document doc, final String defaultCondition,
+            boolean removeConditionAttr) {
         final Map<Node, List<String>> conditionalNodes = getConditionNodes(doc.getDocumentElement());
 
         // Loop through each condition found and see if it matches
@@ -978,7 +1037,7 @@ public class DocBookUtilities {
                 if (parentNode != null) {
                     parentNode.removeChild(node);
                 }
-            } else {
+            } else if (removeConditionAttr) {
                 // Remove the condition attribute so that it can't get processed by something else downstream
                 ((Element) node).removeAttribute("condition");
             }
