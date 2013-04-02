@@ -41,6 +41,13 @@ import org.xml.sax.SAXException;
  * classpathx/jaxp/apidoc/gnu/xml/dom/ls/DomLSSerializer.html for LSSerializer options
  */
 public class XMLUtilities {
+    private static final String DOCTYPE_NAMED_GROUP = "Doctype";
+    private static final NamedPattern DOCTYPE_PATTERN = NamedPattern.compile(
+            "^\\s*<\\?xml.*?\\?>\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?\\s+((PUBLIC\\s+\".*?\"|SYSTEM)\\s+\".*?\")[ " +
+                    "]*(\\[(.|\n)*\\]\\s*)?>)", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final String PREAMBLE_NAMED_GROUP = "Preamble";
+    private static final NamedPattern PREAMBLE_PATTERN = NamedPattern.compile(
+            "^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)", Pattern.MULTILINE | Pattern.DOTALL);
     /**
      * The Docbook elements that contain translatable text
      */
@@ -90,19 +97,23 @@ public class XMLUtilities {
             Pattern.MULTILINE | Pattern.DOTALL);
 
     public static String findEncoding(final String xml) {
-        final int encodingIndexStart = xml.indexOf(ENCODING_START);
-        final int firstLineBreak = xml.indexOf("\n");
+        // Find the preamble first so we can dissect it to find the encoding.
+        final String preamble = findPreamble(xml);
+        if (preamble != null) {
+            final int encodingIndexStart = preamble.indexOf(ENCODING_START);
+            final int firstLineBreak = preamble.indexOf("\n");
 
-        // make sure we found the encoding attribute
-        if (encodingIndexStart != -1) {
-            final int encodingIndexEnd = xml.indexOf("\"", encodingIndexStart + ENCODING_START.length());
+            // make sure we found the encoding attribute
+            if (encodingIndexStart != -1) {
+                final int encodingIndexEnd = preamble.indexOf("\"", encodingIndexStart + ENCODING_START.length());
 
-            // make sure the encoding attribute was found before the first
-            // line break
-            if (firstLineBreak == -1 || encodingIndexStart < firstLineBreak) {
-                // make sure we found the end of the attribute
-                if (encodingIndexEnd != -1) {
-                    return xml.substring(encodingIndexStart + ENCODING_START.length(), encodingIndexEnd);
+                // make sure the encoding attribute was found before the first
+                // line break
+                if (firstLineBreak == -1 || encodingIndexStart < firstLineBreak) {
+                    // make sure we found the end of the attribute
+                    if (encodingIndexEnd != -1) {
+                        return preamble.substring(encodingIndexStart + ENCODING_START.length(), encodingIndexEnd);
+                    }
                 }
             }
         }
@@ -111,55 +122,21 @@ public class XMLUtilities {
     }
 
     public static String findDocumentType(final String xml) {
-        final int indexStart = xml.indexOf(DOCTYPE_START);
-
-        // make sure we found the encoding attribute
-        if (indexStart != -1) {
-            // Find the end of the doctype ignoring entity definitions.
-            int entityStart = xml.indexOf(ENTITY_START, indexStart + DOCTYPE_START.length());
-            int lastEntityEnd = -1;
-
-            while (entityStart != -1) {
-                int entityEnd = xml.indexOf(ENTITY_END, entityStart + ENTITY_START.length());
-
-                // Ensure that we found the matching entity end tag
-                if (entityEnd != -1) {
-                    lastEntityEnd = entityEnd;
-                    entityStart = xml.indexOf(ENTITY_START, lastEntityEnd + ENTITY_END.length());
-                }
-            }
-            final int indexEnd;
-            if (lastEntityEnd != -1) {
-                indexEnd = xml.indexOf(DOCTYPE_END, lastEntityEnd + ENTITY_END.length());
-            } else {
-                indexEnd = xml.indexOf(DOCTYPE_END, indexStart + DOCTYPE_START.length());
-            }
-
-            // make sure we found the end of the attribute
-            if (indexEnd != -1) {
-                return xml.substring(indexStart, indexEnd + DOCTYPE_END.length());
-            }
-
+        final NamedMatcher matcher = DOCTYPE_PATTERN.matcher(xml);
+        if (matcher.find()) {
+            return matcher.group(DOCTYPE_NAMED_GROUP);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     public static String findPreamble(final String xml) {
-        final int indexStart = xml.indexOf(PREAMBLE_START);
-
-        // make sure we found the encoding attribute
-        if (indexStart != -1) {
-            final int indexEnd = xml.indexOf(PREAMBLE_END, indexStart + PREAMBLE_START.length());
-
-            // make sure we found the end of the attribute
-            if (indexEnd != -1) {
-                return xml.substring(indexStart, indexEnd + PREAMBLE_END.length());
-            }
-
+        final NamedMatcher matcher = PREAMBLE_PATTERN.matcher(xml);
+        if (matcher.find()) {
+            return matcher.group(PREAMBLE_NAMED_GROUP);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     /**
