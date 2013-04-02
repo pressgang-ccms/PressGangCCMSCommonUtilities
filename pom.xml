@@ -84,12 +84,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${apache.commonslang.version}</version>
@@ -129,6 +123,14 @@
             <groupId>com.github.tony19</groupId>
             <artifactId>named-regexp</artifactId>
             <version>${namedregexp.version}</version>
+        </dependency>
+
+        <!-- Testing libraries -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
