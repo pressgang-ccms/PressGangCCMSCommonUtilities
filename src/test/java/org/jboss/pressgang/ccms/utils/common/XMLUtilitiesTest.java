@@ -1,10 +1,9 @@
-package org.jboss.pressgang.ccms.utils;
+package org.jboss.pressgang.ccms.utils.common;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.junit.Test;
 
 public class XMLUtilitiesTest {
