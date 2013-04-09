@@ -1072,7 +1072,7 @@ public class DocBookUtilities {
             if (attr != null) {
                 final String conditionStatement = attr.getNodeValue();
 
-                final String[] conditions = conditionStatement.split("\\s*;\\s*");
+                final String[] conditions = conditionStatement.split("\\s*(;|,)\\s*");
 
                 conditionalNodes.put(node, Arrays.asList(conditions));
             }

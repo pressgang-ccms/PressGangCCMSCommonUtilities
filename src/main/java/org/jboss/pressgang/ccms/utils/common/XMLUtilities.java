@@ -833,18 +833,19 @@ public class XMLUtilities {
     private static boolean doesElementContainTranslatableContentV2(final Node node) {
         final NodeList children = node.getChildNodes();
         if (children != null) {
-            /* check to see if any of the children are translatable nodes */
+            // check to see if any of the children are translatable nodes
             for (int j = 0; j < children.getLength(); ++j) {
                 final Node child = children.item(j);
                 final String childName = child.getNodeName();
 
-                /* this child node is itself translatable, so return true */
-                if (TRANSLATABLE_ELEMENTS.contains(childName)) {
+                if (INLINE_ELEMENTS.contains(childName)) {
+                    // If the node is an inline element then continue to the next node
+                    continue;
+                } else if (TRANSLATABLE_ELEMENTS.contains(childName)) {
+                    // This child node is itself translatable, so return true
                     return true;
-                }
-
-                /* check if this child contains translatable nodes */
-                if (doesElementContainTranslatableContentV2(child)) {
+                } else if (doesElementContainTranslatableContentV2(child)) {
+                    // check if this child contains translatable nodes
                     return true;
                 }
             }
@@ -866,7 +867,7 @@ public class XMLUtilities {
             final boolean allowDuplicates, final XMLProperties props) {
         if (node == null || translationStrings == null) return;
 
-        XMLProperties xmlProperites = new XMLProperties(props);
+        XMLProperties xmlProperties = new XMLProperties(props);
 
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
@@ -875,8 +876,8 @@ public class XMLUtilities {
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
-        if (!xmlProperites.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperites.setInline(true);
-        if (!xmlProperites.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperites.setVerbatim(true);
+        if (!xmlProperties.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperties.setInline(true);
+        if (!xmlProperties.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperties.setVerbatim(true);
 
         /*
          * this element has translatable strings if:
@@ -893,7 +894,7 @@ public class XMLUtilities {
          */
 
         if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
-                !xmlProperites.isInline())))) {
+                !xmlProperties.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
@@ -902,7 +903,7 @@ public class XMLUtilities {
                 final String nodeText = convertNodeToString(node, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
 
-                if (xmlProperites.isVerbatim()) {
+                if (xmlProperties.isVerbatim()) {
                     addTranslationToNodeDetailsToCollection(nodeText, node, allowDuplicates, translationStrings);
                 } else if (!cleanedNodeText.isEmpty()) {
                     addTranslationToNodeDetailsToCollection(cleanedNodeText, node, allowDuplicates, translationStrings);
@@ -949,7 +950,7 @@ public class XMLUtilities {
                             nodes = new ArrayList<Node>();
                         }
 
-                        getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperites);
+                        getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
                         final String childText = convertNodeToString(child, true);
@@ -957,7 +958,7 @@ public class XMLUtilities {
                         final String cleanedChildText = cleanTranslationText(childText, i == 0, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
 
-                        final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
+                        final String thisTranslatableString = isVerbatimNode || xmlProperties.isVerbatim() ? childText : cleanedChildText;
 
                         translatableString += thisTranslatableString;
                         nodes.add(child);
@@ -976,7 +977,7 @@ public class XMLUtilities {
             final NodeList nodeList = node.getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 final Node child = nodeList.item(i);
-                getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperites);
+                getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperties);
             }
         }
     }
@@ -993,7 +994,7 @@ public class XMLUtilities {
             final boolean allowDuplicates, final XMLProperties props) {
         if (node == null || translationStrings == null) return;
 
-        XMLProperties xmlProperites = new XMLProperties(props);
+        XMLProperties xmlProperties = new XMLProperties(props);
 
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
@@ -1002,8 +1003,8 @@ public class XMLUtilities {
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
-        if (!xmlProperites.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperites.setInline(true);
-        if (!xmlProperites.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperites.setVerbatim(true);
+        if (!xmlProperties.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperties.setInline(true);
+        if (!xmlProperties.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperties.setVerbatim(true);
 
         /*
          * this element has translatable strings if:
@@ -1020,7 +1021,7 @@ public class XMLUtilities {
          */
 
         if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
-                !xmlProperites.isInline())))) {
+                !xmlProperties.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
@@ -1029,7 +1030,7 @@ public class XMLUtilities {
                 final String nodeText = convertNodeToString(node, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
 
-                if (xmlProperites.isVerbatim()) {
+                if (xmlProperties.isVerbatim()) {
                     addTranslationToNodeDetailsToCollection(nodeText, node, allowDuplicates, translationStrings);
                 } else if (!cleanedNodeText.isEmpty() && !cleanedNodeText.matches("^\\s+$")) {
                     addTranslationToNodeDetailsToCollection(cleanedNodeText, node, allowDuplicates, translationStrings);
@@ -1055,11 +1056,12 @@ public class XMLUtilities {
                      */
                     final boolean containsTranslatableTags = doesElementContainTranslatableContentV2(child);
                     final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
+                    final boolean childInlineElement = INLINE_ELEMENTS.contains(childNodeName);
 
                     /*
                      * if so, save the string we have been building up, process the child, and start building up a new string
                      */
-                    if (containsTranslatableTags || childTranslatableElement) {
+                    if ((containsTranslatableTags || childTranslatableElement) && !childInlineElement) {
                         if (nodes.size() != 0) {
                             /*
                              * We have found a child node that itself contains some translatable children. In this case we
@@ -1080,7 +1082,7 @@ public class XMLUtilities {
                             removeWhitespaceFromStart = true;
                         }
 
-                        getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperites);
+                        getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
                         final String childText = convertNodeToString(child, true);
@@ -1088,7 +1090,7 @@ public class XMLUtilities {
                         final String cleanedChildText = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
 
-                        final String thisTranslatableString = isVerbatimNode || xmlProperites.isVerbatim() ? childText : cleanedChildText;
+                        final String thisTranslatableString = isVerbatimNode || xmlProperties.isVerbatim() ? childText : cleanedChildText;
 
                         if (!thisTranslatableString.isEmpty() && !thisTranslatableString.matches("^\\s+$")) {
                             translatableString += thisTranslatableString;
@@ -1115,7 +1117,7 @@ public class XMLUtilities {
             final NodeList nodeList = node.getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 final Node child = nodeList.item(i);
-                getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperites);
+                getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperties);
             }
         }
     }
