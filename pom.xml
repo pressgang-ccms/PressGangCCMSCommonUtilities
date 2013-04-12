@@ -15,7 +15,7 @@
 
     <name>PressGang CCMS Common Utilities</name>
     <url>https://community.jboss.org/en/pressgang</url>
-    <description>A set of common utilities used within the JBoss Pressgang CCMS project</description>
+    <description>A set of common utilities used within the JBoss PressGang CCMS project</description>
 
     <scm>
         <url>https://github.com/pressgang-ccms/PressGangCCMSCommonUtilities</url>
@@ -114,7 +114,7 @@
         <!-- Gozirra Libraries -->
         <dependency>
             <groupId>org.jboss.pressgang.ccms</groupId>
-            <artifactId>gozirra-extended</artifactId>
+            <artifactId>gozirra-pressgang</artifactId>
             <version>${gozirra.version}</version>
         </dependency>
 

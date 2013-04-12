@@ -891,7 +891,7 @@ public class DocBookUtilities {
     /**
      * Check to ensure that a Docbook tgroup isn't missing an row entries, using number of cols defined for the tgroup.
      *
-     * @param entryTbl The DOM entrytbl element to be checked.
+     * @param tgroup The DOM tgroup element to be checked.
      * @return True if the tgroup has the required number of entries, otherwise false.
      */
     public static boolean validateTableGroup(final Element tgroup) {

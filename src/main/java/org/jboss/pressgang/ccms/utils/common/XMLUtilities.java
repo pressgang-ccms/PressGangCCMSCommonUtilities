@@ -838,10 +838,7 @@ public class XMLUtilities {
                 final Node child = children.item(j);
                 final String childName = child.getNodeName();
 
-                if (INLINE_ELEMENTS.contains(childName)) {
-                    // If the node is an inline element then continue to the next node
-                    continue;
-                } else if (TRANSLATABLE_ELEMENTS.contains(childName)) {
+                if (TRANSLATABLE_ELEMENTS.contains(childName)) {
                     // This child node is itself translatable, so return true
                     return true;
                 } else if (doesElementContainTranslatableContentV2(child)) {
