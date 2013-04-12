@@ -188,7 +188,7 @@ public class DocBookUtilities {
      * @param title The title string to be escaped.
      * @return The escaped title string.
      */
-    protected static String escapeTitleString(final String title) {
+    public static String escapeTitleString(final String title) {
         if (title == null) return "";
 
         /*
@@ -235,7 +235,7 @@ public class DocBookUtilities {
         // Perform the replacements on what's left
         escapedTitle = escapedTitle.replace("<", "&lt;")
             .replace(">", "&gt;")
-            .replace("\"", "&qout;");
+            .replace("\"", "&quot;");
 
         // Replace the markers
         for (int count  = 0; count < elements.size(); count++) {
