@@ -339,6 +339,10 @@ public class CommonFilterConstants {
      * The description of the has related from search field
      */
     public static final String TOPIC_NOT_EDITED_IN_LAST_DAYS_DESC = "Topic Not Edited In Last Days";
+    public static final String TOPIC_EDITED_IN_LAST_MINUTES = "topicEditedInLastMins";
+    public static final String TOPIC_EDITED_IN_LAST_MINUTES_DESC = "Topic Edited In Last Minutes";
+    public static final String TOPIC_NOT_EDITED_IN_LAST_MINUTES = "topicNotEditedInLastMins";
+    public static final String TOPIC_NOT_EDITED_IN_LAST_MINUTES_DESC = "Topic Not Edited In Last Minutes";
     /**
      * The URL variable that defines the topic property tag
      */
