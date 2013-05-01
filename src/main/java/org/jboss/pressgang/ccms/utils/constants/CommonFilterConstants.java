@@ -212,6 +212,26 @@ public class CommonFilterConstants {
      */
     public static final String LOGIC_FILTER_VAR_DESC = "Field Logic";
     /**
+     * The URL variable that defines the has related from search field
+     */
+    public static final String EDITED_IN_LAST_DAYS = "editedInLastDays";
+    /**
+     * The description of the has related from search field
+     */
+    public static final String EDITED_IN_LAST_DAYS_DESC = "Edited In Last Days";
+    /**
+     * The URL variable that defines the has related from search field
+     */
+    public static final String NOT_EDITED_IN_LAST_DAYS = "notEditedInLastDays";
+    /**
+     * The description of the has related from search field
+     */
+    public static final String NOT_EDITED_IN_LAST_DAYS_DESC = "Not Edited In Last Days";
+    public static final String EDITED_IN_LAST_MINUTES = "editedInLastMins";
+    public static final String EDITED_IN_LAST_MINUTES_DESC = "Edited In Last Minutes";
+    public static final String NOT_EDITED_IN_LAST_MINUTES = "notEditedInLastMins";
+    public static final String NOT_EDITED_IN_LAST_MINUTES_DESC = "Not Edited In Last Minutes";
+    /**
      * The URL variable that defines the has relationships search field
      */
     public static final String TOPIC_HAS_OPEN_BUGZILLA_BUGS = "topicHasOpenBugzillaBugs";
