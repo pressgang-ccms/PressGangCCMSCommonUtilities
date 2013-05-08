@@ -869,7 +869,6 @@ public class XMLUtilities {
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
 
-        final boolean textElement = node.getNodeType() == Node.TEXT_NODE;
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
@@ -890,7 +889,7 @@ public class XMLUtilities {
          * 4. not a standaloneElement and not an inlineElement
          */
 
-        if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
                 !xmlProperties.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
@@ -996,7 +995,6 @@ public class XMLUtilities {
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
 
-        final boolean textElement = node.getNodeType() == Node.TEXT_NODE;
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
@@ -1017,7 +1015,7 @@ public class XMLUtilities {
          * 4. not a standaloneElement and not an inlineElement
          */
 
-        if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
                 !xmlProperties.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;

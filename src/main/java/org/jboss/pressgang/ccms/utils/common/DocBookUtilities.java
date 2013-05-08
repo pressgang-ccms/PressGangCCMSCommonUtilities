@@ -784,6 +784,26 @@ public class DocBookUtilities {
         }
     }
 
+    public static Document wrapDocumentInAppendix(final Document doc) {
+        if (!doc.getDocumentElement().getNodeName().equals("appendix")) {
+            final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            Document newDoc = null;
+            try {
+                final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                newDoc = dBuilder.newDocument();
+            } catch (ParserConfigurationException ex) {
+                ExceptionUtilities.handleException(ex);
+                return null;
+            }
+            final Element section = newDoc.createElement("appendix");
+            section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
+            newDoc.appendChild(section);
+            return newDoc;
+        } else {
+            return doc;
+        }
+    }
+
     /**
      * Wrap a list of Strings in a {@code<row>} element. Each string
      * is also wrapped in a {@code<entry>} element.

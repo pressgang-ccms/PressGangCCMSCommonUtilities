@@ -99,13 +99,17 @@ public class XMLUtilitiesTest {
                 "\t\t\t</para>\n" +
                 "\t\t</footnote> for secure transport-level encryption of requests. This involves a process of attaining a certificate " +
                 "from your Red Hat Enterprise Virtualization Manager server and importing it into your client's certificate store.\n" +
-                "\t</para>\n</section>";
+                "\t</para>\n" +
+                "\t<para>\n" +
+                "\t\t<!-- Inject: 3737 -->\n"+
+                "\t</para>\n" +
+                "</section>";
         final Document doc = XMLUtilities.convertStringToDocument(xml);
 
         // When
         List<StringToNodeCollection> nodes = XMLUtilities.getTranslatableStringsV2 (doc, false);
 
         // Then
-        assertThat(nodes.size(), is(2));
+        assertThat(nodes.size(), is(3));
     }
 }
