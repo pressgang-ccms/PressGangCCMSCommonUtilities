@@ -733,7 +733,8 @@ public class XMLUtilities {
             for (final String nodeName : nodeNames) {
                 if (child.getNodeName().equals(nodeName)) {
                     nodes.add(child);
-                } else if (recursiveSearch) {
+                }
+                if (recursiveSearch) {
                     nodes.addAll(getChildNodes(child, true, nodeName));
                 }
             }

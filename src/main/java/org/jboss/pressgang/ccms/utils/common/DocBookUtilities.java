@@ -762,27 +762,19 @@ public class DocBookUtilities {
     }
 
     public static Document wrapDocumentInSection(final Document doc) {
-        if (!doc.getDocumentElement().getNodeName().equals("section")) {
-            final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            Document newDoc = null;
-            try {
-                final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                newDoc = dBuilder.newDocument();
-            } catch (ParserConfigurationException ex) {
-                ExceptionUtilities.handleException(ex);
-                return null;
-            }
-            final Element section = newDoc.createElement("section");
-            section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
-            newDoc.appendChild(section);
-            return newDoc;
-        } else {
-            return doc;
-        }
+        return wrapDocument(doc, "section");
     }
 
     public static Document wrapDocumentInAppendix(final Document doc) {
-        if (!doc.getDocumentElement().getNodeName().equals("appendix")) {
+        return wrapDocument(doc, "appendix");
+    }
+
+    public static Document wrapDocumentInLegalNotice(final Document doc) {
+        return wrapDocument(doc, "legalnotice");
+    }
+
+    public static Document wrapDocument(final Document doc, final String elementName) {
+        if (!doc.getDocumentElement().getNodeName().equals(elementName)) {
             final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             Document newDoc = null;
             try {
@@ -792,7 +784,7 @@ public class DocBookUtilities {
                 ExceptionUtilities.handleException(ex);
                 return null;
             }
-            final Element section = newDoc.createElement("appendix");
+            final Element section = newDoc.createElement(elementName);
             section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
             newDoc.appendChild(section);
             return newDoc;
