@@ -879,15 +879,13 @@ public class XMLUtilities {
         /*
          * this element has translatable strings if:
          * 
-         * 1. a text node
+         * 1. a translatableElement
          * 
          * OR
          * 
-         * 2. a translatableElement
+         * 2. a standaloneElement without a translatableParentElement
          * 
-         * 3. a standaloneElement without a translatableParentElement
-         * 
-         * 4. not a standaloneElement and not an inlineElement
+         * 3. not a standaloneElement and not an inlineElement
          */
 
         if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
@@ -1005,15 +1003,13 @@ public class XMLUtilities {
         /*
          * this element has translatable strings if:
          * 
-         * 1. a text node
+         * 1. a translatableElement
          * 
          * OR
+         *
+         * 2. a standaloneElement without a translatableParentElement
          * 
-         * 2. a translatableElement
-         * 
-         * 3. a standaloneElement without a translatableParentElement
-         * 
-         * 4. not a standaloneElement and not an inlineElement
+         * 3. not a standaloneElement and not an inlineElement
          */
 
         if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
