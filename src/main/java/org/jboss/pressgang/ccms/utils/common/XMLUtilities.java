@@ -733,7 +733,8 @@ public class XMLUtilities {
             for (final String nodeName : nodeNames) {
                 if (child.getNodeName().equals(nodeName)) {
                     nodes.add(child);
-                } else if (recursiveSearch) {
+                }
+                if (recursiveSearch) {
                     nodes.addAll(getChildNodes(child, true, nodeName));
                 }
             }
@@ -869,7 +870,6 @@ public class XMLUtilities {
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
 
-        final boolean textElement = node.getNodeType() == Node.TEXT_NODE;
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
@@ -879,18 +879,16 @@ public class XMLUtilities {
         /*
          * this element has translatable strings if:
          * 
-         * 1. a text node
+         * 1. a translatableElement
          * 
          * OR
          * 
-         * 2. a translatableElement
+         * 2. a standaloneElement without a translatableParentElement
          * 
-         * 3. a standaloneElement without a translatableParentElement
-         * 
-         * 4. not a standaloneElement and not an inlineElement
+         * 3. not a standaloneElement and not an inlineElement
          */
 
-        if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
                 !xmlProperties.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
@@ -996,7 +994,6 @@ public class XMLUtilities {
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
 
-        final boolean textElement = node.getNodeType() == Node.TEXT_NODE;
         final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
         final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
@@ -1006,18 +1003,16 @@ public class XMLUtilities {
         /*
          * this element has translatable strings if:
          * 
-         * 1. a text node
+         * 1. a translatableElement
          * 
          * OR
+         *
+         * 2. a standaloneElement without a translatableParentElement
          * 
-         * 2. a translatableElement
-         * 
-         * 3. a standaloneElement without a translatableParentElement
-         * 
-         * 4. not a standaloneElement and not an inlineElement
+         * 3. not a standaloneElement and not an inlineElement
          */
 
-        if (textElement || (translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
                 !xmlProperties.isInline())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;

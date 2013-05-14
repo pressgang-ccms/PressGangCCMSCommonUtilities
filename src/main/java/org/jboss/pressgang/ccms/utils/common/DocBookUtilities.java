@@ -93,13 +93,13 @@ public class DocBookUtilities {
 
     public static void setSectionTitle(final String titleValue, final Document doc) {
         assert doc != null : "The doc parameter can not be null";
+        final Element docElement = doc.getDocumentElement();
 
+        // Check to make sure the document is a section. If it isn't than just return
+        if (docElement == null || !docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME)) return;
+
+        // Attempt to parse the title as XML. If this fails then just set the title as plain text.
         final Element newTitle = doc.createElement(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
-
-        /*
-         * Attempt to parse the title as XML. If this fails
-         * then just set the title as plain text.
-         */
         try {
             final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeTitleString(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
@@ -113,36 +113,33 @@ public class DocBookUtilities {
             newTitle.appendChild(doc.createTextNode(titleValue));
         }
 
-        final Element docElement = doc.getDocumentElement();
-        if (docElement != null && docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME)) {
-            // remove any id attributes from the section
-            docElement.removeAttribute("id");
+        // Remove any id attributes from the section
+        docElement.removeAttribute("id");
 
-            final NodeList titleNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
-            // see if we have a title node whose parent is the section
-            if (titleNodes.getLength() != 0 && titleNodes.item(0).getParentNode().equals(docElement)) {
-                final Node title = titleNodes.item(0);
-                title.getParentNode().replaceChild(newTitle, title);
-            } else {
-                // Find the first node that isn't text or a comment
-                Node firstNode = docElement.getFirstChild();
-                while (firstNode != null && firstNode.getNodeType() != Node.ELEMENT_NODE) {
-                    firstNode = firstNode.getNextSibling();
-                }
+        final NodeList titleNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
+        // see if we have a title node whose parent is the section
+        if (titleNodes.getLength() != 0 && titleNodes.item(0).getParentNode().equals(docElement)) {
+            final Node title = titleNodes.item(0);
+            title.getParentNode().replaceChild(newTitle, title);
+        } else {
+            // Find the first node that isn't text or a comment
+            Node firstNode = docElement.getFirstChild();
+            while (firstNode != null && firstNode.getNodeType() != Node.ELEMENT_NODE) {
+                firstNode = firstNode.getNextSibling();
+            }
 
-                // Set the section title based on if the first node is a "sectioninfo" node.
-                if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME)) {
-                    final Node nextNode = firstNode.getNextSibling();
-                    if (nextNode != null) {
-                        docElement.insertBefore(newTitle, nextNode);
-                    } else {
-                        docElement.appendChild(newTitle);
-                    }
-                } else if (firstNode != null) {
-                    docElement.insertBefore(newTitle, firstNode);
+            // Set the section title based on if the first node is a "sectioninfo" node.
+            if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME)) {
+                final Node nextNode = firstNode.getNextSibling();
+                if (nextNode != null) {
+                    docElement.insertBefore(newTitle, nextNode);
                 } else {
                     docElement.appendChild(newTitle);
                 }
+            } else if (firstNode != null) {
+                docElement.insertBefore(newTitle, firstNode);
+            } else {
+                docElement.appendChild(newTitle);
             }
         }
     }
@@ -765,7 +762,19 @@ public class DocBookUtilities {
     }
 
     public static Document wrapDocumentInSection(final Document doc) {
-        if (!doc.getDocumentElement().getNodeName().equals("section")) {
+        return wrapDocument(doc, "section");
+    }
+
+    public static Document wrapDocumentInAppendix(final Document doc) {
+        return wrapDocument(doc, "appendix");
+    }
+
+    public static Document wrapDocumentInLegalNotice(final Document doc) {
+        return wrapDocument(doc, "legalnotice");
+    }
+
+    public static Document wrapDocument(final Document doc, final String elementName) {
+        if (!doc.getDocumentElement().getNodeName().equals(elementName)) {
             final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             Document newDoc = null;
             try {
@@ -775,7 +784,7 @@ public class DocBookUtilities {
                 ExceptionUtilities.handleException(ex);
                 return null;
             }
-            final Element section = newDoc.createElement("section");
+            final Element section = newDoc.createElement(elementName);
             section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
             newDoc.appendChild(section);
             return newDoc;
