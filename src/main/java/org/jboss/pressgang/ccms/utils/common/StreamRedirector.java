@@ -9,11 +9,16 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class is used to monitor the various streams managed by a Process in
  * order to prevent a buffer overrun for long running Processes.
  */
 class StreamRedirector extends Thread {
+    private static final Logger LOG = LoggerFactory.getLogger(StreamRedirector.class);
+
     /**
      * A stream to poll for data
      */
@@ -75,7 +80,7 @@ class StreamRedirector extends Thread {
 
             if (pw != null) pw.flush();
         } catch (final IOException ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to read from Input Stream", ex);
         }
     }
 }

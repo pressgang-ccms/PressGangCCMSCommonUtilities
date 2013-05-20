@@ -6,12 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * A collection of static methods to make running native commands easier.
  *
  * @author Matthew Casperson
  */
 public class ExecUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(ExecUtilities.class);
+
     /**
      * Run a Process, and read the various streams so there is not a buffer
      * overrun.
@@ -60,16 +66,13 @@ public class ExecUtilities {
         try {
             final boolean retValue = p.waitFor() == 0;
 
-			/*
-             * give the threads time to collect the final output from the
-			 * Process
-			 */
+            // give the threads time to collect the final output from the Process
             errorStream.join();
             outputStream.join();
 
             return retValue;
         } catch (final InterruptedException ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Command execution Intercepted", ex);
             return false;
         }
     }

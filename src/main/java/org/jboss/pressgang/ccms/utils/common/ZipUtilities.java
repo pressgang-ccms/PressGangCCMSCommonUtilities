@@ -16,9 +16,12 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ZipUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(ZipUtilities.class);
     private static int BUFFER_SIZE = 2048;
 
     public static byte[] createZip(final HashMap<String, byte[]> files) {
@@ -33,7 +36,7 @@ public class ZipUtilities {
             zipfile.close();
             return bos.toByteArray();
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to create ZIP", ex);
         }
 
         return null;
@@ -52,7 +55,8 @@ public class ZipUtilities {
                     try {
                         fileMap.put(relativePath, FileUtilities.readFileContents(file).getBytes("UTF-8"));
                     } catch (UnsupportedEncodingException e) {
-                        /* UTF-8 is a valid format so this should exception should never get thrown */
+                        // UTF-8 is a valid format so this should exception should never get thrown
+                        LOG.debug("", e);
                     }
                 }
             }
@@ -73,8 +77,8 @@ public class ZipUtilities {
             while ((ze = zf.getNextEntry()) != null) {
                 final String name = ze.getName();
                 final long size = ze.getSize();
-				
-				/* see if we are working with a file or a directory */
+
+                // see if we are working with a file or a directory
                 if (size != 0) {
                     byte[] fileContents = new byte[0];
                     final byte[] fileBuffer = new byte[BUFFER_SIZE];
@@ -88,7 +92,7 @@ public class ZipUtilities {
             }
 
         } catch (final IOException ex) {
-            ExceptionUtilities.handleException(ex);
+           LOG.error("Unable to read file contents", ex);
         }
     }
 
@@ -127,7 +131,7 @@ public class ZipUtilities {
         try {
             zis = new ZipInputStream(new FileInputStream(zipFile));
         } catch (FileNotFoundException ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to find specified file", ex);
             return false;
         }
         ZipEntry entry = null;
@@ -142,7 +146,7 @@ public class ZipUtilities {
                 zipEntries.put(entry, bos.toByteArray());
             }
         } catch (IOException ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to write ZIP file to directory", ex);
             return false;
         }
         return unzipFileIntoDirectory(zipEntries, directory);

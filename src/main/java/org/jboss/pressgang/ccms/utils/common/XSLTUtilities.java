@@ -17,8 +17,11 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.xalan.processor.TransformerFactoryImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XSLTUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(XSLTUtilities.class);
     private static Map<String, Templates> templates = new ConcurrentHashMap<String, Templates>();
 
     public static String transformXML(final String xml, final String xsl, final String xslSystemId,
@@ -39,8 +42,7 @@ public class XSLTUtilities {
             final ByteArrayInputStream xslStream = new ByteArrayInputStream(xsl.getBytes("UTF-8"));
             final ByteArrayOutputStream retValueStream = new ByteArrayOutputStream();
 
-			/* http://xml.apache.org/xalan-j/usagepatterns.html#basic */
-
+            // http://xml.apache.org/xalan-j/usagepatterns.html#basic
             Templates template = null;
             synchronized (templates) {
                 if (templates.containsKey(xslSystemId)) {
@@ -48,26 +50,26 @@ public class XSLTUtilities {
                 } else {
                     System.out.println("Initialising Templates for " + xslSystemId);
 
-					/*
+                    /*
                      * Instantiate a TransformerFactory. make sure to get a
-					 * org.apache.xalan.processor.TransformerFactoryImpl instead
-					 * of the default
-					 * org.apache.xalan.xsltc.trax.TransformerFactoryImpl. The
-					 * latter doesn't work for docbook xsl.
-					 */
+                     * org.apache.xalan.processor.TransformerFactoryImpl instead
+                     * of the default
+                     * org.apache.xalan.xsltc.trax.TransformerFactoryImpl. The
+                     * latter doesn't work for docbook xsl.
+                     */
                     System.setProperty("javax.xml.transform.TransformerFactory", "org.apache.xalan.processor.TransformerFactoryImpl");
                     final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-					/*
-					 * Set the URIResolver that will handle request to external
-					 * resources
-					 */
+                    /*
+                     * Set the URIResolver that will handle request to external
+                     * resources
+                     */
                     transformerFactory.setURIResolver(new XSLTResolver(resources));
 
-					/*
-					 * see http://nlp.stanford.edu/nlp/javadoc/xalan-docs/
-					 * extensionslib .html#nodeinfo
-					 */
+                    /*
+                     * see http://nlp.stanford.edu/nlp/javadoc/xalan-docs/
+                     * extensionslib .html#nodeinfo
+                     */
                     transformerFactory.setAttribute(TransformerFactoryImpl.FEATURE_SOURCE_LOCATION, Boolean.TRUE);
                     // transformerFactory.setAttribute(TransformerFactoryImpl.FEATURE_INCREMENTAL,
                     // Boolean.TRUE);
@@ -75,7 +77,7 @@ public class XSLTUtilities {
                     final StreamSource xslStreamSource = new StreamSource(xslStream);
                     xslStreamSource.setSystemId(xslSystemId);
 
-					/* save the template */
+                    /* save the template */
                     templates.put(xslSystemId, transformerFactory.newTemplates(xslStreamSource));
 
                     System.out.println("Done Initialising Templates for " + xslSystemId);
@@ -84,20 +86,20 @@ public class XSLTUtilities {
                 template = templates.get(xslSystemId);
             }
 
-			/*
-			 * Use the TransformerFactory to process the stylesheet Source and
-			 * generate a Transformer.
-			 */
+            /*
+             * Use the TransformerFactory to process the stylesheet Source and
+             * generate a Transformer.
+             */
             final Transformer transformer = template.newTransformer();
 
-			/* set the global variables */
+            /* set the global variables */
             if (globalParameters != null) for (final Entry<String, String> paramEntry : globalParameters.entrySet())
                 transformer.setParameter(paramEntry.getKey(), paramEntry.getValue());
 
-			/*
-			 * Use the Transformer to transform an XML Source and send the
-			 * output to a Result object.
-			 */
+            /*
+             * Use the Transformer to transform an XML Source and send the
+             * output to a Result object.
+             */
             transformer.transform(new StreamSource(xmlStream), new StreamResult(retValueStream));
 
             return retValueStream.toString();
@@ -105,7 +107,7 @@ public class XSLTUtilities {
         } catch (final TransformerException ex) {
             throw ex;
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to transform the XML content", ex);
         }
 
         return null;
@@ -116,6 +118,7 @@ public class XSLTUtilities {
  * A class to get the various xsl resources that might be imported.
  */
 class XSLTResolver implements URIResolver {
+    private static final Logger LOG = LoggerFactory.getLogger(XSLTResolver.class);
     private Map<String, byte[]> resources;
 
     public XSLTResolver(final Map<String, byte[]> resources) {
@@ -140,7 +143,7 @@ class XSLTResolver implements URIResolver {
                 return source;
             }
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to resolve external resource via an internal resource", ex);
         }
 
         System.out.println("Did not find resource. href: \"" + href + "\" base: \"" + base + "\"");

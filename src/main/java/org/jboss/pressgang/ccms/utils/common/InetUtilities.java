@@ -8,7 +8,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class InetUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(InetUtilities.class);
+
     /**
      * Downloads a file as a byte array
      *
@@ -38,12 +43,13 @@ public class InetUtilities {
         }};
 
         // Install the all-trusting trust manager
+        // FIXME from Lee: This doesn't seem like a wise idea to install an all-trusting cert manager by default
         try {
             final SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to install the all-trust SSL Manager", ex);
         }
 
         try {
@@ -57,14 +63,14 @@ public class InetUtilities {
                 buffer.write(data, 0, nRead);
             }
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to read data from URL", ex);
         } finally {
             try {
                 buffer.flush();
 
                 if (is != null) is.close();
             } catch (final Exception ex) {
-                ExceptionUtilities.handleException(ex);
+                LOG.error("Unable to flush and close URL Input Stream", ex);
             }
         }
 

@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -22,6 +24,7 @@ import org.w3c.dom.Text;
  * with DocBook
  */
 public class DocBookUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(DocBookUtilities.class);
     /**
      * The name of the section tag
      */
@@ -51,7 +54,7 @@ public class DocBookUtilities {
         try {
             doc = XMLUtilities.convertStringToDocument(xml);
         } catch (Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to convert String to a DOM Document", ex);
         }
 
         return findTitle(doc);
@@ -781,7 +784,7 @@ public class DocBookUtilities {
                 final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                 newDoc = dBuilder.newDocument();
             } catch (ParserConfigurationException ex) {
-                ExceptionUtilities.handleException(ex);
+                LOG.debug("Unable to create a new DOM Document", ex);
                 return null;
             }
             final Element section = newDoc.createElement(elementName);

@@ -4,7 +4,12 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HTTPUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(HTTPUtilities.class);
+
     /**
      * Used to send arbitrary data to the user (i.e. to download files) with a
      * MIME type of "application/octet-stream"
@@ -68,7 +73,7 @@ public class HTTPUtilities {
 
             FacesContext.getCurrentInstance().responseComplete();
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to write content to HTTP Output Stream", ex);
         }
     }
 

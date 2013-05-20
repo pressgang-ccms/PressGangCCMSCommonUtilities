@@ -26,6 +26,8 @@ import org.jboss.pressgang.ccms.utils.sort.EntitySubstitutionBoundaryDataBoundar
 import org.jboss.pressgang.ccms.utils.structures.EntitySubstitutionBoundaryData;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -41,6 +43,7 @@ import org.xml.sax.SAXException;
  * classpathx/jaxp/apidoc/gnu/xml/dom/ls/DomLSSerializer.html for LSSerializer options
  */
 public class XMLUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(XMLUtilities.class);
     private static final String DOCTYPE_NAMED_GROUP = "Doctype";
     private static final NamedPattern DOCTYPE_PATTERN = NamedPattern.compile(
             "^\\s*<\\?xml.*?\\?>\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?\\s+((PUBLIC\\s+\".*?\"|SYSTEM)\\s+\".*?\")[ " +
@@ -1017,7 +1020,7 @@ public class XMLUtilities {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
-            /* dump the node if it has no children */
+            // dump the node if it has no children
             if (!hasChildren) {
                 final String nodeText = convertNodeToString(node, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
@@ -1043,16 +1046,12 @@ public class XMLUtilities {
                     final Node child = children.item(i);
                     final String childNodeName = child.getNodeName();
 
-                    /*
-                     * does this child have another level of translatable tags?
-                     */
+                    // does this child have another level of translatable tags?
                     final boolean containsTranslatableTags = doesElementContainTranslatableContentV2(child);
                     final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
                     final boolean childInlineElement = INLINE_ELEMENTS.contains(childNodeName);
 
-                    /*
-                     * if so, save the string we have been building up, process the child, and start building up a new string
-                     */
+                    // if so, save the string we have been building up, process the child, and start building up a new string
                     if ((containsTranslatableTags || childTranslatableElement) && !childInlineElement) {
                         if (nodes.size() != 0) {
                             /*
@@ -1097,7 +1096,7 @@ public class XMLUtilities {
                     }
                 }
 
-                /* save the last translated string */
+                // save the last translated string
                 if (nodes.size() != 0) {
                     addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
 
@@ -1105,7 +1104,7 @@ public class XMLUtilities {
                 }
             }
         } else {
-            /* if we hit a non-translatable element, process its children */
+            // if we hit a non-translatable element, process its children
             final NodeList nodeList = node.getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 final Node child = nodeList.item(i);
@@ -1133,14 +1132,14 @@ public class XMLUtilities {
             final ArrayList<ArrayList<Node>> nodeCollections = stringToNodeCollection.getNodeCollections();
 
             if (nodeCollections != null && nodeCollections.size() != 0) {
-                /* Zanata will change the format of the strings that it returns. Here we account for any trimming that was done. */
+                // Zanata will change the format of the strings that it returns. Here we account for any trimming that was done.
                 final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
 
                 if (fixedStringDetails.getFixedString() != null) {
                     final String translation = translations.get(fixedStringDetails.getFixedString());
 
                     if (translation != null && !translation.isEmpty()) {
-                        /* Build up the padding that Zanata removed */
+                        // Build up the padding that Zanata removed
                         final StringBuilder leftTrimPadding = new StringBuilder();
                         final StringBuilder rightTrimPadding = new StringBuilder();
 
@@ -1150,24 +1149,22 @@ public class XMLUtilities {
                         for (int i = 0; i < fixedStringDetails.getRightTrimCount(); ++i)
                             rightTrimPadding.append(" ");
 
-                        /* wrap the returned translation in a root element */
+                        // wrap the returned translation in a root element
                         final String wrappedTranslation = "<tempRoot>" + leftTrimPadding + translation + rightTrimPadding + "</tempRoot>";
 
-                        /* convert the wrapped translation into an XML document */
+                        // convert the wrapped translation into an XML document
                         Document translationDocument = null;
                         try {
                             translationDocument = convertStringToDocument(wrappedTranslation);
                         } catch (Exception ex) {
-                            ExceptionUtilities.handleException(ex);
+                            LOG.error("Unable to convert Translated String to a DOM Document", ex);
                         }
 
-                        /* was the conversion successful */
+                        // was the conversion successful
                         if (translationDocument != null) {
                             for (final ArrayList<Node> nodes : nodeCollections) {
                                 if (nodes != null && nodes.size() != 0) {
-                                    /*
-                                     * All nodes in a collection should share the same parent
-                                     */
+                                    // All nodes in a collection should share the same parent
                                     final Node parent = nodes.get(0).getParentNode();
 
                                     if (parent != null) {
@@ -1188,9 +1185,7 @@ public class XMLUtilities {
                                             }
                                         }
 
-                                        /*
-                                         * remove the original node that the translated text came from
-                                         */
+                                        // remove the original node that the translated text came from
                                         for (final Node node : nodes) {
                                             if (parent == node.getParentNode()) parent.removeChild(node);
                                         }
