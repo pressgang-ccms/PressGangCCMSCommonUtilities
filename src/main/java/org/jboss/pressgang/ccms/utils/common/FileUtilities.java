@@ -10,12 +10,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A collection of static methods for working with local files.
  *
  * @author Matthew Casperson
  */
 public class FileUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(FileUtilities.class);
+
     /**
      * @param file The file to be read
      * @return The contents of the file as a String
@@ -39,7 +44,7 @@ public class FileUtilities {
                 }
             }
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("An error occurred while reading the file contents", ex);
         } finally {
             if (scanner != null) scanner.close();
         }
@@ -86,12 +91,12 @@ public class FileUtilities {
 
             return bytes;
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("An error occurred while reading the file contents", ex);
         } finally {
             try {
                 if (is != null) is.close();
             } catch (final Exception ex) {
-                ExceptionUtilities.handleException(ex);
+                LOG.error("Failed to close the FileInputStream", ex);
             }
         }
 
@@ -108,7 +113,7 @@ public class FileUtilities {
         if (fileName == null) return null;
 
         final int lastPeriodIndex = fileName.lastIndexOf(".");
-        /* make sure there is an extension, and that the filename doesn't end with a period */
+        // make sure there is an extension, and that the filename doesn't end with a period
         if (lastPeriodIndex != -1 && lastPeriodIndex < fileName.length() - 1) {
             final String extension = fileName.substring(lastPeriodIndex + 1);
             return extension;
@@ -207,22 +212,23 @@ public class FileUtilities {
      * Opens a file using the OS default program for the file type, using the Java Desktop API.
      *
      * @param file The file to be opened.
-     * @throws Exception Thrown if there is an issue opening the file or if the Desktop API isn't supported.
+     * @throws IOException Thrown if there is an issue opening the file.
+     * @throws IllegalStateException Thrown if the Desktop API isn't supported.
      */
-    public static void openFile(final File file) throws Exception {
+    public static void openFile(final File file) throws IOException {
         // Check that the file is a file
-        if (!file.isFile()) throw new Exception("Passed file is not a file.");
+        if (!file.isFile()) throw new IOException("Passed file is not a file.");
 
         // Check that the Desktop API is supported
         if (!Desktop.isDesktopSupported()) {
-            throw new Exception("Desktop is not supported");
+            throw new IllegalStateException("Desktop is not supported");
         }
 
         final Desktop desktop = Desktop.getDesktop();
 
         // Check that the open functionality is supported
         if (!desktop.isSupported(Desktop.Action.OPEN)) {
-            throw new Exception("Desktop doesn't support the open action");
+            throw new IllegalStateException("Desktop doesn't support the open action");
         }
 
         // Open the file
@@ -232,8 +238,8 @@ public class FileUtilities {
     /**
      * Save the data, represented as a String to a file
      *
-     * @param file         The location/name of the file to be saved.
-     * @param fileContents The data that is to be written to the file.
+     * @param file     The location/name of the file to be saved.
+     * @param contents The data that is to be written to the file.
      * @throws IOException
      */
     public static void saveFile(final File file, final String contents, final String encoding) throws IOException {

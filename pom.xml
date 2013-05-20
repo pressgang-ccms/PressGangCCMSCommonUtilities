@@ -31,6 +31,7 @@
         <apache.commonscodec.version>1.7</apache.commonscodec.version>
         <gozirra.version>0.5-SNAPSHOT</gozirra.version>
         <namedregexp.version>0.1.8</namedregexp.version>
+        <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
     <build>
@@ -123,6 +124,13 @@
             <groupId>com.github.tony19</groupId>
             <artifactId>named-regexp</artifactId>
             <version>${namedregexp.version}</version>
+        </dependency>
+
+        <!-- Logging Libraries -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- Testing libraries -->

@@ -1,27 +1,23 @@
 package org.jboss.pressgang.ccms.utils.common;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PropertyUtils {
-    final static private Map<String, Properties> loadedProperties = new HashMap<String, Properties>();
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyUtils.class);
 
     public static String getProperty(final String fileName, final String property, final Class<?> classWithResources) {
-        if (!loadedProperties.containsKey(fileName)) {
-            try {
-                final InputStream inputStream = classWithResources.getResourceAsStream(fileName);
-                final Properties properties = new Properties();
-                properties.load(inputStream);
-                loadedProperties.put(fileName, properties);
-            } catch (final Exception ex) {
-                ExceptionUtilities.handleException(ex);
-            }
+        final Properties properties = new Properties();
+        try {
+            final InputStream inputStream = classWithResources.getResourceAsStream(fileName);
+            properties.load(inputStream);
+        } catch (final Exception ex) {
+            LOG.debug("Unable to find resource file", ex);
         }
 
-        if (loadedProperties.containsKey(fileName)) return loadedProperties.get(fileName).getProperty(property);
-
-        return null;
+        return properties.getProperty(property);
     }
 }

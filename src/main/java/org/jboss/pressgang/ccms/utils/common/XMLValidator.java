@@ -3,6 +3,8 @@ package org.jboss.pressgang.ccms.utils.common;
 import javax.xml.XMLConstants;
 import java.io.ByteArrayInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMError;
 import org.w3c.dom.DOMErrorHandler;
@@ -18,6 +20,8 @@ import org.xml.sax.SAXException;
  * This class is used to validate XML, optionally also validating the XML against a DDT schema
  */
 public class XMLValidator implements DOMErrorHandler, LSResourceResolver {
+    private static final Logger LOG = LoggerFactory.getLogger(XMLValidator.class);
+
     protected boolean errorsDetected;
     private String errorText;
     private String dtdFileName;
@@ -43,7 +47,7 @@ public class XMLValidator implements DOMErrorHandler, LSResourceResolver {
             errorsDetected = true;
             errorText = ex.getMessage();
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to convert input string to DOM Document", ex);
         }
 
         return null;
@@ -54,6 +58,10 @@ public class XMLValidator implements DOMErrorHandler, LSResourceResolver {
     }
 
     public Document validateTopicXML(final Document core, final String dtdFileName, final byte[] dtdData) {
+        return validateTopicXML(core, dtdFileName, dtdData, DocBookUtilities.TOPIC_ROOT_NODE_NAME);
+    }
+
+    public Document validateTopicXML(final Document core, final String dtdFileName, final byte[] dtdData, final String rootElementName) {
         if (core == null) return null;
 
         try {
@@ -81,16 +89,14 @@ public class XMLValidator implements DOMErrorHandler, LSResourceResolver {
             // all topics have to be sections
             final Node rootNode = core.getDocumentElement();
             final String documentNodeName = rootNode.getNodeName();
-            if (!documentNodeName.equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME)) return null;
+            if (!documentNodeName.equals(rootElementName)) return null;
 
             return core;
 
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("An error occurred during validation", ex);
 
-			/*
-             * something happened, which we will assume means the xml is invalid
-			 */
+            // something happened, which we will assume means the xml is invalid
             return null;
         }
     }
@@ -112,7 +118,7 @@ public class XMLValidator implements DOMErrorHandler, LSResourceResolver {
                 return dtdsource;
             }
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to resolve external resource", ex);
         }
 
         return null;

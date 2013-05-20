@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -15,6 +17,8 @@ import org.w3c.dom.Node;
  * @author Matthew Casperson
  */
 public class HTMLUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(HTMLUtilities.class);
+
     /**
      * A regular expression that identifies the start of a CSS import statement
      */
@@ -41,7 +45,7 @@ public class HTMLUtilities {
         try {
             doc = XMLUtilities.convertStringToDocument(html);
         } catch (Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Failed to convert the HTML into a DOM Document", ex);
         }
         if (doc != null) {
             inlineImgNodes(doc, basePath);
@@ -96,7 +100,7 @@ public class HTMLUtilities {
                 }
             }
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to convert external SVG image to DOM Document", ex);
         }
     }
 
@@ -108,49 +112,44 @@ public class HTMLUtilities {
      * @param basePath The base path where the CSS scripts can be found
      */
     private static void inlineCssNodes(final Document doc, final String basePath) {
-        try {
-            // handle null inputs
-            if (doc == null) return;
+        if (doc == null) return;
 
-            final String fixedBasePath = basePath == null ? "" : basePath;
+        final String fixedBasePath = basePath == null ? "" : basePath;
 
-            final List<Node> nodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "link");
-            for (final Node node : nodes) {
-                final NamedNodeMap attributes = node.getAttributes();
+        final List<Node> nodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "link");
+        for (final Node node : nodes) {
+            final NamedNodeMap attributes = node.getAttributes();
 
-                final Node relAttribute = attributes.getNamedItem("rel");
-                final Node hrefAttribute = attributes.getNamedItem("href");
-                final Node mediaAttribute = attributes.getNamedItem("media");
+            final Node relAttribute = attributes.getNamedItem("rel");
+            final Node hrefAttribute = attributes.getNamedItem("href");
+            final Node mediaAttribute = attributes.getNamedItem("media");
 
-                if (relAttribute != null && relAttribute.getTextContent().equals("stylesheet") && hrefAttribute != null) {
-                    final String href = hrefAttribute.getTextContent();
-                    final File hrefFile = new File(fixedBasePath + "/" + href);
-                    if (hrefFile.exists()) {
-                        // find the base path for any import statements that
-                        // might be in the css file
-                        String cssBasePath = "";
-                        int end = href.lastIndexOf("/");
-                        if (end == -1) end = href.lastIndexOf("\\");
-                        if (end != -1) cssBasePath = href.substring(0, end);
+            if (relAttribute != null && relAttribute.getTextContent().equals("stylesheet") && hrefAttribute != null) {
+                final String href = hrefAttribute.getTextContent();
+                final File hrefFile = new File(fixedBasePath + "/" + href);
+                if (hrefFile.exists()) {
+                    // find the base path for any import statements that
+                    // might be in the css file
+                    String cssBasePath = "";
+                    int end = href.lastIndexOf("/");
+                    if (end == -1) end = href.lastIndexOf("\\");
+                    if (end != -1) cssBasePath = href.substring(0, end);
 
-                        final String fileString = inlineCssImports(FileUtilities.readFileContents(hrefFile), basePath + "/" + cssBasePath);
+                    final String fileString = inlineCssImports(FileUtilities.readFileContents(hrefFile), basePath + "/" + cssBasePath);
 
-                        final Node parent = node.getParentNode();
-                        if (parent != null) {
-                            final Element newNode = doc.createElement("style");
-                            newNode.setAttribute("type", "text/css");
+                    final Node parent = node.getParentNode();
+                    if (parent != null) {
+                        final Element newNode = doc.createElement("style");
+                        newNode.setAttribute("type", "text/css");
 
-                            if (mediaAttribute != null) newNode.setAttribute("media", mediaAttribute.getTextContent());
+                        if (mediaAttribute != null) newNode.setAttribute("media", mediaAttribute.getTextContent());
 
-                            newNode.setTextContent(fileString);
+                        newNode.setTextContent(fileString);
 
-                            parent.replaceChild(newNode, node);
-                        }
+                        parent.replaceChild(newNode, node);
                     }
                 }
             }
-        } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
         }
     }
 
@@ -185,47 +184,43 @@ public class HTMLUtilities {
      * @param basePath The base path where the images can be found
      */
     private static void inlineImgNodes(final Document doc, final String basePath) {
-        try {
-            // handle null inputs
-            if (doc == null) return;
+        // handle null inputs
+        if (doc == null) return;
 
-            final String fixedBasePath = basePath == null ? "" : basePath;
+        final String fixedBasePath = basePath == null ? "" : basePath;
 
-            final List<Node> imageNodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "img");
-            for (final Node node : imageNodes) {
-                final NamedNodeMap attributes = node.getAttributes();
-                final Node srcAttribute = attributes.getNamedItem("src");
-                if (srcAttribute != null) {
-                    final String src = srcAttribute.getTextContent();
-                    final File srcFile = new File(fixedBasePath + "/" + src);
-                    if (srcFile.exists()) {
-                        final byte[] srcFileByteArray = FileUtilities.readFileContentsAsByteArray(srcFile);
-                        if (srcFileByteArray != null) {
-                            // get the file extension of the original image
-                            final int extensionStringLocation = src.lastIndexOf(".");
+        final List<Node> imageNodes = XMLUtilities.getChildNodes(doc.getDocumentElement(), "img");
+        for (final Node node : imageNodes) {
+            final NamedNodeMap attributes = node.getAttributes();
+            final Node srcAttribute = attributes.getNamedItem("src");
+            if (srcAttribute != null) {
+                final String src = srcAttribute.getTextContent();
+                final File srcFile = new File(fixedBasePath + "/" + src);
+                if (srcFile.exists()) {
+                    final byte[] srcFileByteArray = FileUtilities.readFileContentsAsByteArray(srcFile);
+                    if (srcFileByteArray != null) {
+                        // get the file extension of the original image
+                        final int extensionStringLocation = src.lastIndexOf(".");
 
-                            // make sure we have an extension
-                            if (extensionStringLocation != -1 && extensionStringLocation != src.length() - 1) {
-                                final String extension = src.substring(extensionStringLocation + 1);
+                        // make sure we have an extension
+                        if (extensionStringLocation != -1 && extensionStringLocation != src.length() - 1) {
+                            final String extension = src.substring(extensionStringLocation + 1);
 
-                                // encode the image
-                                final byte[] srcFileEncodedByteArray = Base64.encodeBase64(srcFileByteArray);
-                                final String srcFileEncodedString = new String(srcFileEncodedByteArray);
+                            // encode the image
+                            final byte[] srcFileEncodedByteArray = Base64.encodeBase64(srcFileByteArray);
+                            final String srcFileEncodedString = new String(srcFileEncodedByteArray);
 
-                                final Node parent = node.getParentNode();
-                                if (parent != null) {
-                                    final Element newImgNode = doc.createElement("img");
-                                    newImgNode.setAttribute("src", "data:image/" + extension + ";base64," + srcFileEncodedString);
+                            final Node parent = node.getParentNode();
+                            if (parent != null) {
+                                final Element newImgNode = doc.createElement("img");
+                                newImgNode.setAttribute("src", "data:image/" + extension + ";base64," + srcFileEncodedString);
 
-                                    parent.replaceChild(newImgNode, node);
-                                }
+                                parent.replaceChild(newImgNode, node);
                             }
                         }
                     }
                 }
             }
-        } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
         }
     }
 }

@@ -7,7 +7,12 @@ import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VersionUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(VersionUtilities.class);
+
     /**
      * Get the Version Number from a properties file in the Application Classpath.
      *
@@ -22,7 +27,7 @@ public class VersionUtilities {
             try {
                 props.load(url.openStream());
             } catch (IOException ex) {
-                ExceptionUtilities.handleException(ex);
+                LOG.debug("Unable to open resource file", ex);
             }
         }
 
@@ -35,21 +40,21 @@ public class VersionUtilities {
      * Get the Build Date Information from a properties file in the Application Classpath.
      *
      * @param resourceFileName  The name of the properties file.
-     * @param builddateProperty The name of the version property in the properties file.
+     * @param buildDateProperty The name of the version property in the properties file.
      * @return The build timestamp or "unknown" if the build timestamp couldn't be found.
      */
-    public static String getAPIBuildTimestamp(final String resourceFileName, final String builddateProperty) {
+    public static String getAPIBuildTimestamp(final String resourceFileName, final String buildDateProperty) {
         final Properties props = new Properties();
         final URL url = ClassLoader.getSystemResource(resourceFileName);
         if (url != null) {
             try {
                 props.load(url.openStream());
             } catch (IOException ex) {
-                ExceptionUtilities.handleException(ex);
+                LOG.debug("Unable to open resource file", ex);
             }
         }
 
-        String version = props.getProperty(builddateProperty, "unknown");
+        String version = props.getProperty(buildDateProperty, "unknown");
 
         return version;
     }
@@ -88,7 +93,7 @@ public class VersionUtilities {
         try {
             atts = getAttributesForClass(clazz);
         } catch (IOException ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to open Manifest stream for class: " + clazz.getName(), ex);
         }
 
         if (atts != null) {
@@ -137,7 +142,7 @@ public class VersionUtilities {
         try {
             atts = getAttributesForClass(clazz);
         } catch (IOException ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.debug("Unable to open Manifest stream for class: " + clazz.getName(), ex);
         }
 
         if (atts != null) {
@@ -154,7 +159,7 @@ public class VersionUtilities {
      * Thanks to the Zanata Team for this method, it has just been edited for this libraries needs.
      *
      * @param clazz The class to find the version information for.
-     * @return The Attributes that exist in the Jars Manifest for the spcified class.
+     * @return The Attributes that exist in the Jars Manifest for the specified class.
      * @throws MalformedURLException
      * @throws IOException
      */
