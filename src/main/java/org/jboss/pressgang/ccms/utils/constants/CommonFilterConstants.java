@@ -591,10 +591,13 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR = "translatedCSNodeIds";
     public static final String CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC = "Translated Content Specification Node IDs";
 
-    /* CSMetaData Constants */
-    public static final String CONTENT_SPEC_META_DATA_IDS_FILTER_VAR = "csMetaDataIds";
-    public static final String CONTENT_SPEC_META_DATA_IDS_FILTER_VAR_DESC = "Content Specification IDs";
+    /* File Filter Constants */
+    public static final String FILE_IDS_FILTER_VAR = "fileIds";
+    public static final String FILE_IDS_FILTER_VAR_DESC = "File IDs";
 
-    public static final String CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR = "csMetaDataTitle";
-    public static final String CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR_DESC = "Content Specification Meta Data Title";
+    public static final String FILE_DESCRIPTION_FILTER_VAR = "fileDesc";
+    public static final String FILE_DESCRIPTION_FILTER_VAR_DESC = "File Description";
+
+    public static final String FILE_NAME_FILTER_VAR = "fileName";
+    public static final String FILE_NAME_FILTER_VAR_DESC = "File Name";
 }
