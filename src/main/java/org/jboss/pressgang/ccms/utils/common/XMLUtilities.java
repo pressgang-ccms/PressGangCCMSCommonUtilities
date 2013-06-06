@@ -45,8 +45,7 @@ public class XMLUtilities {
     private static final Logger LOG = LoggerFactory.getLogger(XMLUtilities.class);
     private static final String DOCTYPE_NAMED_GROUP = "Doctype";
     private static final Pattern DOCTYPE_PATTERN = Pattern.compile(
-            "^\\s*<\\?xml.*?\\?>\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?\\s+((PUBLIC\\s+\".*?\"|SYSTEM)\\s+\".*?\")[ " +
-                    "]*(\\[(.|\n)*\\]\\s*)?>)", java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+            "^\\s*<\\?xml.*?\\?>\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?(\\[.*\\]\\s*)?>)", java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final String PREAMBLE_NAMED_GROUP = "Preamble";
     private static final Pattern PREAMBLE_PATTERN = Pattern.compile(
             "^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)", java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);

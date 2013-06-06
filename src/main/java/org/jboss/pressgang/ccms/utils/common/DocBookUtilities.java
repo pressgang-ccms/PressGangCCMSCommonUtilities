@@ -352,7 +352,7 @@ public class DocBookUtilities {
             retValue.append("]");
         }
 
-        retValue.append(">\n\n");
+        retValue.append(">\n");
         retValue.append(fixedXML);
 
         return retValue.toString();
