@@ -18,10 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.regex.Pattern;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.utils.sort.EntitySubstitutionBoundaryDataBoundaryStartSort;
 import org.jboss.pressgang.ccms.utils.structures.EntitySubstitutionBoundaryData;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
@@ -45,12 +44,12 @@ import org.xml.sax.SAXException;
 public class XMLUtilities {
     private static final Logger LOG = LoggerFactory.getLogger(XMLUtilities.class);
     private static final String DOCTYPE_NAMED_GROUP = "Doctype";
-    private static final NamedPattern DOCTYPE_PATTERN = NamedPattern.compile(
+    private static final Pattern DOCTYPE_PATTERN = Pattern.compile(
             "^\\s*<\\?xml.*?\\?>\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?\\s+((PUBLIC\\s+\".*?\"|SYSTEM)\\s+\".*?\")[ " +
-                    "]*(\\[(.|\n)*\\]\\s*)?>)", Pattern.MULTILINE | Pattern.DOTALL);
+                    "]*(\\[(.|\n)*\\]\\s*)?>)", java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final String PREAMBLE_NAMED_GROUP = "Preamble";
-    private static final NamedPattern PREAMBLE_PATTERN = NamedPattern.compile(
-            "^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final Pattern PREAMBLE_PATTERN = Pattern.compile(
+            "^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)", java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     /**
      * The Docbook elements that contain translatable text
      */
@@ -92,12 +91,12 @@ public class XMLUtilities {
     public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
     public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
 
-    public static final NamedPattern TRAILING_WHITESPACE_RE_PATTERN = NamedPattern.compile(TRAILING_WHITESPACE_RE,
-            Pattern.MULTILINE | Pattern.DOTALL);
+    public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE,
-            Pattern.MULTILINE | Pattern.DOTALL);
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE,
-            Pattern.MULTILINE | Pattern.DOTALL);
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
 
     public static String findEncoding(final String xml) {
         // Find the preamble first so we can dissect it to find the encoding.
@@ -125,7 +124,7 @@ public class XMLUtilities {
     }
 
     public static String findDocumentType(final String xml) {
-        final NamedMatcher matcher = DOCTYPE_PATTERN.matcher(xml);
+        final Matcher matcher = DOCTYPE_PATTERN.matcher(xml);
         if (matcher.find()) {
             return matcher.group(DOCTYPE_NAMED_GROUP);
         } else {
@@ -134,7 +133,7 @@ public class XMLUtilities {
     }
 
     public static String findPreamble(final String xml) {
-        final NamedMatcher matcher = PREAMBLE_PATTERN.matcher(xml);
+        final Matcher matcher = PREAMBLE_PATTERN.matcher(xml);
         if (matcher.find()) {
             return matcher.group(PREAMBLE_NAMED_GROUP);
         } else {
@@ -192,9 +191,9 @@ public class XMLUtilities {
         final Random randomGenerator = new Random();
 
         /* compile the regular expression */
-        final NamedPattern injectionSequencePattern = NamedPattern.compile(XML_ENTITY_RE);
+        final Pattern injectionSequencePattern = Pattern.compile(XML_ENTITY_RE);
         /* find any matches */
-        final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(xml);
+        final Matcher injectionSequencematcher = injectionSequencePattern.matcher(xml);
 
         /* loop over the regular expression matches */
         while (injectionSequencematcher.find()) {
@@ -939,7 +938,7 @@ public class XMLUtilities {
                              * whitespace here.
                              */
 
-                            final NamedMatcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
@@ -1063,7 +1062,7 @@ public class XMLUtilities {
                              * whitespace here.
                              */
 
-                            final NamedMatcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);

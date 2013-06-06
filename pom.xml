@@ -30,7 +30,7 @@
         <apache.commonslang.version>2.6</apache.commonslang.version>
         <apache.commonscodec.version>1.7</apache.commonscodec.version>
         <gozirra.version>0.5-SNAPSHOT</gozirra.version>
-        <namedregexp.version>0.1.8</namedregexp.version>
+        <namedregexp.version>0.1.9</namedregexp.version>
         <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
