@@ -4,7 +4,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,16 +30,12 @@ public class FileUtilities {
         Scanner scanner = null;
         try {
             if (file.exists()) {
-                boolean firstLine = true;
-                scanner = new Scanner(new FileReader(file));
-                while (scanner.hasNextLine()) {
-                    // A new line should be skipped at the start of the file
-                    if (!firstLine) {
+                scanner = new Scanner(file);
+                if (scanner.hasNextLine()) {
+                    do {
+                        output.append(scanner.nextLine());
                         output.append(NL);
-                    } else {
-                        firstLine = false;
-                    }
-                    output.append(scanner.nextLine());
+                    } while (scanner.hasNextLine());
                 }
             }
         } catch (final Exception ex) {

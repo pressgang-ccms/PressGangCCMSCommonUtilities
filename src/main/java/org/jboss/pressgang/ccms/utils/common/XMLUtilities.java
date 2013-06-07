@@ -28,6 +28,7 @@ import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -1274,6 +1275,21 @@ public class XMLUtilities {
         retValue.append(input.replaceAll(END_CDATA_RE, END_CDATA_RE + END_CDATA_REPLACE + START_CDATA));
         retValue.append("]]>");
         return retValue.toString();
+    }
+
+    /**
+     * Creates an XIInclude element with a link to a file
+     *
+     * @param doc The DOM Document to create the xi:include for.
+     * @param file The file name/path to link to.
+     * @return An xi:include element that can be used to include content from another file.
+     */
+    public static Element createXIInclude(final Document doc, final String file) {
+        final Element xiInclude = doc.createElement("xi:include");
+        xiInclude.setAttribute("href", file);
+        xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
+
+        return xiInclude;
     }
 }
 
