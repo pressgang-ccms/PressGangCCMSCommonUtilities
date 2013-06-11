@@ -352,6 +352,22 @@ public class CommonFilterConstants {
      */
     public static final String PROPERTY_TAG_DESC = "Property Tag";
     /**
+     * The URL variable that defines the topic property tag
+     */
+    public static final String PROPERTY_TAG_EXISTS = "propertyTagExists";
+    /**
+     * The description of the property tag exists search field
+     */
+    public static final String PROPERTY_TAG_EXISTS_DESC = "Property Tag Exists";
+    /**
+     * The URL variable that defines the topic property tag
+     */
+    public static final String PROPERTY_TAG_NOT_EXISTS = "propertyTagNotExists";
+    /**
+     * The description of the property tag exists search field
+     */
+    public static final String PROPERTY_TAG_NOT_EXISTS_DESC = "Property Tag Not Exists";
+    /**
      * The URL variable that defines the has relationships search field
      */
     public static final String TOPIC_IS_INCLUDED_IN_SPEC = "topicIncludedInSpec";
