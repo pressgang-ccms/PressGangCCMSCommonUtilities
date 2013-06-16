@@ -105,6 +105,11 @@ public class CommonConstants {
      * The ISO8601 date format, used for SQL queries
      */
     public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+    /**
+     * The BlobConstant ID for the Rocbook DTD
+     */
+    public static final Integer ROCBOOK_DTD_BLOB_ID = 9;
     /**
      * The StringConstant ID that contains the properties file for all of the
      * verbatim, inline and inline contents XML elements.
