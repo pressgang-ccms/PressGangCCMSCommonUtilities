@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtilities {
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
     private static char[] randomStringCharacters = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
             'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
@@ -64,7 +65,7 @@ public class StringUtilities {
         return "\"" + input.replaceAll("\"", "\"\"") + "\"";
     }
 
-    public static String uncapatiliseFirstCharatcer(final String input) {
+    public static String uncapitaliseFirstCharacter(final String input) {
         if (input == null) return null;
 
         if (input.isEmpty()) return "";
@@ -110,10 +111,10 @@ public class StringUtilities {
         return buildString(lines, "\n");
     }
 
-    public static String buildString(final String[] lines, final String seperator) {
+    public static String buildString(final String[] lines, final String separator) {
         final StringBuilder retValue = new StringBuilder();
         for (final String line : lines) {
-            if (retValue.length() != 0) retValue.append(seperator);
+            if (retValue.length() != 0) retValue.append(separator);
             retValue.append(line);
         }
 
@@ -123,28 +124,22 @@ public class StringUtilities {
     public static boolean startsWithWhitespace(final String input) {
         if (input == null || input.isEmpty()) return false;
 
-		/* compile the regular expression */
-        final Pattern injectionSequencePattern = Pattern.compile("\\s");
+        /* find any matches */
+        final Matcher whitespaceMatcher = WHITESPACE_PATTERN.matcher(input.substring(0, 1));
 
-		/* find any matches */
-        final Matcher injectionSequencematcher = injectionSequencePattern.matcher(input.substring(0, 1));
-		
-		/* loop over the regular expression matches */
-        return injectionSequencematcher.find();
+        /* loop over the regular expression matches */
+        return whitespaceMatcher.find();
 
     }
 
     public static boolean endsWithWhitespace(final String input) {
         if (input == null || input.isEmpty()) return false;
-		
-		/* compile the regular expression */
-        final Pattern injectionSequencePattern = Pattern.compile("\\s");
-		
-		/* find any matches */
-        final Matcher injectionSequencematcher = injectionSequencePattern.matcher(input.substring(input.length() - 1, input.length()));
-		
-		/* loop over the regular expression matches */
-        return injectionSequencematcher.find();
+
+        /* find any matches */
+        final Matcher whitespaceMatcher = WHITESPACE_PATTERN.matcher(input.substring(input.length() - 1, input.length()));
+
+        /* loop over the regular expression matches */
+        return whitespaceMatcher.find();
     }
 
     public static String convertToLinuxLineEndings(final String input) {
@@ -158,6 +153,8 @@ public class StringUtilities {
     }
 
     /**
+     * Converts a String into bytes using UTF-8 encoding.
+     *
      * @param input The String to convert
      * @return The byte array from the input String, or null if the input is null
      */
@@ -165,7 +162,7 @@ public class StringUtilities {
         try {
             return input == null ? new byte[]{} : input.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-			/* UTF-8 is a valid format so this should exception should never get thrown */
+            // UTF-8 is a valid format so this should exception should never get thrown
         }
 
         return new byte[]{};
@@ -292,17 +289,6 @@ public class StringUtilities {
             if (!Character.isLetterOrDigit(input.charAt(i))) return false;
         }
         return true;
-    }
-
-    /**
-     * Replaces the escaped chars with their normal counterpart. Only replaces ('[', ']', '(', ')', ';', ',', '+', '-' and '=')
-     *
-     * @param input The string to have all its escaped characters replaced.
-     * @return The input string with the escaped characters replaced back to normal.
-     */
-    public static String replaceEscapeChars(final String input) {
-        return input.replaceAll("\\\\\\[", "[").replaceAll("\\\\\\]", "]").replaceAll("\\\\\\(", "(").replaceAll("\\\\\\)", ")").replaceAll(
-                "\\\\:", ":").replaceAll("\\\\,", ",").replaceAll("\\\\=", "=").replaceAll("\\\\\\+", "+").replaceAll("\\\\-", "-");
     }
 
     /**
