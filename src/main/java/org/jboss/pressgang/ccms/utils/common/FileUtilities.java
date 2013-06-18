@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Scanner;
+import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,25 +25,11 @@ public class FileUtilities {
      * @return The contents of the file as a String
      */
     public static String readFileContents(final File file) {
-        final StringBuilder output = new StringBuilder("");
-        final String NL = System.getProperty("line.separator");
-        Scanner scanner = null;
         try {
-            if (file.exists()) {
-                scanner = new Scanner(file);
-                if (scanner.hasNextLine()) {
-                    do {
-                        output.append(scanner.nextLine());
-                        output.append(NL);
-                    } while (scanner.hasNextLine());
-                }
-            }
-        } catch (final Exception ex) {
-            LOG.error("An error occurred while reading the file contents", ex);
-        } finally {
-            if (scanner != null) scanner.close();
+            return new String(readFileContentsAsByteArray(file), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
-        return output.toString();
     }
 
     /**
