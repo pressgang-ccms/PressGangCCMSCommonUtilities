@@ -55,6 +55,9 @@ public class CommonConstants {
     public static final int CS_RELATIONSHIP_NEXT = 3;
     public static final int CS_RELATIONSHIP_PREVIOUS = 4;
 
+    public static final int FILTER_TOPIC = 0;
+    public static final int FILTER_CONTENT_SPEC = 1;
+
     public static final int DOCBOOK_45 = 0;
     public static final int DOCBOOK_50 = 1;
 

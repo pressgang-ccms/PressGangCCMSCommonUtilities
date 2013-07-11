@@ -168,40 +168,40 @@ public class CommonFilterConstants {
      * The URL variable that defines the start range for the topic create date
      * search field
      */
-    public static final String TOPIC_STARTDATE_FILTER_VAR = "startDate";
+    public static final String STARTDATE_FILTER_VAR = "startDate";
     /**
      * The description of the start range for the topic create date search field
      */
-    public static final String TOPIC_STARTDATE_FILTER_VAR_DESC = "Min Creation Date";
+    public static final String STARTDATE_FILTER_VAR_DESC = "Min Creation Date";
     /**
      * The URL variable that defines the end range for the topic create date
      * search field
      */
-    public static final String TOPIC_ENDDATE_FILTER_VAR = "endDate";
+    public static final String ENDDATE_FILTER_VAR = "endDate";
     /**
      * The description of the end range for the topic create date search field
      */
-    public static final String TOPIC_ENDDATE_FILTER_VAR_DESC = "Max Creation Date";
+    public static final String ENDDATE_FILTER_VAR_DESC = "Max Creation Date";
     /**
      * The URL variable that defines the start edit range for the topic create
      * date search field
      */
-    public static final String TOPIC_STARTEDITDATE_FILTER_VAR = "startEditDate";
+    public static final String STARTEDITDATE_FILTER_VAR = "startEditDate";
     /**
      * The description of the start edit range for the topic create date search
      * field
      */
-    public static final String TOPIC_STARTEDITDATE_FILTER_VAR_DESC = "Min Edited Date";
+    public static final String STARTEDITDATE_FILTER_VAR_DESC = "Min Edited Date";
     /**
      * The URL variable that defines the end edit range for the topic create
      * date search field
      */
-    public static final String TOPIC_ENDEDITDATE_FILTER_VAR = "endEditDate";
+    public static final String ENDEDITDATE_FILTER_VAR = "endEditDate";
     /**
      * The description of the end edit range for the topic create date search
      * field
      */
-    public static final String TOPIC_ENDEDITDATE_FILTER_VAR_DESC = "Max Edited Date";
+    public static final String ENDEDITDATE_FILTER_VAR_DESC = "Max Edited Date";
     /**
      * The URL variable that defines the logic to be applied to the search
      * fields
@@ -518,6 +518,9 @@ public class CommonFilterConstants {
 
     public static final String FILTER_DESCRIPTION_FILTER_VAR = "filterDesc";
     public static final String FILTER_DESCRIPTION_FILTER_VAR_DESC = "Filter Description";
+
+    public static final String FILTER_TYPE_FILTER_VAR = "filterType";
+    public static final String FILTER_TYPE_FILTER_VAR_DESC = "Filter Type";
 
     /* PropertyTag Constants */
     public static final String PROP_TAG_IDS_FILTER_VAR = "propTagIds";
