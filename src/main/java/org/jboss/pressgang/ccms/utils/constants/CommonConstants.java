@@ -29,6 +29,10 @@ public class CommonConstants {
      * The Bugzilla Profile Property Tag
      */
     public final static Integer BUGZILLA_PROFILE_PROPERTY = 5;
+    /**
+     * The Content Specification tag ID
+     */
+    public static final Integer CONTENT_SPEC_TAG_ID = 268;
 
     public static final int CS_BOOK = 0;
     public static final int CS_ARTICLE = 1;
