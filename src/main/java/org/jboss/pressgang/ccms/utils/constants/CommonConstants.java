@@ -44,6 +44,7 @@ public class CommonConstants {
     public static final int CS_NODE_COMMENT = 6;
     public static final int CS_NODE_META_DATA = 7;
     public static final int CS_NODE_PREFACE = 8;
+    public static final int CS_NODE_INNER_TOPIC = 9;
 
     public static final int CS_RELATIONSHIP_PREREQUISITE = 0;
     public static final int CS_RELATIONSHIP_REFER_TO = 1;
