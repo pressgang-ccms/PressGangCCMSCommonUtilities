@@ -27,7 +27,11 @@ public class FileUtilities {
     public static String readFileContents(final File file) {
         try {
             final byte[] contents = readFileContentsAsByteArray(file);
-            return new String(contents, "UTF-8");
+            if (contents != null) {
+                return new String(contents, "UTF-8");
+            } else {
+                return "";
+            }
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
