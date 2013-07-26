@@ -35,8 +35,10 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * A collection of XML related functions. Note to self: See http://www.gnu.org/s/
@@ -414,7 +416,25 @@ public class XMLUtilities {
                 }
             });
 
-            final Document document = builder.parse(new ByteArrayInputStream(fixedXML.getBytes(encoding)));
+            // Create an error handler that does nothing, so that the default handler (which only prints to stderr) isn't used.
+            builder.setErrorHandler(new ErrorHandler() {
+                @Override
+                public void warning(SAXParseException e) throws SAXException {
+                    // Do nothing
+                }
+
+                @Override
+                public void error(SAXParseException e) throws SAXException {
+                    // Do nothing
+                }
+
+                @Override
+                public void fatalError(SAXParseException e) throws SAXException {
+                    // Do nothing
+                }
+            });
+
+            final Document document = builder.parse(new org.xml.sax.InputSource(new ByteArrayInputStream(fixedXML.getBytes(encoding))));
 
             restoreEntities(replacements, document.getDocumentElement());
 
