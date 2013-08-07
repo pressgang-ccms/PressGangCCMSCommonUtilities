@@ -322,4 +322,110 @@ public class StringUtilities {
                 "\\[").replaceAll("\\(", "\\(").replaceAll("\\)", "\\)").replaceAll("\\?", "\\?").replaceAll("\\$", "\\$").replaceAll("\\|",
                 "\\|").replaceAll("\\^", "\\^").replaceAll("\\.", "\\.");
     }
+
+    /**
+     * Checks to see how similar two strings are using the Levenshtein distance algorithm.
+     *
+     * @param s1 The first string to compare against.
+     * @param s2 The second string to compare against.
+     * @return A value between 0 and 1.0, where 1.0 is an exact match and 0 is no match at all.
+     */
+    public static double similarLevenshtein(String s1, String s2) {
+        if (s1.equals(s2)) {
+            return 1.0;
+        }
+
+        // Make sure s1 is the longest string
+        if (s1.length() < s2.length()) {
+            String swap = s1;
+            s1 = s2;
+            s2 = swap;
+        }
+
+        int bigLength = s1.length();
+        return (bigLength - StringUtils.getLevenshteinDistance(s2, s1)) / (double) bigLength;
+    }
+
+    /**
+     * Checks to see how similar two strings are using the Damerau-Levenshtein distance algorithm.
+     *
+     * @param s1 The first string to compare against.
+     * @param s2 The second string to compare against.
+     * @return A value between 0 and 1.0, where 1.0 is an exact match and 0 is no match at all.
+     */
+    public static double similarDamerauLevenshtein(String s1, String s2) {
+        if (s1.equals(s2)) {
+            return 1.0;
+        }
+
+        // Make sure s1 is the longest string
+        if (s1.length() < s2.length()) {
+            String swap = s1;
+            s1 = s2;
+            s2 = swap;
+        }
+
+        int bigLength = s1.length();
+        return (bigLength - getDamerauLevenshteinDistance(s2, s1)) / (double) bigLength;
+    }
+
+    /**
+     * Get the minimum number of operations required to get from one string to another using the Damerau-Levenshtein distance algorithm
+     * <p/>
+     * Note: Java implementation of the C# algorithm from https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+     *
+     * @param source The source string.
+     * @param target The string to transform the source into.
+     * @return The number of operations required to transform source into target.
+     */
+    public static int getDamerauLevenshteinDistance(String source, String target) {
+        if (source == null || source.isEmpty()) {
+            if (target == null || target.isEmpty()) {
+                return 0;
+            } else {
+                return target.length();
+            }
+        } else if (target == null || target.isEmpty()) {
+            return source.length();
+        }
+
+        int[][] score = new int[source.length() + 2][target.length() + 2];
+
+        int INF = source.length() + target.length();
+        score[0][0] = INF;
+        for (int i = 0; i <= source.length(); i++) {
+            score[i + 1][1] = i;
+            score[i + 1][0] = INF;
+        }
+        for (int j = 0; j <= target.length(); j++) {
+            score[1][j + 1] = j;
+            score[0][j + 1] = INF;
+        }
+
+        final SortedMap<Character, Integer> sd = new TreeMap<Character, Integer>();
+        for (final char letter : (source + target).toCharArray()) {
+            if (!sd.containsKey(letter)) sd.put(letter, 0);
+        }
+
+        for (int i = 1; i <= source.length(); i++) {
+            int DB = 0;
+            for (int j = 1; j <= target.length(); j++) {
+                int i1 = sd.get(target.charAt(j - 1));
+                int j1 = DB;
+
+                if (source.charAt(i - 1) == target.charAt(j - 1)) {
+                    score[i + 1][j + 1] = score[i][j];
+                    DB = j;
+                } else {
+                    score[i + 1][j + 1] = Math.min(score[i][j], Math.min(score[i + 1][j], score[i][j + 1])) + 1;
+                }
+
+                score[i + 1][j + 1] = Math.min(score[i + 1][j + 1], score[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1));
+            }
+
+            sd.put(source.charAt(i - 1), i);
+        }
+
+        return score[source.length() + 1][target.length() + 1];
+    }
 }
