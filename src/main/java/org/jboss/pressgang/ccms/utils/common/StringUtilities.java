@@ -3,8 +3,9 @@ package org.jboss.pressgang.ccms.utils.common;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 
 public class StringUtilities {
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
@@ -92,13 +93,16 @@ public class StringUtilities {
     /**
      * Prepares a string to be inserted into xml by escaping any reserved XML symbols.
      * <p/>
-     * The current symbols are: < >
+     * The current symbols are: < > & "
      *
      * @param input The original string
      * @return A string with the reserved xml characters escaped.
      */
     public static String escapeForXML(final String input) {
-        return input.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        return input.replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;");
     }
 
     /**

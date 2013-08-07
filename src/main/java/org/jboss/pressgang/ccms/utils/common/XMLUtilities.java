@@ -94,6 +94,8 @@ public class XMLUtilities {
     public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
     public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
 
+    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);");
+
     public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE,
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE,
@@ -193,10 +195,8 @@ public class XMLUtilities {
 
         final Random randomGenerator = new Random();
 
-        /* compile the regular expression */
-        final Pattern injectionSequencePattern = Pattern.compile(XML_ENTITY_RE);
         /* find any matches */
-        final Matcher injectionSequencematcher = injectionSequencePattern.matcher(xml);
+        final Matcher injectionSequencematcher = XML_ENTITY_PATTERN.matcher(xml);
 
         /* loop over the regular expression matches */
         while (injectionSequencematcher.find()) {
