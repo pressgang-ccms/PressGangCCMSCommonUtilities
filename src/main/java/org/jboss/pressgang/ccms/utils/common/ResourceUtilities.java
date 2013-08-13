@@ -35,6 +35,9 @@ public class ResourceUtilities {
             while ((line = br.readLine()) != null) {
                 output.append(line + "\n");
             }
+
+            in.close();
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,6 +63,8 @@ public class ResourceUtilities {
         try {
             dBuilder = dbFactory.newDocumentBuilder();
             doc = dBuilder.parse(in);
+
+            in.close();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
