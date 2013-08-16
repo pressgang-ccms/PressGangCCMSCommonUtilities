@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.EntityResolver;
@@ -584,7 +585,16 @@ public class XMLUtilities {
         if (Node.COMMENT_NODE == nodeType) {
             final StringBuffer retValue = new StringBuffer();
 
-            if (!verbatim && !inline) appendIndent(retValue, tabIndent, indentLevel, indentCount);
+            if (!verbatim && !inline) {
+                // If the previous node is a text node that isn't just whitespace then the comment must follow on, so don't add an indent
+                if (previousNode != null && previousNode instanceof Text) {
+                    if (previousNode.getTextContent().trim().isEmpty()) {
+                        appendIndent(retValue, tabIndent, indentLevel, indentCount);
+                    }
+                } else {
+                    appendIndent(retValue, tabIndent, indentLevel, indentCount);
+                }
+            }
 
             if (includeElementName) retValue.append("<!--");
             retValue.append(node.getNodeValue());
