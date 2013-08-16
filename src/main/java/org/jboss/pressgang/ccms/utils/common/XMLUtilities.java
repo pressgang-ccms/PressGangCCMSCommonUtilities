@@ -622,7 +622,7 @@ public class XMLUtilities {
                         trimmedNodeValue = trimmedNodeValue.substring(0, trimmedNodeValue.length() - 1);
                     }
 
-                    if (startedWithWhiteSpace && !firstNotInlinedTextNode) trimmedNodeValue = " " + trimmedNodeValue;
+                    if (startedWithWhiteSpace && !firstNode) trimmedNodeValue = " " + trimmedNodeValue;
 
                     /* Only add whitespace if the node isn't the last node */
                     if (endedWithWhitespace && node.getNextSibling() != null) trimmedNodeValue += " ";
