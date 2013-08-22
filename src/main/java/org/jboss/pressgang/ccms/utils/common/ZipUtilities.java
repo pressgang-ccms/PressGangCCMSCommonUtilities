@@ -121,7 +121,7 @@ public class ZipUtilities {
     /**
      * Unzips a Zip File in byte array format to a specified directory.
      *
-     * @param zipBytes  The zip file.
+     * @param zipFile  The zip file.
      * @param directory The directory to unzip the file to.
      * @return true if the file was successfully unzipped otherwise false.
      */
@@ -150,6 +150,42 @@ public class ZipUtilities {
             return false;
         }
         return unzipFileIntoDirectory(zipEntries, directory);
+    }
+
+    /**
+     * Unzips a Zip File in byte array format to a specified directory.
+     *
+     * @param zipBytes  The zip file.
+     * @return A map of file names to file data.
+     */
+    public static Map<String, byte[]> unzipFile(final byte[] zipBytes, boolean stripZIPName) throws IOException {
+        final Map<ZipEntry, byte[]> zipEntries = new HashMap<ZipEntry, byte[]>();
+        final ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipBytes));
+        ZipEntry entry = null;
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((entry = zis.getNextEntry()) != null) {
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            while ((read = zis.read(buffer)) > 0) {
+                bos.write(buffer, 0, read);
+            }
+            zipEntries.put(entry, bos.toByteArray());
+        }
+
+        final HashMap<String, byte[]> files = new HashMap<String, byte[]>();
+        for (final Entry<ZipEntry, byte[]> mapEntry : zipEntries.entrySet()) {
+            final ZipEntry zipEntry = mapEntry.getKey();
+            // Ignore directories, as we only want files
+            if (!zipEntry.isDirectory()) {
+                if (stripZIPName) {
+                    files.put(stripZipFileName(zipEntry.getName()), mapEntry.getValue());
+                } else {
+                    files.put(zipEntry.getName(), mapEntry.getValue());
+                }
+            }
+        }
+
+        return files;
     }
 
     /**
