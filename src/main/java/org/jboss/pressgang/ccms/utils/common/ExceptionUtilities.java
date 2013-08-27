@@ -19,4 +19,17 @@ public class ExceptionUtilities {
         sw.flush();
         return sw.toString();
     }
+
+    /**
+     * Gets the root cause of an Exception/Error
+     *
+     * @param throwable The exception/error to find the root cause of.
+     * @return The root cause of the exception, or throwable if it is the root cause.
+     */
+    public static Throwable getRootCause(Throwable throwable) {
+        if (throwable.getCause() != null)
+            return getRootCause(throwable.getCause());
+
+        return throwable;
+    }
 }
