@@ -190,4 +190,45 @@ public class CommonConstants {
      * A prefix for error xref ids
      */
     public static final String ERROR_XREF_ID_PREFIX = "TagErrorXRef";
+
+    // Content Spec Meta Data Constants
+    public static final String CS_CHECKSUM_TITLE = "CHECKSUM";
+    public static final String CS_ID_TITLE = "ID";
+    public static final String CS_TITLE_TITLE = "Title";
+    public static final String CS_SUBTITLE_TITLE = "Subtitle";
+    public static final String CS_EDITION_TITLE = "Edition";
+    public static final String CS_BOOK_VERSION_TITLE = "Book Version";
+    public static final String CS_PUBSNUMBER_TITLE = "Pubsnumber";
+    public static final String CS_PRODUCT_TITLE = "Product";
+    public static final String CS_ABSTRACT_TITLE = "Abstract";
+    public static final String CS_ABSTRACT_ALTERNATE_TITLE = "Description";
+    public static final String CS_COPYRIGHT_HOLDER_TITLE = "Copyright Holder";
+    public static final String CS_COPYRIGHT_YEAR_TITLE = "Copyright Year";
+    public static final String CS_VERSION_TITLE = "Version";
+    public static final String CS_BRAND_TITLE = "Brand";
+    public static final String CS_BUG_LINKS_TITLE = "Bug Links";
+    public static final String CS_BUGZILLA_PRODUCT_TITLE = "BZProduct";
+    public static final String CS_BUGZILLA_COMPONENT_TITLE = "BZComponent";
+    public static final String CS_BUGZILLA_VERSION_TITLE = "BZVersion";
+    public static final String CS_BUGZILLA_KEYWORDS_TITLE = "BZKeywords";
+    public static final String CS_BUGZILLA_SERVER_TITLE = "BZServer";
+    public static final String CS_BUGZILLA_URL_TITLE = "BZURL";
+    public static final String CS_BOOK_TYPE_TITLE = "Type";
+    public static final String CS_BRAND_LOGO_TITLE = "Brand Logo";
+    public static final String CS_PUBLICAN_CFG_TITLE = "publican.cfg";
+    public static final String CS_INLINE_INJECTION_TITLE = "Inline Injection";
+    public static final String CS_DTD_TITLE = "DTD";
+    public static final String CS_REV_HISTORY_TITLE = "Revision History";
+    public static final String CS_FEEDBACK_TITLE = "Feedback";
+    public static final String CS_LEGAL_NOTICE_TITLE = "Legal Notice";
+    public static final String CS_BUGZILLA_ASSIGNEE_TITLE = "BZ Assignee";
+    public static final String CS_MAVEN_GROUP_ID_TITLE = "GroupId";
+    public static final String CS_MAVEN_ARTIFACT_ID_TITLE = "ArtifactId";
+    public static final String CS_FILE_TITLE = "Additional Files";
+    public static final String CS_FILE_SHORT_TITLE = "Files";
+    public static final String CS_JIRA_PROJECT_TITLE = "JIRAProject";
+    public static final String CS_JIRA_COMPONENT_TITLE = "JIRAComponent";
+    public static final String CS_JIRA_VERSION_TITLE = "JIRAVersion";
+    public static final String CS_JIRA_LABELS_TITLE = "JIRALabels";
+    public static final String CS_JIRA_SERVER_TITLE = "JIRAServer";
 }
