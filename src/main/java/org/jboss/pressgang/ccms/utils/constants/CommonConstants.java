@@ -58,6 +58,9 @@ public class CommonConstants {
     public static final int CS_RELATIONSHIP_NEXT = 3;
     public static final int CS_RELATIONSHIP_PREVIOUS = 4;
 
+    public static final int CS_RELATIONSHIP_MODE_ID = 0;
+    public static final int CS_RELATIONSHIP_MODE_TARGET = 1;
+
     public static final int FILTER_TOPIC = 0;
     public static final int FILTER_CONTENT_SPEC = 1;
 
