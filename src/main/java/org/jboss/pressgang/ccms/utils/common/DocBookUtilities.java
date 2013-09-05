@@ -219,6 +219,9 @@ public class DocBookUtilities {
                   */
                 if (endIndex == -1 || (nextIndex != -1 && nextIndex < endIndex)) {
                     continue;
+                } else if (index + 1 == endIndex) {
+                    // This is a <> sequence, so it should be ignored as well.
+                    continue;
                 } else {
                     elements.add(fixedTitle.substring(index, endIndex + 1));
                 }
