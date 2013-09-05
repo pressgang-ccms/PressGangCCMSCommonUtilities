@@ -76,7 +76,7 @@ public class DocBookUtilities {
 
             // check if the node is the title and if its parent is the document root element
             if (node.getNodeName().equals(TOPIC_ROOT_TITLE_NODE_NAME) && node.getParentNode().equals(doc.getDocumentElement())) {
-                return ((Element) node).getTextContent();
+                return XMLUtilities.convertNodeToString(node, false);
             }
         }
 
