@@ -592,6 +592,9 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_VERSION_FILTER_VAR = "contentSpecVersion";
     public static final String CONTENT_SPEC_VERSION_FILTER_VAR_DESC = "Content Specification Version";
 
+    public static final String HAS_ERRORS_FILTER_VAR = "hasErrors";
+    public static final String HAS_ERRORS_FILTER_VAR_DESC = "Has Errors";
+
     /* CSNode Constants */
     public static final String CONTENT_SPEC_NODE_IDS_FILTER_VAR = "csNodeIds";
     public static final String CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC = "Content Specification Node IDs";
