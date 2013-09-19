@@ -92,6 +92,9 @@ public class CommonFilterConstants {
      */
     public static final int CATEGORY_EXTERNAL_OR_STATE = 3;
 
+    public static final String STRING_MATCHES_SUFFIX = "-matches";
+    public static final String STRING_CONTAINS_SUFFIX = "-contains";
+
     /**
      * The URL variable that defines the topic text search field
      */
@@ -120,6 +123,7 @@ public class CommonFilterConstants {
      * The URL variable that defines the topic title search field
      */
     public static final String TOPIC_TITLE_FILTER_VAR = "topicTitle";
+    public static final String TOPIC_TITLE_MATCHES_FILTER_VAR = TOPIC_TITLE_FILTER_VAR + STRING_MATCHES_SUFFIX;
     /**
      * The description of the topic title search field
      */
@@ -128,6 +132,7 @@ public class CommonFilterConstants {
      * The URL variable that defines the not topic title search field
      */
     public static final String TOPIC_TITLE_NOT_FILTER_VAR = "topicNotTitle";
+    public static final String TOPIC_TITLE_NOT_MATCHES_FILTER_VAR = TOPIC_TITLE_NOT_FILTER_VAR + STRING_MATCHES_SUFFIX;
     /**
      * The description of the not topic title search field
      */
@@ -136,6 +141,7 @@ public class CommonFilterConstants {
      * The URL variable that defines the topic description search field
      */
     public static final String TOPIC_DESCRIPTION_FILTER_VAR = "topicText";
+    public static final String TOPIC_DESCRIPTION_MATCHES_FILTER_VAR = TOPIC_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     /**
      * The description of the topic description search field
      */
@@ -144,6 +150,7 @@ public class CommonFilterConstants {
      * The URL variable that defines the not topic description search field
      */
     public static final String TOPIC_DESCRIPTION_NOT_FILTER_VAR = "topicNotText";
+    public static final String TOPIC_DESCRIPTION_NOT_MATCHES_FILTER_VAR = TOPIC_DESCRIPTION_NOT_FILTER_VAR + STRING_MATCHES_SUFFIX;
     /**
      * The description of the not topic description search field
      */
@@ -152,6 +159,7 @@ public class CommonFilterConstants {
      * The URL variable that defines the topic xml search field
      */
     public static final String TOPIC_XML_FILTER_VAR = "topicXml";
+    public static final String TOPIC_XML_MATCHES_FILTER_VAR = TOPIC_XML_FILTER_VAR + STRING_MATCHES_SUFFIX;
     /**
      * The description of the topic xml search field
      */
@@ -160,6 +168,7 @@ public class CommonFilterConstants {
      * The URL variable that defines the not topic xml search field
      */
     public static final String TOPIC_XML_NOT_FILTER_VAR = "topicNotXml";
+    public static final String TOPIC_XML_NOT_MATCHES_FILTER_VAR = TOPIC_XML_NOT_FILTER_VAR + STRING_MATCHES_SUFFIX;
     /**
      * The description of the not topic xml search field
      */
@@ -211,6 +220,7 @@ public class CommonFilterConstants {
      * The description the logic to be applied to the search fields
      */
     public static final String LOGIC_FILTER_VAR_DESC = "Field Logic";
+
     /**
      * The URL variable that defines the has related from search field
      */
@@ -459,9 +469,11 @@ public class CommonFilterConstants {
     public static final String TAG_IDS_FILTER_VAR_DESC = "Tag IDs";
 
     public static final String TAG_NAME_FILTER_VAR = "tagName";
+    public static final String TAG_NAME_MATCHES_FILTER_VAR = TAG_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String TAG_NAME_FILTER_VAR_DESC = "Tag Name";
 
     public static final String TAG_DESCRIPTION_FILTER_VAR = "tagDesc";
+    public static final String TAG_DESCRIPTION_MATCHES_FILTER_VAR = TAG_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String TAG_DESCRIPTION_FILTER_VAR_DESC = "Tag Description";
 
     /* Category Filter Constants */
@@ -469,9 +481,11 @@ public class CommonFilterConstants {
     public static final String CATEGORY_IDS_FILTER_VAR_DESC = "Category IDs";
 
     public static final String CATEGORY_NAME_FILTER_VAR = "catName";
+    public static final String CATEGORY_NAME_MATCHES_FILTER_VAR = CATEGORY_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CATEGORY_NAME_FILTER_VAR_DESC = "Category Name";
 
     public static final String CATEGORY_DESCRIPTION_FILTER_VAR = "catDesc";
+    public static final String CATEGORY_DESCRIPTION_MATCHES_FILTER_VAR = CATEGORY_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CATEGORY_DESCRIPTION_FILTER_VAR_DESC = "Category Description";
 
     public static final String CATEGORY_IS_MUTUALLY_EXCLUSIVE_VAR = "isMutuallyExclusive";
@@ -484,9 +498,11 @@ public class CommonFilterConstants {
     public static final String USER_IDS_FILTER_VAR_DESC = "User IDs";
 
     public static final String USER_NAME_FILTER_VAR = "username";
+    public static final String USER_NAME_MATCHES_FILTER_VAR = USER_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String USER_NAME_FILTER_VAR_DESC = "Username";
 
     public static final String USER_DESCRIPTION_FILTER_VAR = "userDesc";
+    public static final String USER_DESCRIPTION_MATCHES_FILTER_VAR = USER_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String USER_DESCRIPTION_FILTER_VAR_DESC = "User Description";
 
     /* Image Filter Constants */
@@ -494,9 +510,11 @@ public class CommonFilterConstants {
     public static final String IMAGE_IDS_FILTER_VAR_DESC = "Image IDs";
 
     public static final String IMAGE_DESCRIPTION_FILTER_VAR = "imageDesc";
+    public static final String IMAGE_DESCRIPTION_MATCHES_FILTER_VAR = IMAGE_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String IMAGE_DESCRIPTION_FILTER_VAR_DESC = "Image Description";
 
     public static final String IMAGE_ORIGINAL_FILENAME_FILTER_VAR = "imageOrigName";
+    public static final String IMAGE_ORIGINAL_FILENAME_MATCHES_FILTER_VAR = IMAGE_ORIGINAL_FILENAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String IMAGE_ORIGINAL_FILENAME_FILTER_VAR_DESC = "Image Original Filename";
 
     /* Project Filter Constant */
@@ -504,9 +522,11 @@ public class CommonFilterConstants {
     public static final String PROJECT_IDS_FILTER_VAR_DESC = "Project IDs";
 
     public static final String PROJECT_NAME_FILTER_VAR = "projectName";
+    public static final String PROJECT_NAME_MATCHES_FILTER_VAR = PROJECT_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String PROJECT_NAME_FILTER_VAR_DESC = "Project Name";
 
     public static final String PROJECT_DESCRIPTION_FILTER_VAR = "projectDesc";
+    public static final String PROJECT_DESCRIPTION_MATCHES_FILTER_VAR = PROJECT_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String PROJECT_DESCRIPTION_FILTER_VAR_DESC = "Project Description";
 
     /* Filter Constants */
@@ -514,9 +534,11 @@ public class CommonFilterConstants {
     public static final String FILTER_IDS_FILTER_VAR_DESC = "Filter IDs";
 
     public static final String FILTER_NAME_FILTER_VAR = "filterName";
+    public static final String FILTER_NAME_MATCHES_FILTER_VAR = FILTER_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String FILTER_NAME_FILTER_VAR_DESC = "Filter Name";
 
     public static final String FILTER_DESCRIPTION_FILTER_VAR = "filterDesc";
+    public static final String FILTER_DESCRIPTION_MATCHES_FILTER_VAR = FILTER_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String FILTER_DESCRIPTION_FILTER_VAR_DESC = "Filter Description";
 
     public static final String FILTER_TYPE_FILTER_VAR = "filterType";
@@ -527,9 +549,11 @@ public class CommonFilterConstants {
     public static final String PROP_TAG_IDS_FILTER_VAR_DESC = "Property Tag IDs";
 
     public static final String PROP_TAG_NAME_FILTER_VAR = "propTagName";
+    public static final String PROP_TAG_NAME_MATCHES_FILTER_VAR = PROP_TAG_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String PROP_TAG_NAME_FILTER_VAR_DESC = "Property Tag Name";
 
     public static final String PROP_TAG_DESCRIPTION_FILTER_VAR = "propTagDesc";
+    public static final String PROP_TAG_DESCRIPTION_MATCHES_FILTER_VAR = PROP_TAG_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String PROP_TAG_DESCRIPTION_FILTER_VAR_DESC = "Property Tag Description";
 
     /* BlobConstant Constants */
@@ -537,6 +561,7 @@ public class CommonFilterConstants {
     public static final String BLOB_CONSTANT_IDS_FILTER_VAR_DESC = "Blob Constant IDs";
 
     public static final String BLOB_CONSTANT_NAME_FILTER_VAR = "blobConstantName";
+    public static final String BLOB_CONSTANT_NAME_MATCHES_FILTER_VAR = BLOB_CONSTANT_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String BLOB_CONSTANT_NAME_FILTER_VAR_DESC = "Blob Constant Name";
 
     /* StringConstant Constants */
@@ -544,9 +569,11 @@ public class CommonFilterConstants {
     public static final String STRING_CONSTANT_IDS_FILTER_VAR_DESC = "String Constant IDs";
 
     public static final String STRING_CONSTANT_NAME_FILTER_VAR = "stringConstantName";
+    public static final String STRING_CONSTANT_NAME_MATCHES_FILTER_VAR = STRING_CONSTANT_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String STRING_CONSTANT_NAME_FILTER_VAR_DESC = "String Constant Name";
 
     public static final String STRING_CONSTANT_VALUE_FILTER_VAR = "stringConstantValue";
+    public static final String STRING_CONSTANT_VALUE_MATCHES_FILTER_VAR = STRING_CONSTANT_VALUE_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String STRING_CONSTANT_VALUE_FILTER_VAR_DESC = "String Constant Value";
 
     /* Role Constants */
@@ -554,9 +581,11 @@ public class CommonFilterConstants {
     public static final String ROLE_IDS_FILTER_VAR_DESC = "Role IDs";
 
     public static final String ROLE_NAME_FILTER_VAR = "roleName";
+    public static final String ROLE_NAME_MATCHES_FILTER_VAR = ROLE_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String ROLE_NAME_FILTER_VAR_DESC = "Role Name";
 
     public static final String ROLE_DESCRIPTION_FILTER_VAR = "roleDesc";
+    public static final String ROLE_DESCRIPTION_MATCHES_FILTER_VAR = ROLE_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String ROLE_DESCRIPTION_FILTER_VAR_DESC = "Role Description";
 
     /* IntegerConstant Constants */
@@ -564,6 +593,7 @@ public class CommonFilterConstants {
     public static final String INTEGER_CONSTANT_IDS_FILTER_VAR_DESC = "Integer Constant IDs";
 
     public static final String INTEGER_CONSTANT_NAME_FILTER_VAR = "integerConstantName";
+    public static final String INTEGER_CONSTANT_NAME_MATCHES_FILTER_VAR = INTEGER_CONSTANT_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String INTEGER_CONSTANT_NAME_FILTER_VAR_DESC = "Integer Constant Name";
 
     public static final String INTEGER_CONSTANT_VALUE_FILTER_VAR = "integerConstantValue";
@@ -574,9 +604,11 @@ public class CommonFilterConstants {
     public static final String PROP_CATEGORY_IDS_FILTER_VAR_DESC = "Property Tag Category IDs";
 
     public static final String PROP_CATEGORY_NAME_FILTER_VAR = "propCategoryName";
+    public static final String PROP_CATEGORY_NAME_MATCHES_FILTER_VAR = PROP_CATEGORY_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String PROP_CATEGORY_NAME_FILTER_VAR_DESC = "Property Tag Category Name";
 
     public static final String PROP_CATEGORY_DESCRIPTION_FILTER_VAR = "propCategoryDesc";
+    public static final String PROP_CATEGORY_DESCRIPTION_MATCHES_FILTER_VAR = PROP_CATEGORY_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String PROP_CATEGORY_DESCRIPTION_FILTER_VAR_DESC = "Property Tag Category Description";
 
     /* ContentSpec Constants */
@@ -584,12 +616,15 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_IDS_FILTER_VAR_DESC = "Content Specification IDs";
 
     public static final String CONTENT_SPEC_TITLE_FILTER_VAR = "contentSpecTitle";
+    public static final String CONTENT_SPEC_TITLE_MATCHES_FILTER_VAR = CONTENT_SPEC_TITLE_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_TITLE_FILTER_VAR_DESC = "Content Specification Title";
 
     public static final String CONTENT_SPEC_PRODUCT_FILTER_VAR = "contentSpecProduct";
+    public static final String CONTENT_SPEC_PRODUCT_MATCHES_FILTER_VAR = CONTENT_SPEC_PRODUCT_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_PRODUCT_FILTER_VAR_DESC = "Content Specification Product";
 
     public static final String CONTENT_SPEC_VERSION_FILTER_VAR = "contentSpecVersion";
+    public static final String CONTENT_SPEC_VERSION_MATCHES_FILTER_VAR = CONTENT_SPEC_VERSION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_VERSION_FILTER_VAR_DESC = "Content Specification Version";
 
     public static final String HAS_ERRORS_FILTER_VAR = "hasErrors";
@@ -600,6 +635,7 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC = "Content Specification Node IDs";
 
     public static final String CONTENT_SPEC_NODE_TITLE_FILTER_VAR = "csNodeTitle";
+    public static final String CONTENT_SPEC_NODE_TITLE_MATCHES_FILTER_VAR = CONTENT_SPEC_NODE_TITLE_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC = "Content Specification Node Title";
 
     public static final String CONTENT_SPEC_NODE_TYPE_FILTER_VAR = "csNodeType";
@@ -624,8 +660,10 @@ public class CommonFilterConstants {
     public static final String FILE_IDS_FILTER_VAR_DESC = "File IDs";
 
     public static final String FILE_DESCRIPTION_FILTER_VAR = "fileDesc";
+    public static final String FILE_DESCRIPTION_MATCHES_FILTER_VAR = FILE_DESCRIPTION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String FILE_DESCRIPTION_FILTER_VAR_DESC = "File Description";
 
     public static final String FILE_NAME_FILTER_VAR = "fileName";
+    public static final String FILE_NAME_MATCHES_FILTER_VAR = FILE_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String FILE_NAME_FILTER_VAR_DESC = "File Name";
 }
