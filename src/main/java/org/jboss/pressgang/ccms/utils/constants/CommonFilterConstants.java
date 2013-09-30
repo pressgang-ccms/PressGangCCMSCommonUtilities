@@ -615,9 +615,16 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_IDS_FILTER_VAR = "contentSpecIds";
     public static final String CONTENT_SPEC_IDS_FILTER_VAR_DESC = "Content Specification IDs";
 
+    public static final String CONTENT_SPEC_TYPE_FILTER_VAR = "contentSpecType";
+    public static final String CONTENT_SPEC_TYPE_FILTER_VAR_DESC = "Content Specification Type";
+
     public static final String CONTENT_SPEC_TITLE_FILTER_VAR = "contentSpecTitle";
     public static final String CONTENT_SPEC_TITLE_MATCHES_FILTER_VAR = CONTENT_SPEC_TITLE_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_TITLE_FILTER_VAR_DESC = "Content Specification Title";
+
+    public static final String CONTENT_SPEC_SUBTITLE_FILTER_VAR = "contentSpecSubtitle";
+    public static final String CONTENT_SPEC_SUBTITLE_MATCHES_FILTER_VAR = CONTENT_SPEC_SUBTITLE_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_SUBTITLE_FILTER_VAR_DESC = "Content Specification Subtitle";
 
     public static final String CONTENT_SPEC_PRODUCT_FILTER_VAR = "contentSpecProduct";
     public static final String CONTENT_SPEC_PRODUCT_MATCHES_FILTER_VAR = CONTENT_SPEC_PRODUCT_FILTER_VAR + STRING_MATCHES_SUFFIX;
@@ -626,6 +633,22 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_VERSION_FILTER_VAR = "contentSpecVersion";
     public static final String CONTENT_SPEC_VERSION_MATCHES_FILTER_VAR = CONTENT_SPEC_VERSION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_VERSION_FILTER_VAR_DESC = "Content Specification Version";
+
+    public static final String CONTENT_SPEC_EDITION_FILTER_VAR = "contentSpecEdition";
+    public static final String CONTENT_SPEC_EDITION_MATCHES_FILTER_VAR = CONTENT_SPEC_EDITION_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_EDITION_FILTER_VAR_DESC = "Content Specification Edition";
+
+    public static final String CONTENT_SPEC_ABSTRACT_FILTER_VAR = "contentSpecAbstract";
+    public static final String CONTENT_SPEC_ABSTRACT_MATCHES_FILTER_VAR = CONTENT_SPEC_ABSTRACT_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_ABSTRACT_FILTER_VAR_DESC = "Content Specification Abstract";
+
+    public static final String CONTENT_SPEC_BRAND_FILTER_VAR = "contentSpecBrand";
+    public static final String CONTENT_SPEC_BRAND_MATCHES_FILTER_VAR = CONTENT_SPEC_BRAND_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_BRAND_FILTER_VAR_DESC = "Content Specification Brand";
+
+    public static final String CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR = "contentSpecCopyrightHolder";
+    public static final String CONTENT_SPEC_COPYRIGHT_HOLDER_MATCHES_FILTER_VAR = CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR_DESC = "Content Specification Copyright Holder";
 
     public static final String HAS_ERRORS_FILTER_VAR = "hasErrors";
     public static final String HAS_ERRORS_FILTER_VAR_DESC = "Has Errors";
