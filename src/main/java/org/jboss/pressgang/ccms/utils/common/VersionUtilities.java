@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
+import java.util.WeakHashMap;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -13,6 +15,17 @@ import org.slf4j.LoggerFactory;
 
 public class VersionUtilities {
     private static final Logger LOG = LoggerFactory.getLogger(VersionUtilities.class);
+
+    private static final Map<Class<?>, String> versionMap = new WeakHashMap<Class<?>, String>();
+    private static final Map<Class<?>, String> buildDateMap = new WeakHashMap<Class<?>, String>();
+
+    protected static String getVersion(final Class<?> interfaceClazz) {
+        if (!versionMap.containsKey(interfaceClazz)) {
+            versionMap.put(interfaceClazz, VersionUtilities.getAPIVersion(interfaceClazz));
+        }
+
+        return versionMap.get(interfaceClazz);
+    }
 
     /**
      * Get the Version Number from a properties file in the Application Classpath.
@@ -25,10 +38,20 @@ public class VersionUtilities {
         final Properties props = new Properties();
         final URL url = ClassLoader.getSystemResource(resourceFileName);
         if (url != null) {
+            InputStream is = null;
             try {
-                props.load(url.openStream());
+                is = url.openStream();
+                props.load(is);
             } catch (IOException ex) {
                 LOG.debug("Unable to open resource file", ex);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+
+                    }
+                }
             }
         }
 
@@ -48,10 +71,20 @@ public class VersionUtilities {
         final Properties props = new Properties();
         final URL url = ClassLoader.getSystemResource(resourceFileName);
         if (url != null) {
+            InputStream is = null;
             try {
-                props.load(url.openStream());
+                is = url.openStream();
+                props.load(is);
             } catch (IOException ex) {
                 LOG.debug("Unable to open resource file", ex);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+
+                    }
+                }
             }
         }
 
@@ -89,6 +122,10 @@ public class VersionUtilities {
      * @return The Version number or "unknown" if the version couldn't be found.
      */
     public static String getAPIVersion(final Class<?> clazz) {
+        if (versionMap.containsKey(clazz)) {
+            return versionMap.get(clazz);
+        }
+
         Attributes atts = null;
         String version = null;
         try {
@@ -107,6 +144,9 @@ public class VersionUtilities {
             if (pkg != null) version = pkg.getImplementationVersion();
         }
         if (version == null) version = "unknown";
+
+        versionMap.put(clazz, version);
+
         return version;
     }
 
@@ -138,6 +178,10 @@ public class VersionUtilities {
      * @return The build timestamp or "unknown" if the timestamp couldn't be found.
      */
     public static String getAPIBuildTimestamp(final Class<?> clazz) {
+        if (buildDateMap.containsKey(clazz)) {
+            return buildDateMap.get(clazz);
+        }
+
         Attributes atts = null;
         String buildTimestamp = null;
         try {
@@ -151,6 +195,9 @@ public class VersionUtilities {
         }
 
         if (buildTimestamp == null) buildTimestamp = "unknown";
+
+        buildDateMap.put(clazz, buildTimestamp);
+
         return buildTimestamp;
     }
 
@@ -164,7 +211,7 @@ public class VersionUtilities {
      * @throws MalformedURLException
      * @throws IOException
      */
-    public static Attributes getAttributesForClass(final Class<?> clazz) throws MalformedURLException, IOException {
+    public static Attributes getAttributesForClass(final Class<?> clazz) throws IOException {
         // thanks to
         // http://stackoverflow.com/questions/1272648/need-to-read-own-jars-manifest-and-not-root-classloaders-manifest/1273432#1273432
         final String className = clazz.getSimpleName() + ".class";
