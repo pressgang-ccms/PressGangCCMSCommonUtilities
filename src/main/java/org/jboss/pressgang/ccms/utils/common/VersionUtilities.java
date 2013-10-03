@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.utils.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -182,8 +183,16 @@ public class VersionUtilities {
             return null;
         }
 
-        final Manifest manifest = new Manifest(new URL(manifestPath).openStream());
-        final Attributes attr = manifest.getMainAttributes();
-        return attr;
+
+        InputStream is = null;
+        try {
+            is = new URL(manifestPath).openStream();
+            final Manifest manifest = new Manifest(is);
+            return manifest.getMainAttributes();
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
     }
 }
