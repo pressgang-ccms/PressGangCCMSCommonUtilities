@@ -638,6 +638,10 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_EDITION_MATCHES_FILTER_VAR = CONTENT_SPEC_EDITION_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_EDITION_FILTER_VAR_DESC = "Content Specification Edition";
 
+    public static final String CONTENT_SPEC_PUBSNUMBER_FILTER_VAR = "contentSpecPubsnumber";
+    public static final String CONTENT_SPEC_PUBSNUMBER_MATCHES_FILTER_VAR = CONTENT_SPEC_PUBSNUMBER_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_PUBSNUMBER_FILTER_VAR_DESC = "Content Specification Pubsnumber";
+
     public static final String CONTENT_SPEC_ABSTRACT_FILTER_VAR = "contentSpecAbstract";
     public static final String CONTENT_SPEC_ABSTRACT_MATCHES_FILTER_VAR = CONTENT_SPEC_ABSTRACT_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_ABSTRACT_FILTER_VAR_DESC = "Content Specification Abstract";
@@ -649,6 +653,10 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR = "contentSpecCopyrightHolder";
     public static final String CONTENT_SPEC_COPYRIGHT_HOLDER_MATCHES_FILTER_VAR = CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR_DESC = "Content Specification Copyright Holder";
+
+    public static final String CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR = "contentSpecPublicanCfg";
+    public static final String CONTENT_SPEC_PUBLICAN_CFG_MATCHES_FILTER_VAR = CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR + STRING_MATCHES_SUFFIX;
+    public static final String CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR_DESC = "Content Specification publican.cfg";
 
     public static final String HAS_ERRORS_FILTER_VAR = "hasErrors";
     public static final String HAS_ERRORS_FILTER_VAR_DESC = "Has Errors";
