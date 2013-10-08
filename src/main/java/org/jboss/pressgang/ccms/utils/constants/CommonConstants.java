@@ -226,6 +226,7 @@ public class CommonConstants {
     public static final String CS_REV_HISTORY_TITLE = "Revision History";
     public static final String CS_FEEDBACK_TITLE = "Feedback";
     public static final String CS_LEGAL_NOTICE_TITLE = "Legal Notice";
+    public static final String CS_AUTHOR_GROUP_TITLE = "Author Group";
     public static final String CS_BUGZILLA_ASSIGNEE_TITLE = "BZ Assignee";
     public static final String CS_MAVEN_GROUP_ID_TITLE = "GroupId";
     public static final String CS_MAVEN_ARTIFACT_ID_TITLE = "ArtifactId";

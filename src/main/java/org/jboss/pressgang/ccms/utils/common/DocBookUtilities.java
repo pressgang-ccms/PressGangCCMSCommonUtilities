@@ -779,6 +779,10 @@ public class DocBookUtilities {
         return wrapDocument(doc, "legalnotice");
     }
 
+    public static Document wrapDocumentInAuthorGroup(final Document doc) {
+        return wrapDocument(doc, "authorgroup");
+    }
+
     public static Document wrapDocument(final Document doc, final String elementName) {
         if (!doc.getDocumentElement().getNodeName().equals(elementName)) {
             final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
