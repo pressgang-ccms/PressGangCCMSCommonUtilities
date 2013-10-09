@@ -237,4 +237,6 @@ public class CommonConstants {
     public static final String CS_JIRA_VERSION_TITLE = "JIRAVersion";
     public static final String CS_JIRA_LABELS_TITLE = "JIRALabels";
     public static final String CS_JIRA_SERVER_TITLE = "JIRAServer";
+    public static final String CS_ENTITIES_TITLE = "Entities";
+    public static final String CS_SPACES_TITLE = "spaces";
 }
