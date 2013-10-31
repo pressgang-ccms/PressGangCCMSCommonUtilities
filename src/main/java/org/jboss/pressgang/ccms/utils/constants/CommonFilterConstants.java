@@ -446,6 +446,14 @@ public class CommonFilterConstants {
      * The description of the latest completed translated topic search field
      */
     public static final String TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR_DESC = "Not Latest Completed Translations";
+    /**
+     * The URL variable that defines the topics min hash
+     */
+    public static final String TOPIC_MIN_HASH = "minHash";
+    /**
+     * The description of the topic min hash search field
+     */
+    public static final String TOPIC_MIN_HASH_DESC = "Topic Minimum Hash";
 
     /**
      * The URL variable that defines the topic IDs search field
