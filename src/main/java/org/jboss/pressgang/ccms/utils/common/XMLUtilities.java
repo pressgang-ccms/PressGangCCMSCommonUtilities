@@ -498,11 +498,8 @@ public class XMLUtilities {
     public static String convertDocumentToString(final Document doc) {
         final DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
         final LSSerializer lsSerializer = domImplementation.createLSSerializer();
-        // lsSerializer.getDomConfig().setParameter("format-pretty-print",
-        // Boolean.TRUE);
-        final String xml = lsSerializer.writeToString(doc);
-
-        return xml;
+        // lsSerializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+        return lsSerializer.writeToString(doc);
     }
 
     private static void appendIndent(final StringBuffer stringBuffer, final boolean tabIndent, final int indentLevel,
@@ -618,9 +615,7 @@ public class XMLUtilities {
                         appendIndent(retValue, tabIndent, indentLevel, indentCount);
                     }
 
-                    /*
-                     * Remove any white space at the begining and end of the text, save for one space
-                     */
+                    // Remove any white space at the beginning and end of the text, save for one space
                     final boolean startedWithWhiteSpace = StringUtilities.startsWithWhitespace(trimmedNodeValue);
                     final boolean endedWithWhitespace = StringUtilities.endsWithWhitespace(trimmedNodeValue);
 
@@ -632,10 +627,11 @@ public class XMLUtilities {
                         trimmedNodeValue = trimmedNodeValue.substring(0, trimmedNodeValue.length() - 1);
                     }
 
-                    if (startedWithWhiteSpace && !firstNode) trimmedNodeValue = " " + trimmedNodeValue;
+                    // Only add whitespace if the node is in an inline element or isn't the first node
+                    if (startedWithWhiteSpace && (inline || !firstNode)) trimmedNodeValue = " " + trimmedNodeValue;
 
-                    /* Only add whitespace if the node isn't the last node */
-                    if (endedWithWhitespace && node.getNextSibling() != null) trimmedNodeValue += " ";
+                    // Only add whitespace if the node is in an inline element or isn't the last node
+                    if (endedWithWhitespace && (node.getNextSibling() != null || inline)) trimmedNodeValue += " ";
 
                     retValue.append(trimmedNodeValue);
 
@@ -1393,7 +1389,6 @@ class ZanataStringDetails {
 }
 
 class XMLProperties {
-
     private boolean verbatim = false;
     private boolean inline = false;
 
@@ -1423,5 +1418,4 @@ class XMLProperties {
     public void setInline(boolean inline) {
         this.inline = inline;
     }
-
 }

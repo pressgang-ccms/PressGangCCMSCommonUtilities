@@ -112,41 +112,41 @@ public class XSLTUtilities {
 
         return null;
     }
-}
 
-/**
- * A class to get the various xsl resources that might be imported.
- */
-class XSLTResolver implements URIResolver {
-    private static final Logger LOG = LoggerFactory.getLogger(XSLTResolver.class);
-    private Map<String, byte[]> resources;
+    /**
+     * A class to get the various xsl resources that might be imported.
+     */
+    private static class XSLTResolver implements URIResolver {
+        private static final Logger LOG = LoggerFactory.getLogger(XSLTResolver.class);
+        private Map<String, byte[]> resources;
 
-    public XSLTResolver(final Map<String, byte[]> resources) {
-        this.resources = resources;
-    }
-
-    public Source resolve(final String href, final String base) throws TransformerException {
-        try {
-            String fileLocation = "";
-
-            if (base != null) {
-                final URL baseUrl = new URL(base);
-                final URL absoluteUrl = new URL(baseUrl, href);
-                fileLocation = absoluteUrl.toExternalForm();
-            } else {
-                fileLocation = href;
-            }
-
-            if (resources != null && resources.containsKey(fileLocation)) {
-                final StreamSource source = new StreamSource(new ByteArrayInputStream(resources.get(fileLocation)));
-                source.setSystemId(fileLocation);
-                return source;
-            }
-        } catch (final Exception ex) {
-            LOG.debug("Unable to resolve external resource via an internal resource", ex);
+        public XSLTResolver(final Map<String, byte[]> resources) {
+            this.resources = resources;
         }
 
-        System.out.println("Did not find resource. href: \"" + href + "\" base: \"" + base + "\"");
-        throw new TransformerException("Could not find the resource " + href);
+        public Source resolve(final String href, final String base) throws TransformerException {
+            try {
+                String fileLocation = "";
+
+                if (base != null) {
+                    final URL baseUrl = new URL(base);
+                    final URL absoluteUrl = new URL(baseUrl, href);
+                    fileLocation = absoluteUrl.toExternalForm();
+                } else {
+                    fileLocation = href;
+                }
+
+                if (resources != null && resources.containsKey(fileLocation)) {
+                    final StreamSource source = new StreamSource(new ByteArrayInputStream(resources.get(fileLocation)));
+                    source.setSystemId(fileLocation);
+                    return source;
+                }
+            } catch (final Exception ex) {
+                LOG.debug("Unable to resolve external resource via an internal resource", ex);
+            }
+
+            System.out.println("Did not find resource. href: \"" + href + "\" base: \"" + base + "\"");
+            throw new TransformerException("Could not find the resource " + href);
+        }
     }
 }

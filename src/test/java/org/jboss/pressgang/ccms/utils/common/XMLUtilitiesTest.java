@@ -1,9 +1,11 @@
 package org.jboss.pressgang.ccms.utils.common;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
@@ -111,5 +113,43 @@ public class XMLUtilitiesTest {
 
         // Then
         assertThat(nodes.size(), is(3));
+    }
+
+    @Test
+    public void shouldMaintainWhitespaceWhenConvertingNode() throws SAXException {
+        // Given some XML that is converted into a dom.
+        String xml = "<section><para> A universal installer<filename> .jar</filename> file is provided for installing JBoss&nbsp;Developer&nbsp;Studio and" +
+                " it is available from the Customer Portal. <phrase condition=\"install\">A second version of the universal installer for" +
+                " installing both JBoss&nbsp;Developer&nbsp;Studio and JBoss EAP is also available from the Customer Portal. </phrase>The" +
+                " procedure below guides you though obtaining the universal installer<phrase condition=\"install\">s</phrase> and the " +
+                "installation process. \n</para><para>Inline injection <!-- Inject: 8670 --></para><!-- Normal Comment " +
+                "-->\n\n<programlisting><![CDATA[\nSome test CDATA content with an entity &amp;]]></programlisting></section>\n";
+        Document doc = XMLUtilities.convertStringToDocument(xml);
+
+        final List<String> inline = Arrays.asList("code","prompt","command","firstterm","ulink","guilabel","filename","replaceable","parameter","literal","classname","sgmltag","guibutton","guimenuitem","guimenu","menuchoice","citetitle","systemitem","application","acronym","keycap","emphasis","package","quote","trademark","abbrev","phrase","anchor","citation","glossterm","link","xref","markup","tag","keycode","keycombo","accel","guisubmenu","keysym","shortcut","mousebutton","constant","errorcode","errorname","errortype","function","msgtext","property","returnvalue","symbol","token","varname","database","email","hardware","option","optional","type","methodname","interfacename","uri","productname","productversion","revnumber","date",
+                "computeroutput","firstname","surname","exceptionname","guiicon","property");
+        final List<String> verbatim = Arrays.asList("screen","programlisting","literallayout","synopsis","address");
+        final List<String> verbatimInline = Arrays.asList("title", "term");
+
+        // When converting the node to a string
+        final String convertedXml = XMLUtilities.convertNodeToString(doc, verbatim, inline, verbatimInline, true);
+
+        // Then
+        final String expectedXml = "<section>\n" +
+                "\t<para>\n" +
+                "\t\tA universal installer<filename> .jar</filename> file is provided for installing JBoss&nbsp;Developer&nbsp;Studio and" +
+                " it is available from the Customer Portal. <phrase condition=\"install\">A second version of the universal installer for" +
+                " installing both JBoss&nbsp;Developer&nbsp;Studio and JBoss EAP is also available from the Customer Portal. </phrase>The" +
+                " procedure below guides you though obtaining the universal installer<phrase condition=\"install\">s</phrase> and the " +
+                "installation process.\n" +
+                "\t</para>\n" +
+                "\t<para>\n" +
+                "\t\tInline injection <!-- Inject: 8670 -->\n" +
+                "\t</para>\n" +
+                "\t<!-- Normal Comment -->\n" +
+                "\t<programlisting><![CDATA[\n" +
+                "Some test CDATA content with an entity &amp;]]></programlisting>\n" +
+                "</section>";
+        assertEquals(expectedXml, convertedXml);
     }
 }
