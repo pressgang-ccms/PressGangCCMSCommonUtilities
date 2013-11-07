@@ -52,8 +52,8 @@ public class XMLUtilities {
             "^(\\s*<\\?xml.*?\\?>)?\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?(\\[.*\\]\\s*)?>)",
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final String PREAMBLE_NAMED_GROUP = "Preamble";
-    private static final Pattern PREAMBLE_PATTERN = Pattern.compile(
-            "^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)", java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    private static final Pattern PREAMBLE_PATTERN = Pattern.compile("^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)",
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     /**
      * The Docbook elements that contain translatable text
      */
@@ -496,9 +496,22 @@ public class XMLUtilities {
      * @return The String representation of the Document
      */
     public static String convertDocumentToString(final Document doc) {
+        return convertDocumentToString(doc, false);
+    }
+
+    /**
+     * Converts a Document to a String
+     *
+     * @param doc         The Document to be converted
+     * @param prettyPrint If the xml should be formatted when being converted.
+     * @return The String representation of the Document
+     */
+    public static String convertDocumentToString(final Document doc, final boolean prettyPrint) {
         final DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
         final LSSerializer lsSerializer = domImplementation.createLSSerializer();
-        // lsSerializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+        if (prettyPrint) {
+            lsSerializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+        }
         return lsSerializer.writeToString(doc);
     }
 
@@ -917,8 +930,8 @@ public class XMLUtilities {
          * 3. not a standaloneElement and not an inlineElement
          */
 
-        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
-                !xmlProperties.isInline())))) {
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement && !xmlProperties.isInline
+                ())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
@@ -1041,8 +1054,8 @@ public class XMLUtilities {
          * 3. not a standaloneElement and not an inlineElement
          */
 
-        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement &&
-                !xmlProperties.isInline())))) {
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement && !xmlProperties.isInline
+                ())))) {
             final NodeList children = node.getChildNodes();
             final boolean hasChildren = children == null || children.getLength() != 0;
 
@@ -1307,7 +1320,7 @@ public class XMLUtilities {
     /**
      * Creates an XIInclude element with a link to a file
      *
-     * @param doc The DOM Document to create the xi:include for.
+     * @param doc  The DOM Document to create the xi:include for.
      * @param file The file name/path to link to.
      * @return An xi:include element that can be used to include content from another file.
      */
