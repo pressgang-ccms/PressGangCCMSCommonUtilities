@@ -240,4 +240,5 @@ public class CommonConstants {
     public static final String CS_ENTITIES_TITLE = "Entities";
     public static final String CS_SPACES_TITLE = "spaces";
     public static final String CS_DEFAULT_PUBLICAN_CFG_TITLE = "Default " + CS_PUBLICAN_CFG_TITLE;
+    public static final String CS_INDEX_TITLE = "Index";
 }
