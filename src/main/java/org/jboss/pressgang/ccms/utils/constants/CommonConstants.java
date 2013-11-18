@@ -1,39 +1,10 @@
 package org.jboss.pressgang.ccms.utils.constants;
 
 /**
- * This class defines the constants that are used between Skynet and its various
+ * This class defines the constants that are used between PressGang and its various
  * components
  */
 public class CommonConstants {
-    /**
-     * The PropertyTag ID that defines the fixed URL
-     */
-    public static final Integer FIXED_URL_PROP_TAG_ID = 20;
-    /**
-     * The PropertyTag ID that defines the Bugzilla Product
-     */
-    public static final Integer BUGZILLA_PRODUCT_PROP_TAG_ID = 21;
-    /**
-     * The PropertyTag ID that defines the Bugzilla Component
-     */
-    public static final Integer BUGZILLA_COMPONENT_PROP_TAG_ID = 23;
-    /**
-     * The PropertyTag ID that defines the Bugzilla Version
-     */
-    public static final Integer BUGZILLA_VERSION_PROP_TAG_ID = 22;
-    /**
-     * The PropertyTag ID that defines the Bugzilla Product
-     */
-    public static final Integer BUGZILLA_KEYWORDS_PROP_TAG_ID = 24;
-    /**
-     * The Bugzilla Profile Property Tag
-     */
-    public final static Integer BUGZILLA_PROFILE_PROPERTY = 5;
-    /**
-     * The Content Specification tag ID
-     */
-    public static final Integer CONTENT_SPEC_TAG_ID = 268;
-
     public static final int CS_BOOK = 0;
     public static final int CS_ARTICLE = 1;
     public static final int CS_BOOK_DRAFT = 2;
@@ -83,29 +54,21 @@ public class CommonConstants {
             "(?<TopicLocale>.{2}_.{2})?\\s*(?<CSType>\\[\\w+\\])?";
 
     /**
-     * The default locale
-     */
-    public static final String DEFAULT_LOCALE_PROPERTY = "topicIndex.defaultLocale";
-    /**
      * The bugzilla url
      */
-    public static final String BUGZILLA_URL_PROPERTY = "topicIndex.bugzillaUrl";
+    public static final String BUGZILLA_URL_PROPERTY = "pressgang.bugzillaUrl";
     /**
      * The bugzilla username
      */
-    public static final String BUGZILLA_USERNAME_PROPERTY = "topicIndex.bugzillaUsername";
+    public static final String BUGZILLA_USERNAME_PROPERTY = "pressgang.bugzillaUsername";
     /**
      * The bugzilla password
      */
-    public static final String BUGZILLA_PASSWORD_PROPERTY = "topicIndex.bugzillaPassword";
+    public static final String BUGZILLA_PASSWORD_PROPERTY = "pressgang.bugzillaPassword";
     /**
      * The bugzilla minimum time between calls property name
      */
     public static final String BUGZILLA_MIN_API_CALL_INTERVAL_PROPERTY = "topicIndex.bugzillaMinCallInterval";
-    /**
-     * The system property that identifies this Skynet instance
-     */
-    public static final String INSTANCE_NAME_PROPERTY = "topicIndex.instanceName";
     /**
      * The format of the date to be displayed by any date widget
      */
@@ -115,19 +78,6 @@ public class CommonConstants {
      */
     public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-    /**
-     * The BlobConstant ID for the Rocbook DTD
-     */
-    public static final Integer ROCBOOK_DTD_BLOB_ID = 9;
-    /**
-     * The StringConstant ID that contains the properties file for all of the
-     * verbatim, inline and inline contents XML elements.
-     */
-    public static final Integer XML_ELEMENTS_STRING_CONSTANT_ID = 37;
-    /**
-     * The StringConstant ID that contains the list of locales to be used.
-     */
-    public static final Integer LOCALES_STRING_CONSTANT_ID = 38;
     /**
      * The Verbatim property key for the XML Elements StringConstant properties file.
      */
@@ -143,32 +93,32 @@ public class CommonConstants {
     /**
      * The system property that defines the STOMP message server
      */
-    public static final String STOMP_MESSAGE_SERVER_SYSTEM_PROPERTY = "topicIndex.stompMessageServer";
+    public static final String STOMP_MESSAGE_SERVER_SYSTEM_PROPERTY = "pressgang.stompMessageServer";
     /**
      * The system property that defines the STOMP message server port
      */
-    public static final String STOMP_MESSAGE_SERVER_PORT_SYSTEM_PROPERTY = "topicIndex.stompMessageServerPort";
+    public static final String STOMP_MESSAGE_SERVER_PORT_SYSTEM_PROPERTY = "pressgang.stompMessageServerPort";
     /**
      * The system property that defines the STOMP message server username
      */
-    public static final String STOMP_MESSAGE_SERVER_USER_SYSTEM_PROPERTY = "topicIndex.stompMessageServerUser";
+    public static final String STOMP_MESSAGE_SERVER_USER_SYSTEM_PROPERTY = "pressgang.stompMessageServerUser";
     /**
      * The system property that defines the STOMP message server password
      */
-    public static final String STOMP_MESSAGE_SERVER_PASS_SYSTEM_PROPERTY = "topicIndex.stompMessageServerPass";
+    public static final String STOMP_MESSAGE_SERVER_PASS_SYSTEM_PROPERTY = "pressgang.stompMessageServerPass";
     /**
      * The system property that defines the STOMP message queue that a service
      * should listen to
      */
-    public static final String STOMP_MESSAGE_SERVER_QUEUE_SYSTEM_PROPERTY = "topicIndex.stompMessageServerQueue";
+    public static final String STOMP_MESSAGE_SERVER_QUEUE_SYSTEM_PROPERTY = "pressgang.stompMessageServerQueue";
     /**
      * The system property that defines the PressGang REST Server
      */
-    public static final String PRESS_GANG_REST_SERVER_SYSTEM_PROPERTY = "topicIndex.skynetServer";
+    public static final String PRESS_GANG_REST_SERVER_SYSTEM_PROPERTY = "pressgang.restServer";
     /**
      * The system property that defines the PressGang REST Server
      */
-    public static final String PRESS_GANG_UI_SYSTEM_PROPERTY = "topicIndex.ui";
+    public static final String PRESS_GANG_UI_SYSTEM_PROPERTY = "pressgang.ui";
 
     /**
      * The ZIP file MIME type
@@ -179,12 +129,6 @@ public class CommonConstants {
      * The encoding of the XML, used when converting a DOM object to a string
      */
     public static final String XML_ENCODING = "UTF-8";
-
-    /**
-     * The default locale to be used on all new topics
-     */
-    public static final String DEFAULT_LOCALE = System.getProperty(
-            CommonConstants.DEFAULT_LOCALE_PROPERTY) == null ? "en-US" : System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
 
     /**
      * The regular expression string used to check if an email is valid.
