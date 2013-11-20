@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.utils.common;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -29,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -377,6 +380,16 @@ public class XMLUtilities {
      * @throws SAXException
      */
     public static Document convertStringToDocument(final String xml) throws SAXException {
+        return convertStringToDocument(xml, true);
+    }
+
+    /**
+     * @param xml The XML to be converted
+     * @param preserveEntities Whether or not entities should be preserved.
+     * @return A Document converted from the supplied XML, or null if the supplied XML was invalid
+     * @throws SAXException
+     */
+    public static Document convertStringToDocument(final String xml, final boolean preserveEntities) throws SAXException {
         if (xml == null) return null;
 
         try {
@@ -399,7 +412,7 @@ public class XMLUtilities {
              * and retain the entities without having to link to any DTDs or implement any EntityResolvers.
              */
             final Map<String, String> replacements = calculateEntityReplacements(xml);
-            final String fixedXML = replaceEntities(replacements, xml);
+            final String fixedXML = preserveEntities? replaceEntities(replacements, xml) : xml;
 
             final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             // This was causing an exception... See below with the EntityResolver for an alternative.
@@ -437,7 +450,9 @@ public class XMLUtilities {
 
             final Document document = builder.parse(new org.xml.sax.InputSource(new ByteArrayInputStream(fixedXML.getBytes(encoding))));
 
-            restoreEntities(replacements, document.getDocumentElement());
+            if (preserveEntities) {
+                restoreEntities(replacements, document.getDocumentElement());
+            }
 
             return document;
         } catch (SAXException ex) {
@@ -1172,7 +1187,7 @@ public class XMLUtilities {
 
             if (nodeCollections != null && nodeCollections.size() != 0) {
                 // Zanata will change the format of the strings that it returns. Here we account for any trimming that was done.
-                final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
+                final TranslatedStringDetails fixedStringDetails = new TranslatedStringDetails(translations, originalString);
 
                 if (fixedStringDetails.getFixedString() != null) {
                     final String translation = translations.get(fixedStringDetails.getFixedString());
@@ -1331,13 +1346,70 @@ public class XMLUtilities {
 
         return xiInclude;
     }
+
+    /**
+     * Parses a string that defines XML entities and returns a list of Entity objects. An example input string is:
+     * <pre>
+     *     &lt;!ENTITY ent "My Entity"&gt;
+     *     &lt;!ENTITY cut "&lt;para&gt;&lt;/para&gt;"&gt;
+     * </pre>
+     *
+     * @param entitiesString The content spec to get the entities from.
+     * @return A list of Entity objects that were parsed from the string.
+     */
+    public static List<Entity> parseEntitiesFromString(final String entitiesString) {
+        final List<Entity> retValue = new ArrayList<Entity>();
+
+        // Check to make sure we have something to parse
+        if (!isNullOrEmpty(entitiesString)) {
+
+            /*
+             * This has to be done in two steps because Xerces will not parse an entities value unless it is referenced in the XML
+             * content. However since we don't know what entities we have, we need to do an initial parse to get the entity names. Afer
+             * that we construct a new wrapper which references the entities and the convert it to a Document making sure that the entities
+             * are expanded. Once this is done we can then look over the entities and construct the return value.
+             */
+            try {
+                // First Pass to find the entity names used
+                final String wrappedEntities = "<!DOCTYPE section [" + entitiesString + "]><section></section>";
+                final Document firstPassDoc = convertStringToDocument(wrappedEntities);
+
+                final List<String> entityNames = new ArrayList<String>();
+                final NamedNodeMap entities = firstPassDoc.getDoctype().getEntities();
+                for (int i = 0; i < entities.getLength(); i++) {
+                    entityNames.add(entities.item(i).getNodeName());
+                }
+
+                // Build the second wrapper making sure to include all the custom entities so that they are parsed and we can get them later
+                final StringBuilder wrappedEntities2 = new StringBuilder("<!DOCTYPE section [");
+                wrappedEntities2.append(entitiesString);
+                wrappedEntities2.append("]><section>");
+                for (final String entityName : entityNames) {
+                    wrappedEntities2.append("&").append(entityName).append(";");
+                }
+                wrappedEntities2.append("</section>");
+
+                // Do the second pass, as now that the entities are used the value will be parsed
+                final Document secondPassDoc = convertStringToDocument(wrappedEntities2.toString(), false);
+                final NamedNodeMap entities2 = secondPassDoc.getDoctype().getEntities();
+                for (int i = 0; i < entities2.getLength(); i++) {
+                    final Entity entity = (Entity) entities2.item(i);
+                    retValue.add(entity);
+                }
+            } catch (Exception e) {
+                return retValue;
+            }
+        }
+
+        return retValue;
+    }
 }
 
 /**
- * Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata
+ * Pushing to Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata
  * and match it to the source XML.
  */
-class ZanataStringDetails {
+class TranslatedStringDetails {
     /**
      * The number of spaces that Zanata removed from the left
      */
@@ -1351,28 +1423,28 @@ class ZanataStringDetails {
      */
     private final String fixedString;
 
-    ZanataStringDetails(final Map<String, String> translations, final String originalString) {
+    TranslatedStringDetails(final Map<String, String> translations, final String originalString) {
         /*
          * Here we account for any trimming that is done by Zanata.
          */
-        final String lTrimtString = StringUtilities.ltrim(originalString);
+        final String lTrimString = StringUtilities.ltrim(originalString);
         final String rTrimString = StringUtilities.rtrim(originalString);
         final String trimString = originalString.trim();
 
-        final boolean containsExactMacth = translations.containsKey(originalString);
-        final boolean lTrimMatch = translations.containsKey(lTrimtString);
+        final boolean containsExactMatch = translations.containsKey(originalString);
+        final boolean lTrimMatch = translations.containsKey(lTrimString);
         final boolean rTrimMatch = translations.containsKey(rTrimString);
         final boolean trimMatch = translations.containsKey(trimString);
 
         /* remember the details of the trimming, so we can add the padding back */
-        if (containsExactMacth) {
+        if (containsExactMatch) {
             this.leftTrimCount = 0;
             this.rightTrimCount = 0;
             this.fixedString = originalString;
         } else if (lTrimMatch) {
-            this.leftTrimCount = originalString.length() - lTrimtString.length();
+            this.leftTrimCount = originalString.length() - lTrimString.length();
             this.rightTrimCount = 0;
-            this.fixedString = lTrimtString;
+            this.fixedString = lTrimString;
         } else if (rTrimMatch) {
             this.leftTrimCount = 0;
             this.rightTrimCount = originalString.length() - rTrimString.length();
