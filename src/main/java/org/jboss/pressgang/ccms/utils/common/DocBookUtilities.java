@@ -104,7 +104,7 @@ public class DocBookUtilities {
         // Attempt to parse the title as XML. If this fails then just set the title as plain text.
         final Element newTitle = doc.createElement(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
         try {
-            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeTitleString(titleValue) + "</title>");
+            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeForXML(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
 
             // Add the child elements to the ulink node
@@ -157,7 +157,7 @@ public class DocBookUtilities {
          * then just set the title as plain text.
          */
         try {
-            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeTitleString(titleValue) + "</title>");
+            final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeForXML(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
             
             // Add the child elements to the ulink node
@@ -183,13 +183,13 @@ public class DocBookUtilities {
     }
 
     /**
-     * Escapes a String so that it can be used in a Docbook Title Element.
+     * Escapes a String so that it can be used in a Docbook Element, ensuring that any entities or elements are maintained.
      *
-     * @param title The title string to be escaped.
-     * @return The escaped title string.
+     * @param content The string to be escaped.
+     * @return The escaped string that can be used in XML.
      */
-    public static String escapeTitleString(final String title) {
-        if (title == null) return "";
+    public static String escapeForXML(final String content) {
+        if (content == null) return "";
 
         /*
          * Note: The following characters should be escaped: & < > " '
@@ -203,15 +203,15 @@ public class DocBookUtilities {
          * <title>Product A &gt; Product B<phrase condition="beta">-Beta</phrase></title>
          */
 
-        String fixedTitle = title.replaceAll("&(?![#\\w\\d]*?;)", "&amp;");
+        String fixedContent = content.replaceAll("&(?![#\\w\\d]*?;)", "&amp;");
 
         // Loop over and find all the XML Elements as they should remain untouched.
         final LinkedList<String> elements = new LinkedList<String>();
-        if (fixedTitle.indexOf('<') != -1) {
+        if (fixedContent.indexOf('<') != -1) {
             int index = -1;
-            while ((index = fixedTitle.indexOf('<', index + 1)) != -1){
-                int endIndex = fixedTitle.indexOf('>', index);
-                int nextIndex = fixedTitle.indexOf('<', index + 1);
+            while ((index = fixedContent.indexOf('<', index + 1)) != -1){
+                int endIndex = fixedContent.indexOf('>', index);
+                int nextIndex = fixedContent.indexOf('<', index + 1);
 
                 /*
                   * If the next opening tag is less than the next ending tag, than the current opening tag isn't a match for the next
@@ -223,14 +223,14 @@ public class DocBookUtilities {
                     // This is a <> sequence, so it should be ignored as well.
                     continue;
                 } else {
-                    elements.add(fixedTitle.substring(index, endIndex + 1));
+                    elements.add(fixedContent.substring(index, endIndex + 1));
                 }
 
             }
         }
 
         // Find all the elements and replace them with a marker
-        String escapedTitle = fixedTitle;
+        String escapedTitle = fixedContent;
         for (int count  = 0; count < elements.size(); count++) {
             escapedTitle = escapedTitle.replace(elements.get(count), "###" + count + "###");
         }

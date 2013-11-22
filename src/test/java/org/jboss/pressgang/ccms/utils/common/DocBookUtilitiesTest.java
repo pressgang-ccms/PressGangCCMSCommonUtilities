@@ -18,10 +18,10 @@ public class DocBookUtilitiesTest {
         final String test4 = "<title>Product A &amp; Product B<phrase condition=\"beta\">-Beta</phrase></title>";
 
         // When escaping the title string
-        final String output = DocBookUtilities.escapeTitleString(test);
-        final String output2 = DocBookUtilities.escapeTitleString(test2);
-        final String output3 = DocBookUtilities.escapeTitleString(test3);
-        final String output4 = DocBookUtilities.escapeTitleString(test4);
+        final String output = DocBookUtilities.escapeForXML(test);
+        final String output2 = DocBookUtilities.escapeForXML(test2);
+        final String output3 = DocBookUtilities.escapeForXML(test3);
+        final String output4 = DocBookUtilities.escapeForXML(test4);
 
         // Then make sure the relevant characters have been replaced
         assertEquals(output, "<title>Product A &gt; Product B<phrase condition=\"beta\">-Beta</phrase></title>");
