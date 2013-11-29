@@ -680,6 +680,12 @@ public class XMLUtilities {
 
         if (Node.ENTITY_REFERENCE_NODE == nodeType) {
             final StringBuffer retValue = new StringBuffer();
+
+            // if this is the first node, then add the indent
+            if (!inline && !verbatim && firstNode) {
+                appendIndent(retValue, tabIndent, indentLevel, indentCount);
+            }
+
             if (includeElementName) retValue.append("&");
             retValue.append(node.getNodeName());
             if (includeElementName) retValue.append(";");
