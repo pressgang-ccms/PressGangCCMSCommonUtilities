@@ -11,7 +11,7 @@ public class ExceptionUtilities {
      * @param ex The thrown exception
      * @return The stack trace from the exception
      */
-    public static String getStackTrace(final Exception ex) {
+    public static String getStackTrace(final Throwable ex) {
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw, true);
         ex.printStackTrace(pw);
