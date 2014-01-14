@@ -449,11 +449,27 @@ public class CommonFilterConstants {
     /**
      * The URL variable that defines the topics min hash
      */
-    public static final String TOPIC_MIN_HASH = "minHash";
+    public static final String TOPIC_MIN_HASH_VAR = "minHash";
     /**
      * The description of the topic min hash search field
      */
-    public static final String TOPIC_MIN_HASH_DESC = "Topic Minimum Hash";
+    public static final String TOPIC_MIN_HASH_VAR_DESC = "Topic Minimum Hash";
+    /**
+     * The URL variable that defines the created by search field
+     */
+    public static final String CREATED_BY_VAR = "createdBy";
+    /**
+     * The description of the created by search field
+     */
+    public static final String CREATED_BY_VAR_DESC = "Created By";
+    /**
+     * The URL variable that defines the edited by search field
+     */
+    public static final String EDITED_BY_VAR = "editedBy";
+    /**
+     * The description of the edited by search field
+     */
+    public static final String EDITED_BY_VAR_DESC = "Edited By";
 
     /**
      * The URL variable that defines the topic IDs search field
