@@ -185,4 +185,14 @@ public class CommonConstants {
     public static final String CS_SPACES_TITLE = "spaces";
     public static final String CS_DEFAULT_PUBLICAN_CFG_TITLE = "Default " + CS_PUBLICAN_CFG_TITLE;
     public static final String CS_INDEX_TITLE = "Index";
+
+    /**
+     * The number of characters that make up a SHA 256 hash
+     */
+    public static final int SHA256_LENGTH = 64;
+
+    /**
+     * The name of the SHA 256 algorithm
+     */
+    public static final String SHA256_NAME = "SHA-256";
 }
