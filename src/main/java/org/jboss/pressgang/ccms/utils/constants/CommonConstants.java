@@ -174,6 +174,7 @@ public class CommonConstants {
     public static final String CS_BUGZILLA_ASSIGNEE_TITLE = "BZ Assignee";
     public static final String CS_MAVEN_GROUP_ID_TITLE = "GroupId";
     public static final String CS_MAVEN_ARTIFACT_ID_TITLE = "ArtifactId";
+    public static final String CS_MAVEN_POM_VERSION_TITLE = "POM Version";
     public static final String CS_FILE_TITLE = "Additional Files";
     public static final String CS_FILE_SHORT_TITLE = "Files";
     public static final String CS_JIRA_PROJECT_TITLE = "JIRAProject";

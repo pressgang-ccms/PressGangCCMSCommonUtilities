@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.jboss.pressgang</groupId>
         <artifactId>pressgang-parent</artifactId>
-        <version>1.5</version>
+        <version>1.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.jboss.pressgang.ccms</groupId>
@@ -19,8 +19,8 @@
 
     <scm>
         <url>https://github.com/pressgang-ccms/PressGangCCMSCommonUtilities</url>
-        <connection>scm:git@github.com:pressgang-ccms/PressGangCCMSCommonUtilities.git</connection>
-        <developerConnection>scm:git@github.com:pressgang-ccms/PressGangCCMSCommonUtilities.git</developerConnection>
+        <connection>scm:git:git@github.com:pressgang-ccms/PressGangCCMSCommonUtilities.git</connection>
+        <developerConnection>scm:git:git@github.com:pressgang-ccms/PressGangCCMSCommonUtilities.git</developerConnection>
     </scm>
 
     <properties>
