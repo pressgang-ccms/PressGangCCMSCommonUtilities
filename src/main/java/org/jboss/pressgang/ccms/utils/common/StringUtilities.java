@@ -1,6 +1,8 @@
 package org.jboss.pressgang.ccms.utils.common;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.SortedMap;
@@ -9,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class StringUtilities {
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
@@ -427,5 +430,43 @@ public class StringUtilities {
         }
 
         return score[source.length() + 1][target.length() + 1];
+    }
+
+    /**
+     * Calculate the SHA 256 hash for a string (http://www.mkyong.com/java/java-sha-hashing-example/)
+     * @param content The string to get the hash for
+     * @return The SHA 256 hash
+     */
+    public static char[] calculateContentHash(final String content) {
+        final char[] retValue = new char[CommonConstants.SHA256_LENGTH];
+
+        if (content != null && content.trim().length() != 0) {
+            try
+            {
+                final MessageDigest md = MessageDigest.getInstance(CommonConstants.SHA256_NAME);
+                md.update(content.getBytes());
+
+                final byte byteData[] = md.digest();
+
+                //convert the byte to hex format method 1 (http://www.mkyong.com/java/java-sha-hashing-example/)
+                final StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < byteData.length; ++i) {
+                    String hex = Integer.toHexString(0xff & byteData[i]);
+                    if(hex.length()==1) {
+                        hex = "0" + hex;
+                    }
+                    retValue[i*2] = hex.charAt(0);
+                    retValue[i*2 + 1] = hex.charAt(1);
+                }
+            } catch (final NoSuchAlgorithmException ex) {
+                // SHA-256 should always be available
+            }
+        } else {
+            for (int i = 0; i < CommonConstants.SHA256_LENGTH; i++) {
+                retValue[i] = '0';
+            }
+        }
+
+        return retValue;
     }
 }
