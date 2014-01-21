@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A collection of static methods to create and manipulate collections
@@ -25,17 +24,6 @@ public class CollectionUtilities {
     public static <T> ArrayList<T> toArrayList(final T... array) {
         final ArrayList<T> retValue = new ArrayList<T>();
         for (final T item : array)
-            retValue.add(item);
-        return retValue;
-    }
-
-    /**
-     * @param set The Set to be converted to an ArrayList
-     * @return An ArrayList containing the elements in the set
-     */
-    public static <T> ArrayList<T> toArrayList(final Set<T> set) {
-        final ArrayList<T> retValue = new ArrayList<T>();
-        for (final T item : set)
             retValue.add(item);
         return retValue;
     }
@@ -88,7 +76,7 @@ public class CollectionUtilities {
         return retValue;
     }
 
-    public static <T> int addAll(final T[] source, final ArrayList<T> destination) {
+    public static <T> int addAll(final T[] source, final Collection<T> destination) {
         int count = 0;
         for (final T sourceItem : source) {
             destination.add(sourceItem);
@@ -98,7 +86,7 @@ public class CollectionUtilities {
         return count;
     }
 
-    public static <T> int addAllThatDontExist(final List<T> source, final List<T> destination) {
+    public static <T> int addAllThatDontExist(final Collection<T> source, final Collection<T> destination) {
         int count = 0;
         for (final T sourceItem : source) {
             if (!destination.contains(sourceItem)) {
@@ -110,7 +98,7 @@ public class CollectionUtilities {
         return count;
     }
 
-    public static <T> String toSeperatedString(final List<T> list) {
+    public static <T> String toSeperatedString(final Collection<T> list) {
         final StringBuffer stringBuffer = new StringBuffer();
         for (final T element : list) {
             if (stringBuffer.length() != 0) stringBuffer.append(",");
@@ -119,7 +107,7 @@ public class CollectionUtilities {
         return stringBuffer.toString();
     }
 
-    public static <T> String toSeperatedString(final List<T> list, final String separator) {
+    public static <T> String toSeperatedString(final Collection<T> list, final String separator) {
         final StringBuffer stringBuffer = new StringBuffer();
         for (final T element : list) {
             if (stringBuffer.length() != 0) stringBuffer.append(separator);
@@ -179,7 +167,7 @@ public class CollectionUtilities {
         return first.equals(second);
     }
 
-    public static List<Integer> toAbsIntegerList(final List<Integer> array) {
+    public static List<Integer> toAbsIntegerList(final Collection<Integer> array) {
         final ArrayList<Integer> retValue = new ArrayList<Integer>();
         for (final Integer item : array)
             retValue.add(Math.abs(item));
