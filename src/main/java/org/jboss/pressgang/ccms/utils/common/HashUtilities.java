@@ -67,4 +67,22 @@ public class HashUtilities {
             return null;
         }
     }
+
+    /**
+     * Generates a SHA-256 Hash for a specific string
+     *
+     * @param input The byte[] to be converted into an SHA-1 hash.
+     * @return The SHA-256 Hash string of the input string.
+     */
+    public static String generateSHA256(final byte[] input) {
+        try {
+            final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.reset();
+            byte[] digest = messageDigest.digest(input);
+            return new String(Hex.encodeHex(digest));
+        } catch (Exception e) {
+            LOG.debug("An error occurred generating the SHA-256 Hash of the input byte[]", e);
+            return null;
+        }
+    }
 }
