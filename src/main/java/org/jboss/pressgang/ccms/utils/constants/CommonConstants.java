@@ -39,6 +39,9 @@ public class CommonConstants {
     public static final int DOCBOOK_45 = 0;
     public static final int DOCBOOK_50 = 1;
 
+    public static final String DOCBOOK_45_TITLE = "DocBook 4.5";
+    public static final String DOCBOOK_50_TITLE = "DocBook 5.0";
+
     /**
      * The Regular Expression the defines the search format for a property tag
      */

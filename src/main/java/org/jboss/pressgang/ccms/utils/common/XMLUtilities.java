@@ -419,6 +419,7 @@ public class XMLUtilities {
             // builderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             // this is the default, but set it anyway
             // builderFactory.setValidating(false);
+            builderFactory.setNamespaceAware(true);
 
             final DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
@@ -803,6 +804,123 @@ public class XMLUtilities {
             }
         }
         return nodes;
+    }
+
+    /**
+     * Add/Set the DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addDoctype(final String xml, final String rootElementName) {
+        return addDoctype(xml, rootElementName, null);
+    }
+
+    /**
+     * Add/Set the DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @param entityFileName  The file name for any external entities that should be included.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addDoctype(final String xml, final String rootElementName, final String entityFileName) {
+        final String preamble = findPreamble(xml);
+        final String docType = findDocumentType(xml);
+        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+
+        // Remove any current doctype declarations
+        final String fixedXML;
+        if (docType != null) {
+            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            fixedXML = tempFixedXML.replace(docType, "");
+        } else {
+            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+        }
+
+        final StringBuilder retValue = new StringBuilder(fixedPreamble);
+        retValue.append("<!DOCTYPE ");
+        if (rootElementName == null) {
+            retValue.append("chapter");
+        } else {
+            retValue.append(rootElementName);
+        }
+
+        // Add the local entity file
+        if (entityFileName != null) {
+            retValue.append(" [\n");
+            retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
+            retValue.append("%BOOK_ENTITIES;\n");
+            retValue.append("]");
+        }
+
+        retValue.append(">\n");
+        retValue.append(fixedXML);
+
+        return retValue.toString();
+    }
+
+    /**
+     * Add/Set the PUBLIC DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param publicName      The PUBLIC name for the DOCTYPE.
+     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addPublicDoctype(final String xml, final String publicName, final String publicLocation,
+            final String rootElementName) {
+        return addPublicDoctype(xml, publicName, publicLocation, null, rootElementName);
+    }
+
+    /**
+     * Add/Set the PUBLIC DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param publicName      The PUBLIC name for the DOCTYPE.
+     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
+     * @param entityFileName  The file name for any external entities that should be included.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addPublicDoctype(final String xml, final String publicName, final String publicLocation,
+            final String entityFileName, final String rootElementName) {
+        final String preamble = findPreamble(xml);
+        final String docType = findDocumentType(xml);
+        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+
+        // Remove any current doctype declarations
+        final String fixedXML;
+        if (docType != null) {
+            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            fixedXML = tempFixedXML.replace(docType, "");
+        } else {
+            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+        }
+
+        final StringBuilder retValue = new StringBuilder(fixedPreamble);
+        retValue.append("<!DOCTYPE ");
+        if (rootElementName == null) {
+            retValue.append("chapter");
+        } else {
+            retValue.append(rootElementName);
+        }
+        retValue.append(" PUBLIC \"" + publicName + "\" \"" + publicLocation + "\" ");
+
+        // Add the local entity file
+        if (entityFileName != null) {
+            retValue.append("[\n");
+            retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
+            retValue.append("%BOOK_ENTITIES;\n");
+            retValue.append("]");
+        }
+
+        retValue.append(">\n");
+        retValue.append(fixedXML);
+
+        return retValue.toString();
     }
 
     /**

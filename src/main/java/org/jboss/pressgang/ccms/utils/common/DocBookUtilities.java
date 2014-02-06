@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -159,7 +161,7 @@ public class DocBookUtilities {
         try {
             final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeForXML(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
-            
+
             // Add the child elements to the ulink node
             final NodeList nodes = titleEle.getChildNodes();
             while (nodes.getLength() > 0) {
@@ -209,7 +211,7 @@ public class DocBookUtilities {
         final LinkedList<String> elements = new LinkedList<String>();
         if (fixedContent.indexOf('<') != -1) {
             int index = -1;
-            while ((index = fixedContent.indexOf('<', index + 1)) != -1){
+            while ((index = fixedContent.indexOf('<', index + 1)) != -1) {
                 int endIndex = fixedContent.indexOf('>', index);
                 int nextIndex = fixedContent.indexOf('<', index + 1);
 
@@ -231,17 +233,15 @@ public class DocBookUtilities {
 
         // Find all the elements and replace them with a marker
         String escapedTitle = fixedContent;
-        for (int count  = 0; count < elements.size(); count++) {
+        for (int count = 0; count < elements.size(); count++) {
             escapedTitle = escapedTitle.replace(elements.get(count), "###" + count + "###");
         }
 
         // Perform the replacements on what's left
-        escapedTitle = escapedTitle.replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace("\"", "&quot;");
+        escapedTitle = escapedTitle.replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
 
         // Replace the markers
-        for (int count  = 0; count < elements.size(); count++) {
+        for (int count = 0; count < elements.size(); count++) {
             escapedTitle = escapedTitle.replace("###" + count + "###", elements.get(count));
         }
 
@@ -300,83 +300,38 @@ public class DocBookUtilities {
         return "<section" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</section>";
     }
 
-    /**
-     * Add/Set the PUBLIC DOCTYPE for some XML content.
-     *
-     * @param xml             The XML to add or set the DOCTYPE for.
-     * @param publicName      The PUBLIC name for the DOCTTYPE.
-     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
-     * @param rootElementName The root Element Name for the DOCTYPE.
-     * @return The XML with the DOCTYPE added.
-     */
-    public static String addXMLPublicDoctype(final String xml, final String publicName, final String publicLocation,
-            final String rootElementName) {
-        return addXMLPublicDoctype(xml, publicName, publicLocation, null, rootElementName);
+    public static String addDocBook45Doctype(final String xml) {
+        return addDocBook45Doctype(xml, null, "chapter");
     }
 
-    /**
-     * Add/Set the PUBLIC DOCTYPE for some XML content.
-     *
-     * @param xml             The XML to add or set the DOCTYPE for.
-     * @param publicName      The PUBLIC name for the DOCTYPE.
-     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
-     * @param entityFileName  A name for a local entity to set in the doctype.
-     * @param rootElementName The root Element Name for the DOCTYPE.
-     * @return The XML with the DOCTYPE added.
-     */
-    public static String addXMLPublicDoctype(final String xml, final String publicName, final String publicLocation,
-            final String entityFileName, final String rootElementName) {
-        final String preamble = XMLUtilities.findPreamble(xml);
-        final String docType = XMLUtilities.findDocumentType(xml);
-        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+    public static String addDocBook45Doctype(final String xml, final String entityFileName, final String rootElementName) {
+        return XMLUtilities.addPublicDoctype(xml, "-//OASIS//DTD DocBook XML V4.5//EN",
+                "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd", entityFileName, rootElementName);
+    }
 
-        final String fixedXML;
-        if (docType != null) {
-            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
-            fixedXML = tempFixedXML.replace(docType, "");
+    public static String addDocBook50Doctype(final String xml) {
+        return addDocBook50Doctype(xml, null, "chapter");
+    }
+
+    public static String addDocBook50Doctype(final String xml, final String entityFileName, final String rootElementName) {
+        return XMLUtilities.addPublicDoctype(xml, "-//OASIS//DTD DocBook XML V5.0//EN",
+                "http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd", entityFileName, rootElementName);
+    }
+
+    public static String addDocBook50Namespace(final String xml) {
+        return addDocBook50Namespace(xml, "chapter");
+    }
+
+    public static String addDocBook50Namespace(final String xml, final String rootElementName) {
+        if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
+        final Pattern pattern = Pattern.compile("(?<ELEMENT><" + rootElementName + ".*?)>");
+        final Matcher matcher = pattern.matcher(xml);
+        if (matcher.find()) {
+            final String element = matcher.group("ELEMENT");
+            return xml.replaceFirst(element, element + " xmlns=\"http://docbook.org/ns/docbook\" version=\"5.0\"");
         } else {
-            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            return xml;
         }
-
-        final StringBuilder retValue = new StringBuilder(fixedPreamble);
-        retValue.append("<!DOCTYPE ");
-        if (rootElementName == null) {
-            retValue.append("chapter");
-        } else {
-            retValue.append(rootElementName);
-        }
-        retValue.append(" PUBLIC \"" + publicName + "\" \"" + publicLocation + "\" ");
-
-        // Add the local entity file
-        if (entityFileName != null) {
-            retValue.append("[\n");
-            retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
-            retValue.append("%BOOK_ENTITIES;\n");
-            retValue.append("]");
-        }
-
-        retValue.append(">\n");
-        retValue.append(fixedXML);
-
-        return retValue.toString();
-    }
-
-    public static String addDocbook45XMLDoctype(final String xml) {
-        return addDocbook45XMLDoctype(xml, null, "chapter");
-    }
-
-    public static String addDocbook45XMLDoctype(final String xml, final String entityFileName, final String rootElementName) {
-        return addXMLPublicDoctype(xml, "-//OASIS//DTD DocBook XML V4.5//EN", "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd",
-                entityFileName, rootElementName);
-    }
-
-    public static String addDocbook50XMLDoctype(final String xml) {
-        return addDocbook50XMLDoctype(xml, null, "chapter");
-    }
-
-    public static String addDocbook50XMLDoctype(final String xml, final String entityFileName, final String rootElementName) {
-        return addXMLPublicDoctype(xml, "-//OASIS//DTD DocBook XML V5.0//EN", "http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd",
-                entityFileName, rootElementName);
     }
 
     public static String buildXRefListItem(final String xref, final String role) {
@@ -735,7 +690,7 @@ public class DocBookUtilities {
         final Element xrefItem = xmlDoc.createElement("ulink");
         xrefItem.setAttribute("url", url);
         paraItem.appendChild(xrefItem);
-        
+
         // Attempt to parse the title as XML. If this fails then just set the title as plain text.
         try {
             final Document doc = XMLUtilities.convertStringToDocument("<title>" + title + "</title>");
@@ -1026,10 +981,10 @@ public class DocBookUtilities {
      * matches the passed condition string. If they don't match
      * then remove the nodes.
      *
-     * @param condition        The condition regex to be tested against.
-     * @param doc              The Document to check for conditional statements.
-     * @param defaultCondition The default condition to allow a default block when processing conditions.
-     * @param removeConditionAttr  Remove the condition attribute from any matching/leftover nodes.
+     * @param condition           The condition regex to be tested against.
+     * @param doc                 The Document to check for conditional statements.
+     * @param defaultCondition    The default condition to allow a default block when processing conditions.
+     * @param removeConditionAttr Remove the condition attribute from any matching/leftover nodes.
      */
     public static void processConditions(final String condition, final Document doc, final String defaultCondition,
             boolean removeConditionAttr) {
@@ -1045,7 +1000,7 @@ public class DocBookUtilities {
             for (final String nodeCondition : nodeConditions) {
                 if (condition != null && nodeCondition.matches(condition)) {
                     matched = true;
-                } else if (condition == null && defaultCondition!= null && nodeCondition.matches(defaultCondition)) {
+                } else if (condition == null && defaultCondition != null && nodeCondition.matches(defaultCondition)) {
                     matched = true;
                 }
             }
