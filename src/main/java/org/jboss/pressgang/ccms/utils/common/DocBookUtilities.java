@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
+import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -117,9 +118,6 @@ public class DocBookUtilities {
         } catch (Exception e) {
             newTitle.appendChild(doc.createTextNode(titleValue));
         }
-
-        // Remove any id attributes from the section
-        docElement.removeAttribute("id");
 
         final NodeList titleNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
         // see if we have a title node whose parent is the section
@@ -328,7 +326,14 @@ public class DocBookUtilities {
         final Matcher matcher = pattern.matcher(xml);
         if (matcher.find()) {
             final String element = matcher.group("ELEMENT");
-            return xml.replaceFirst(element, element + " xmlns=\"http://docbook.org/ns/docbook\" version=\"5.0\"");
+            // Remove any current namespace declaration
+            String fixedElement = element.replaceFirst(" xmlns=\".*?\"", "");
+            // Remove any current version declaration
+            fixedElement = fixedElement.replaceFirst(" version=\".*?\"", "");
+            // Remove any current xlink namespace declaration
+            fixedElement = fixedElement.replaceFirst(" xmlns:xlink=\".*?\"", "");
+            return xml.replaceFirst(element, fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
+                    " version=\"5.0\"");
         } else {
             return xml;
         }
@@ -499,15 +504,21 @@ public class DocBookUtilities {
     }
 
     public static String wrapListItems(final List<String> listItems) {
-        return wrapListItems(listItems, null, null);
+        return wrapListItems(null, listItems, null, null);
     }
 
     public static String wrapListItems(final List<String> listItems, final String title) {
-        return wrapListItems(listItems, title, null);
+        return wrapListItems(null, listItems, title, null);
     }
 
-    public static String wrapListItems(final List<String> listItems, final String title, final String id) {
-        final String idAttribute = id != null && id.length() != 0 ? " id=\"" + id + "\" " : "";
+    public static String wrapListItems(final DocBookVersion docBookVersion, final List<String> listItems, final String title,
+            final String id) {
+        final String idAttribute;
+        if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+            idAttribute = id != null && id.length() != 0 ? " xml:id=\"" + id + "\" " : "";
+        } else {
+            idAttribute = id != null && id.length() != 0 ? " id=\"" + id + "\" " : "";
+        }
         final String titleElement = title == null || title.length() == 0 ? "" : "<title>" + title + "</title>";
 
         final StringBuilder retValue = new StringBuilder("<itemizedlist" + idAttribute + ">" + titleElement);

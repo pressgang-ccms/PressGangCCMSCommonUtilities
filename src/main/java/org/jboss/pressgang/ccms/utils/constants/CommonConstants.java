@@ -170,7 +170,7 @@ public class CommonConstants {
     public static final String CS_BRAND_LOGO_TITLE = "Brand Logo";
     public static final String CS_PUBLICAN_CFG_TITLE = "publican.cfg";
     public static final String CS_INLINE_INJECTION_TITLE = "Inline Injection";
-    public static final String CS_DTD_TITLE = "DTD";
+    public static final String CS_FORMAT_TITLE = "Format";
     public static final String CS_REV_HISTORY_TITLE = "Revision History";
     public static final String CS_FEEDBACK_TITLE = "Feedback";
     public static final String CS_LEGAL_NOTICE_TITLE = "Legal Notice";

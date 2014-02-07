@@ -828,7 +828,7 @@ public class XMLUtilities {
     public static String addDoctype(final String xml, final String rootElementName, final String entityFileName) {
         final String preamble = findPreamble(xml);
         final String docType = findDocumentType(xml);
-        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+        final String fixedPreamble = preamble == null ? "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" : preamble + "\n";
 
         // Remove any current doctype declarations
         final String fixedXML;
@@ -1464,7 +1464,7 @@ public class XMLUtilities {
      * @return An xi:include element that can be used to include content from another file.
      */
     public static Element createXIInclude(final Document doc, final String file) {
-        final Element xiInclude = doc.createElement("xi:include");
+        final Element xiInclude = doc.createElementNS("http://www.w3.org/2001/XInclude", "xi:include");
         xiInclude.setAttribute("href", file);
         xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
 

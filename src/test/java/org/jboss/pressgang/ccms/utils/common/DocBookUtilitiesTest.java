@@ -39,6 +39,6 @@ public class DocBookUtilitiesTest {
         final String fixedXML = DocBookUtilities.addDocBook50Namespace(xml, "section");
 
         // Then
-        assert fixedXML.contains("xmlns=\"http://docbook.org/ns/docbook\" version=\"5.0\"");
+        assert fixedXML.contains("xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"5.0\"");
     }
 }
