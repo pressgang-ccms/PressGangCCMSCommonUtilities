@@ -1,8 +1,5 @@
 package org.jboss.pressgang.ccms.utils.common;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +12,7 @@ import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -97,7 +95,7 @@ public class DocBookUtilities {
         return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9_.-]", "");
     }
 
-    public static void setSectionTitle(final String titleValue, final Document doc) {
+    public static void setSectionTitle(final DocBookVersion docBookVersion, final String titleValue, final Document doc) {
         assert doc != null : "The doc parameter can not be null";
         final Element docElement = doc.getDocumentElement();
 
@@ -131,18 +129,27 @@ public class DocBookUtilities {
                 firstNode = firstNode.getNextSibling();
             }
 
-            // Set the section title based on if the first node is a "sectioninfo" node.
-            if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME)) {
-                final Node nextNode = firstNode.getNextSibling();
-                if (nextNode != null) {
-                    docElement.insertBefore(newTitle, nextNode);
+            // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title, whereas 4.5 has to be before the title.
+            if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+                if (firstNode != null) {
+                    docElement.insertBefore(newTitle, firstNode);
                 } else {
                     docElement.appendChild(newTitle);
                 }
-            } else if (firstNode != null) {
-                docElement.insertBefore(newTitle, firstNode);
             } else {
-                docElement.appendChild(newTitle);
+                // Set the section title based on if the first node is a "sectioninfo" node.
+                if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME)) {
+                    final Node nextNode = firstNode.getNextSibling();
+                    if (nextNode != null) {
+                        docElement.insertBefore(newTitle, nextNode);
+                    } else {
+                        docElement.appendChild(newTitle);
+                    }
+                } else if (firstNode != null) {
+                    docElement.insertBefore(newTitle, firstNode);
+                } else {
+                    docElement.appendChild(newTitle);
+                }
             }
         }
     }
@@ -246,21 +253,46 @@ public class DocBookUtilities {
         return escapedTitle;
     }
 
-    public static void setSectionInfo(final Element sectionInfo, final Document doc) {
+    public static void setInfo(final DocBookVersion docBookVersion, final Element info, final Document doc) {
         assert doc != null : "The doc parameter can not be null";
-        assert sectionInfo != null : "The sectionInfo parameter can not be null";
+        assert info != null : "The sectionInfo parameter can not be null";
 
         final Element docElement = doc.getDocumentElement();
-        if (docElement != null && docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME)) {
-            final NodeList sectionInfoNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME);
-            // See if we have a sectioninfo node whose parent is the section
-            if (sectionInfoNodes.getLength() != 0 && sectionInfoNodes.item(0).getParentNode().equals(docElement)) {
-                final Node sectionInfoNode = sectionInfoNodes.item(0);
-                sectionInfoNode.getParentNode().replaceChild(sectionInfo, sectionInfoNode);
+        if (docElement != null) {
+            final NodeList infoNodes = docElement.getElementsByTagName(info.getNodeName());
+            // See if we have an info node whose parent is the section
+            if (infoNodes.getLength() != 0 && infoNodes.item(0).getParentNode().equals(docElement)) {
+                final Node sectionInfoNode = infoNodes.item(0);
+                sectionInfoNode.getParentNode().replaceChild(info, sectionInfoNode);
             } else {
-                final Node firstNode = docElement.getFirstChild();
-                if (firstNode != null) docElement.insertBefore(sectionInfo, firstNode);
-                else docElement.appendChild(sectionInfo);
+                // Find the first node that isn't text or a comment
+                Node firstNode = docElement.getFirstChild();
+                while (firstNode != null && firstNode.getNodeType() != Node.ELEMENT_NODE) {
+                    firstNode = firstNode.getNextSibling();
+                }
+
+                // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title, whereas 4.5 has to be before the title.
+                if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+                    // Set the section title based on if the first node is a info node.
+                    if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME)) {
+                        final Node nextNode = firstNode.getNextSibling();
+                        if (nextNode != null) {
+                            docElement.insertBefore(info, nextNode);
+                        } else {
+                            docElement.appendChild(info);
+                        }
+                    } else if (firstNode != null) {
+                        docElement.insertBefore(info, firstNode);
+                    } else {
+                        docElement.appendChild(info);
+                    }
+                } else {
+                    if (firstNode != null) {
+                        docElement.insertBefore(info, firstNode);
+                    } else {
+                        docElement.appendChild(info);
+                    }
+                }
             }
         }
     }
@@ -317,7 +349,9 @@ public class DocBookUtilities {
     }
 
     public static String addDocBook50Namespace(final String xml) {
-        return addDocBook50Namespace(xml, "chapter");
+        // Find the root element name
+        final String rootEleName = XMLUtilities.findRootElementName(xml);
+        return addDocBook50Namespace(xml, rootEleName);
     }
 
     public static String addDocBook50Namespace(final String xml, final String rootElementName) {
@@ -751,19 +785,32 @@ public class DocBookUtilities {
 
     public static Document wrapDocument(final Document doc, final String elementName) {
         if (!doc.getDocumentElement().getNodeName().equals(elementName)) {
-            final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            Document newDoc = null;
-            try {
-                final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                newDoc = dBuilder.newDocument();
-            } catch (ParserConfigurationException ex) {
-                LOG.debug("Unable to create a new DOM Document", ex);
-                return null;
+            final Element originalDocumentElement = doc.getDocumentElement();
+            final Element newDocumentElement;
+            if (doc.getDocumentElement().getNamespaceURI() != null) {
+                newDocumentElement = doc.createElementNS(doc.getDocumentElement().getNamespaceURI(), elementName);
+            } else {
+                newDocumentElement = doc.createElement(elementName);
             }
-            final Element section = newDoc.createElement(elementName);
-            section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
-            newDoc.appendChild(section);
-            return newDoc;
+
+            // Copy all children
+            NodeList children = originalDocumentElement.getChildNodes();
+            while (children.getLength() != 0) {
+                newDocumentElement.appendChild(children.item(0));
+            }
+
+            // Copy all the attributes
+            NamedNodeMap attrs = originalDocumentElement.getAttributes();
+            for (int i = 0; i < attrs.getLength(); i++) {
+                final Attr attr = (Attr) attrs.item(i);
+                originalDocumentElement.removeAttributeNode(attr);
+                newDocumentElement.setAttributeNode(attr);
+            }
+
+            // Replace the original element
+            doc.replaceChild(newDocumentElement, originalDocumentElement);
+
+            return doc;
         } else {
             return doc;
         }

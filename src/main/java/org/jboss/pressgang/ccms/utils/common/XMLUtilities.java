@@ -57,6 +57,8 @@ public class XMLUtilities {
     private static final String PREAMBLE_NAMED_GROUP = "Preamble";
     private static final Pattern PREAMBLE_PATTERN = Pattern.compile("^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)",
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
+    private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<(?<" + ROOT_ELE_NAMED_GROUP + ">\\S+).*?>");
     /**
      * The Docbook elements that contain translatable text
      */
@@ -145,6 +147,29 @@ public class XMLUtilities {
         final Matcher matcher = PREAMBLE_PATTERN.matcher(xml);
         if (matcher.find()) {
             return matcher.group(PREAMBLE_NAMED_GROUP);
+        } else {
+            return null;
+        }
+    }
+
+    public static String findRootElementName(final String xml) {
+        String cleanedXML = xml;
+
+        // Remove the preamble
+        final Matcher preambleMatcher = PREAMBLE_PATTERN.matcher(cleanedXML);
+        if (preambleMatcher.find()) {
+            cleanedXML = preambleMatcher.replaceFirst("");
+        }
+
+        // Remove the doctype
+        final Matcher doctypeMatcher = DOCTYPE_PATTERN.matcher(cleanedXML);
+        if (doctypeMatcher.find()) {
+            cleanedXML = doctypeMatcher.replaceFirst("");
+        }
+
+        final Matcher rootEleMatcher = ROOT_ELE_PATTERN.matcher(cleanedXML);
+        if (rootEleMatcher.find()) {
+            return rootEleMatcher.group(ROOT_ELE_NAMED_GROUP);
         } else {
             return null;
         }
