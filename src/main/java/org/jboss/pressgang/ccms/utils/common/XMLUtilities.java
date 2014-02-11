@@ -61,7 +61,7 @@ public class XMLUtilities {
     private static final Pattern PREAMBLE_PATTERN = Pattern.compile("^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)",
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
-    private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<(?<" + ROOT_ELE_NAMED_GROUP + ">\\S+).*?>");
+    private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">\\S+).*?>");
     /**
      * The Docbook elements that contain translatable text
      */
@@ -92,7 +92,7 @@ public class XMLUtilities {
     public static final String END_CDATA_RE = "\\]\\]>";
     public static final String END_CDATA_REPLACE = "]]&gt;";
     public static final String XML_ENTITY_NAMED_GROUP = "name";
-    public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);";
+    public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);";
     public static final String DOCTYPE_START = "<!DOCTYPE";
     public static final String DOCTYPE_END = ">";
     public static final String ENTITY_START = "<!ENTITY";
