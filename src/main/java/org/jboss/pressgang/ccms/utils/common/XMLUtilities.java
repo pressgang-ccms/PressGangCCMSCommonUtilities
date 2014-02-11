@@ -12,7 +12,9 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -553,7 +556,16 @@ public class XMLUtilities {
         if (prettyPrint) {
             lsSerializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
         }
-        return lsSerializer.writeToString(doc);
+        if (doc.getXmlEncoding() != null) {
+            final LSOutput lsOutput =  domImplementation.createLSOutput();
+            lsOutput.setEncoding(doc.getXmlEncoding());
+            final Writer stringWriter = new StringWriter();
+            lsOutput.setCharacterStream(stringWriter);
+            lsSerializer.write(doc, lsOutput);
+            return stringWriter.toString();
+        } else {
+            return lsSerializer.writeToString(doc);
+        }
     }
 
     private static void appendIndent(final StringBuffer stringBuffer, final boolean tabIndent, final int indentLevel,
