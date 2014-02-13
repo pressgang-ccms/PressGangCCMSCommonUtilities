@@ -61,7 +61,7 @@ public class XMLUtilities {
     private static final Pattern PREAMBLE_PATTERN = Pattern.compile("^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)",
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
-    private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">\\S+).*?>");
+    private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">[\\w\\d\\-\\.]+).*?>");
     /**
      * The Docbook elements that contain translatable text
      */
