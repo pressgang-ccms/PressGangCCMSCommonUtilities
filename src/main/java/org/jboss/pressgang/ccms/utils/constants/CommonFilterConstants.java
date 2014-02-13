@@ -463,6 +463,14 @@ public class CommonFilterConstants {
      */
     public static final String CREATED_BY_VAR_DESC = "Created By";
     /**
+     * The URL variable that defines the created by search field
+     */
+    public static final String NOT_CREATED_BY_VAR = "notCreatedBy";
+    /**
+     * The description of the created by search field
+     */
+    public static final String NOT_CREATED_BY_VAR_DESC = "Not Created By";
+    /**
      * The URL variable that defines the edited by search field
      */
     public static final String EDITED_BY_VAR = "editedBy";
@@ -470,6 +478,15 @@ public class CommonFilterConstants {
      * The description of the edited by search field
      */
     public static final String EDITED_BY_VAR_DESC = "Edited By";
+
+    /**
+     * The URL variable that defines the edited by search field
+     */
+    public static final String NOT_EDITED_BY_VAR = "notEditedBy";
+    /**
+     * The description of the edited by search field
+     */
+    public static final String NOT_EDITED_BY_VAR_DESC = "Not Edited By";
 
     /**
      * The URL variable that defines the topic IDs search field
