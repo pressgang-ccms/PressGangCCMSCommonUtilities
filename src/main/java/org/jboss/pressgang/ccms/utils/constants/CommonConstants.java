@@ -19,9 +19,10 @@ public class CommonConstants {
     public static final int CS_NODE_COMMENT = 6;
     public static final int CS_NODE_META_DATA = 7;
     public static final int CS_NODE_PREFACE = 8;
-    public static final int CS_NODE_INNER_TOPIC = 9;
+    public static final int CS_NODE_INITIAL_CONTENT_TOPIC = 9;
     public static final int CS_NODE_META_DATA_TOPIC = 10;
     public static final int CS_NODE_FILE = 11;
+    public static final int CS_NODE_INITIAL_CONTENT = 12;
 
     public static final int CS_RELATIONSHIP_PREREQUISITE = 0;
     public static final int CS_RELATIONSHIP_REFER_TO = 1;
@@ -37,6 +38,9 @@ public class CommonConstants {
 
     public static final int DOCBOOK_45 = 0;
     public static final int DOCBOOK_50 = 1;
+
+    public static final String DOCBOOK_45_TITLE = "DocBook 4.5";
+    public static final String DOCBOOK_50_TITLE = "DocBook 5.0";
 
     /**
      * The Regular Expression the defines the search format for a property tag
@@ -166,7 +170,7 @@ public class CommonConstants {
     public static final String CS_BRAND_LOGO_TITLE = "Brand Logo";
     public static final String CS_PUBLICAN_CFG_TITLE = "publican.cfg";
     public static final String CS_INLINE_INJECTION_TITLE = "Inline Injection";
-    public static final String CS_DTD_TITLE = "DTD";
+    public static final String CS_FORMAT_TITLE = "Format";
     public static final String CS_REV_HISTORY_TITLE = "Revision History";
     public static final String CS_FEEDBACK_TITLE = "Feedback";
     public static final String CS_LEGAL_NOTICE_TITLE = "Legal Notice";

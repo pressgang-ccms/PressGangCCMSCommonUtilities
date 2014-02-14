@@ -12,7 +12,9 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -57,6 +60,8 @@ public class XMLUtilities {
     private static final String PREAMBLE_NAMED_GROUP = "Preamble";
     private static final Pattern PREAMBLE_PATTERN = Pattern.compile("^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)",
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
+    private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">[\\w\\d\\-\\.]+).*?>");
     /**
      * The Docbook elements that contain translatable text
      */
@@ -87,7 +92,7 @@ public class XMLUtilities {
     public static final String END_CDATA_RE = "\\]\\]>";
     public static final String END_CDATA_REPLACE = "]]&gt;";
     public static final String XML_ENTITY_NAMED_GROUP = "name";
-    public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);";
+    public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);";
     public static final String DOCTYPE_START = "<!DOCTYPE";
     public static final String DOCTYPE_END = ">";
     public static final String ENTITY_START = "<!ENTITY";
@@ -98,7 +103,7 @@ public class XMLUtilities {
     public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
     public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
 
-    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);");
+    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);");
 
     public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE,
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
@@ -145,6 +150,29 @@ public class XMLUtilities {
         final Matcher matcher = PREAMBLE_PATTERN.matcher(xml);
         if (matcher.find()) {
             return matcher.group(PREAMBLE_NAMED_GROUP);
+        } else {
+            return null;
+        }
+    }
+
+    public static String findRootElementName(final String xml) {
+        String cleanedXML = xml;
+
+        // Remove the preamble
+        final Matcher preambleMatcher = PREAMBLE_PATTERN.matcher(cleanedXML);
+        if (preambleMatcher.find()) {
+            cleanedXML = preambleMatcher.replaceFirst("");
+        }
+
+        // Remove the doctype
+        final Matcher doctypeMatcher = DOCTYPE_PATTERN.matcher(cleanedXML);
+        if (doctypeMatcher.find()) {
+            cleanedXML = doctypeMatcher.replaceFirst("");
+        }
+
+        final Matcher rootEleMatcher = ROOT_ELE_PATTERN.matcher(cleanedXML);
+        if (rootEleMatcher.find()) {
+            return rootEleMatcher.group(ROOT_ELE_NAMED_GROUP);
         } else {
             return null;
         }
@@ -419,6 +447,7 @@ public class XMLUtilities {
             // builderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             // this is the default, but set it anyway
             // builderFactory.setValidating(false);
+            builderFactory.setNamespaceAware(true);
 
             final DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
@@ -527,7 +556,16 @@ public class XMLUtilities {
         if (prettyPrint) {
             lsSerializer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
         }
-        return lsSerializer.writeToString(doc);
+        if (doc.getXmlEncoding() != null) {
+            final LSOutput lsOutput =  domImplementation.createLSOutput();
+            lsOutput.setEncoding(doc.getXmlEncoding());
+            final Writer stringWriter = new StringWriter();
+            lsOutput.setCharacterStream(stringWriter);
+            lsSerializer.write(doc, lsOutput);
+            return stringWriter.toString();
+        } else {
+            return lsSerializer.writeToString(doc);
+        }
     }
 
     private static void appendIndent(final StringBuffer stringBuffer, final boolean tabIndent, final int indentLevel,
@@ -803,6 +841,123 @@ public class XMLUtilities {
             }
         }
         return nodes;
+    }
+
+    /**
+     * Add/Set the DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addDoctype(final String xml, final String rootElementName) {
+        return addDoctype(xml, rootElementName, null);
+    }
+
+    /**
+     * Add/Set the DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @param entityFileName  The file name for any external entities that should be included.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addDoctype(final String xml, final String rootElementName, final String entityFileName) {
+        final String preamble = findPreamble(xml);
+        final String docType = findDocumentType(xml);
+        final String fixedPreamble = preamble == null ? "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" : preamble + "\n";
+
+        // Remove any current doctype declarations
+        final String fixedXML;
+        if (docType != null) {
+            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            fixedXML = tempFixedXML.replace(docType, "");
+        } else {
+            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+        }
+
+        final StringBuilder retValue = new StringBuilder(fixedPreamble);
+        retValue.append("<!DOCTYPE ");
+        if (rootElementName == null) {
+            retValue.append("chapter");
+        } else {
+            retValue.append(rootElementName);
+        }
+
+        // Add the local entity file
+        if (entityFileName != null) {
+            retValue.append(" [\n");
+            retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
+            retValue.append("%BOOK_ENTITIES;\n");
+            retValue.append("]");
+        }
+
+        retValue.append(">\n");
+        retValue.append(fixedXML);
+
+        return retValue.toString();
+    }
+
+    /**
+     * Add/Set the PUBLIC DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param publicName      The PUBLIC name for the DOCTYPE.
+     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addPublicDoctype(final String xml, final String publicName, final String publicLocation,
+            final String rootElementName) {
+        return addPublicDoctype(xml, publicName, publicLocation, null, rootElementName);
+    }
+
+    /**
+     * Add/Set the PUBLIC DOCTYPE for some XML content.
+     *
+     * @param xml             The XML to add or set the DOCTYPE for.
+     * @param publicName      The PUBLIC name for the DOCTYPE.
+     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
+     * @param entityFileName  The file name for any external entities that should be included.
+     * @param rootElementName The root Element Name for the DOCTYPE.
+     * @return The XML with the DOCTYPE added.
+     */
+    public static String addPublicDoctype(final String xml, final String publicName, final String publicLocation,
+            final String entityFileName, final String rootElementName) {
+        final String preamble = findPreamble(xml);
+        final String docType = findDocumentType(xml);
+        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+
+        // Remove any current doctype declarations
+        final String fixedXML;
+        if (docType != null) {
+            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            fixedXML = tempFixedXML.replace(docType, "");
+        } else {
+            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+        }
+
+        final StringBuilder retValue = new StringBuilder(fixedPreamble);
+        retValue.append("<!DOCTYPE ");
+        if (rootElementName == null) {
+            retValue.append("chapter");
+        } else {
+            retValue.append(rootElementName);
+        }
+        retValue.append(" PUBLIC \"" + publicName + "\" \"" + publicLocation + "\" ");
+
+        // Add the local entity file
+        if (entityFileName != null) {
+            retValue.append("[\n");
+            retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
+            retValue.append("%BOOK_ENTITIES;\n");
+            retValue.append("]");
+        }
+
+        retValue.append(">\n");
+        retValue.append(fixedXML);
+
+        return retValue.toString();
     }
 
     /**
@@ -1346,7 +1501,7 @@ public class XMLUtilities {
      * @return An xi:include element that can be used to include content from another file.
      */
     public static Element createXIInclude(final Document doc, final String file) {
-        final Element xiInclude = doc.createElement("xi:include");
+        final Element xiInclude = doc.createElementNS("http://www.w3.org/2001/XInclude", "xi:include");
         xiInclude.setAttribute("href", file);
         xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
 

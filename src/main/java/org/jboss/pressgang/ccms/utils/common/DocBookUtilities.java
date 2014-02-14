@@ -1,8 +1,5 @@
 package org.jboss.pressgang.ccms.utils.common;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,8 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
+import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -94,7 +95,7 @@ public class DocBookUtilities {
         return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9_.-]", "");
     }
 
-    public static void setSectionTitle(final String titleValue, final Document doc) {
+    public static void setSectionTitle(final DocBookVersion docBookVersion, final String titleValue, final Document doc) {
         assert doc != null : "The doc parameter can not be null";
         final Element docElement = doc.getDocumentElement();
 
@@ -116,9 +117,6 @@ public class DocBookUtilities {
             newTitle.appendChild(doc.createTextNode(titleValue));
         }
 
-        // Remove any id attributes from the section
-        docElement.removeAttribute("id");
-
         final NodeList titleNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME);
         // see if we have a title node whose parent is the section
         if (titleNodes.getLength() != 0 && titleNodes.item(0).getParentNode().equals(docElement)) {
@@ -131,18 +129,27 @@ public class DocBookUtilities {
                 firstNode = firstNode.getNextSibling();
             }
 
-            // Set the section title based on if the first node is a "sectioninfo" node.
-            if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME)) {
-                final Node nextNode = firstNode.getNextSibling();
-                if (nextNode != null) {
-                    docElement.insertBefore(newTitle, nextNode);
+            // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title, whereas 4.5 has to be before the title.
+            if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+                if (firstNode != null) {
+                    docElement.insertBefore(newTitle, firstNode);
                 } else {
                     docElement.appendChild(newTitle);
                 }
-            } else if (firstNode != null) {
-                docElement.insertBefore(newTitle, firstNode);
             } else {
-                docElement.appendChild(newTitle);
+                // Set the section title based on if the first node is a "sectioninfo" node.
+                if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME)) {
+                    final Node nextNode = firstNode.getNextSibling();
+                    if (nextNode != null) {
+                        docElement.insertBefore(newTitle, nextNode);
+                    } else {
+                        docElement.appendChild(newTitle);
+                    }
+                } else if (firstNode != null) {
+                    docElement.insertBefore(newTitle, firstNode);
+                } else {
+                    docElement.appendChild(newTitle);
+                }
             }
         }
     }
@@ -159,7 +166,7 @@ public class DocBookUtilities {
         try {
             final Document tempDoc = XMLUtilities.convertStringToDocument("<title>" + escapeForXML(titleValue) + "</title>");
             final Node titleEle = doc.importNode(tempDoc.getDocumentElement(), true);
-            
+
             // Add the child elements to the ulink node
             final NodeList nodes = titleEle.getChildNodes();
             while (nodes.getLength() > 0) {
@@ -209,7 +216,7 @@ public class DocBookUtilities {
         final LinkedList<String> elements = new LinkedList<String>();
         if (fixedContent.indexOf('<') != -1) {
             int index = -1;
-            while ((index = fixedContent.indexOf('<', index + 1)) != -1){
+            while ((index = fixedContent.indexOf('<', index + 1)) != -1) {
                 int endIndex = fixedContent.indexOf('>', index);
                 int nextIndex = fixedContent.indexOf('<', index + 1);
 
@@ -231,38 +238,61 @@ public class DocBookUtilities {
 
         // Find all the elements and replace them with a marker
         String escapedTitle = fixedContent;
-        for (int count  = 0; count < elements.size(); count++) {
+        for (int count = 0; count < elements.size(); count++) {
             escapedTitle = escapedTitle.replace(elements.get(count), "###" + count + "###");
         }
 
         // Perform the replacements on what's left
-        escapedTitle = escapedTitle.replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace("\"", "&quot;");
+        escapedTitle = escapedTitle.replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
 
         // Replace the markers
-        for (int count  = 0; count < elements.size(); count++) {
+        for (int count = 0; count < elements.size(); count++) {
             escapedTitle = escapedTitle.replace("###" + count + "###", elements.get(count));
         }
 
         return escapedTitle;
     }
 
-    public static void setSectionInfo(final Element sectionInfo, final Document doc) {
+    public static void setInfo(final DocBookVersion docBookVersion, final Element info, final Document doc) {
         assert doc != null : "The doc parameter can not be null";
-        assert sectionInfo != null : "The sectionInfo parameter can not be null";
+        assert info != null : "The sectionInfo parameter can not be null";
 
         final Element docElement = doc.getDocumentElement();
-        if (docElement != null && docElement.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_NODE_NAME)) {
-            final NodeList sectionInfoNodes = docElement.getElementsByTagName(DocBookUtilities.TOPIC_ROOT_SECTIONINFO_NODE_NAME);
-            // See if we have a sectioninfo node whose parent is the section
-            if (sectionInfoNodes.getLength() != 0 && sectionInfoNodes.item(0).getParentNode().equals(docElement)) {
-                final Node sectionInfoNode = sectionInfoNodes.item(0);
-                sectionInfoNode.getParentNode().replaceChild(sectionInfo, sectionInfoNode);
+        if (docElement != null) {
+            final NodeList infoNodes = docElement.getElementsByTagName(info.getNodeName());
+            // See if we have an info node whose parent is the section
+            if (infoNodes.getLength() != 0 && infoNodes.item(0).getParentNode().equals(docElement)) {
+                final Node sectionInfoNode = infoNodes.item(0);
+                sectionInfoNode.getParentNode().replaceChild(info, sectionInfoNode);
             } else {
-                final Node firstNode = docElement.getFirstChild();
-                if (firstNode != null) docElement.insertBefore(sectionInfo, firstNode);
-                else docElement.appendChild(sectionInfo);
+                // Find the first node that isn't text or a comment
+                Node firstNode = docElement.getFirstChild();
+                while (firstNode != null && firstNode.getNodeType() != Node.ELEMENT_NODE) {
+                    firstNode = firstNode.getNextSibling();
+                }
+
+                // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title, whereas 4.5 has to be before the title.
+                if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+                    // Set the section title based on if the first node is a info node.
+                    if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME)) {
+                        final Node nextNode = firstNode.getNextSibling();
+                        if (nextNode != null) {
+                            docElement.insertBefore(info, nextNode);
+                        } else {
+                            docElement.appendChild(info);
+                        }
+                    } else if (firstNode != null) {
+                        docElement.insertBefore(info, firstNode);
+                    } else {
+                        docElement.appendChild(info);
+                    }
+                } else {
+                    if (firstNode != null) {
+                        docElement.insertBefore(info, firstNode);
+                    } else {
+                        docElement.appendChild(info);
+                    }
+                }
             }
         }
     }
@@ -300,83 +330,47 @@ public class DocBookUtilities {
         return "<section" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</section>";
     }
 
-    /**
-     * Add/Set the PUBLIC DOCTYPE for some XML content.
-     *
-     * @param xml             The XML to add or set the DOCTYPE for.
-     * @param publicName      The PUBLIC name for the DOCTTYPE.
-     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
-     * @param rootElementName The root Element Name for the DOCTYPE.
-     * @return The XML with the DOCTYPE added.
-     */
-    public static String addXMLPublicDoctype(final String xml, final String publicName, final String publicLocation,
-            final String rootElementName) {
-        return addXMLPublicDoctype(xml, publicName, publicLocation, null, rootElementName);
+    public static String addDocBook45Doctype(final String xml) {
+        return addDocBook45Doctype(xml, null, "chapter");
     }
 
-    /**
-     * Add/Set the PUBLIC DOCTYPE for some XML content.
-     *
-     * @param xml             The XML to add or set the DOCTYPE for.
-     * @param publicName      The PUBLIC name for the DOCTYPE.
-     * @param publicLocation  The PUBLIC location/url for the DOCTYPE.
-     * @param entityFileName  A name for a local entity to set in the doctype.
-     * @param rootElementName The root Element Name for the DOCTYPE.
-     * @return The XML with the DOCTYPE added.
-     */
-    public static String addXMLPublicDoctype(final String xml, final String publicName, final String publicLocation,
-            final String entityFileName, final String rootElementName) {
-        final String preamble = XMLUtilities.findPreamble(xml);
-        final String docType = XMLUtilities.findDocumentType(xml);
-        final String fixedPreamble = preamble == null ? "<?xml version='1.0' encoding='UTF-8' ?>\n" : preamble + "\n";
+    public static String addDocBook45Doctype(final String xml, final String entityFileName, final String rootElementName) {
+        return XMLUtilities.addPublicDoctype(xml, "-//OASIS//DTD DocBook XML V4.5//EN",
+                "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd", entityFileName, rootElementName);
+    }
 
-        final String fixedXML;
-        if (docType != null) {
-            final String tempFixedXML = preamble == null ? xml : xml.replace(preamble, "");
-            fixedXML = tempFixedXML.replace(docType, "");
+    public static String addDocBook50Doctype(final String xml) {
+        return addDocBook50Doctype(xml, null, "chapter");
+    }
+
+    public static String addDocBook50Doctype(final String xml, final String entityFileName, final String rootElementName) {
+        return XMLUtilities.addPublicDoctype(xml, "-//OASIS//DTD DocBook XML V5.0//EN",
+                "http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd", entityFileName, rootElementName);
+    }
+
+    public static String addDocBook50Namespace(final String xml) {
+        // Find the root element name
+        final String rootEleName = XMLUtilities.findRootElementName(xml);
+        return addDocBook50Namespace(xml, rootEleName);
+    }
+
+    public static String addDocBook50Namespace(final String xml, final String rootElementName) {
+        if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
+        final Pattern pattern = Pattern.compile("(?<ELEMENT><" + rootElementName + ".*?)>");
+        final Matcher matcher = pattern.matcher(xml);
+        if (matcher.find()) {
+            final String element = matcher.group("ELEMENT");
+            // Remove any current namespace declaration
+            String fixedElement = element.replaceFirst(" xmlns=\".*?\"", "");
+            // Remove any current version declaration
+            fixedElement = fixedElement.replaceFirst(" version=\".*?\"", "");
+            // Remove any current xlink namespace declaration
+            fixedElement = fixedElement.replaceFirst(" xmlns:xlink=\".*?\"", "");
+            return xml.replaceFirst(element, fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
+                    " version=\"5.0\"");
         } else {
-            fixedXML = preamble == null ? xml : xml.replace(preamble, "");
+            return xml;
         }
-
-        final StringBuilder retValue = new StringBuilder(fixedPreamble);
-        retValue.append("<!DOCTYPE ");
-        if (rootElementName == null) {
-            retValue.append("chapter");
-        } else {
-            retValue.append(rootElementName);
-        }
-        retValue.append(" PUBLIC \"" + publicName + "\" \"" + publicLocation + "\" ");
-
-        // Add the local entity file
-        if (entityFileName != null) {
-            retValue.append("[\n");
-            retValue.append("<!ENTITY % BOOK_ENTITIES SYSTEM \"" + entityFileName + "\">\n");
-            retValue.append("%BOOK_ENTITIES;\n");
-            retValue.append("]");
-        }
-
-        retValue.append(">\n");
-        retValue.append(fixedXML);
-
-        return retValue.toString();
-    }
-
-    public static String addDocbook45XMLDoctype(final String xml) {
-        return addDocbook45XMLDoctype(xml, null, "chapter");
-    }
-
-    public static String addDocbook45XMLDoctype(final String xml, final String entityFileName, final String rootElementName) {
-        return addXMLPublicDoctype(xml, "-//OASIS//DTD DocBook XML V4.5//EN", "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd",
-                entityFileName, rootElementName);
-    }
-
-    public static String addDocbook50XMLDoctype(final String xml) {
-        return addDocbook50XMLDoctype(xml, null, "chapter");
-    }
-
-    public static String addDocbook50XMLDoctype(final String xml, final String entityFileName, final String rootElementName) {
-        return addXMLPublicDoctype(xml, "-//OASIS//DTD DocBook XML V5.0//EN", "http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd",
-                entityFileName, rootElementName);
     }
 
     public static String buildXRefListItem(final String xref, final String role) {
@@ -544,15 +538,21 @@ public class DocBookUtilities {
     }
 
     public static String wrapListItems(final List<String> listItems) {
-        return wrapListItems(listItems, null, null);
+        return wrapListItems(null, listItems, null, null);
     }
 
     public static String wrapListItems(final List<String> listItems, final String title) {
-        return wrapListItems(listItems, title, null);
+        return wrapListItems(null, listItems, title, null);
     }
 
-    public static String wrapListItems(final List<String> listItems, final String title, final String id) {
-        final String idAttribute = id != null && id.length() != 0 ? " id=\"" + id + "\" " : "";
+    public static String wrapListItems(final DocBookVersion docBookVersion, final List<String> listItems, final String title,
+            final String id) {
+        final String idAttribute;
+        if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+            idAttribute = id != null && id.length() != 0 ? " xml:id=\"" + id + "\" " : "";
+        } else {
+            idAttribute = id != null && id.length() != 0 ? " id=\"" + id + "\" " : "";
+        }
         final String titleElement = title == null || title.length() == 0 ? "" : "<title>" + title + "</title>";
 
         final StringBuilder retValue = new StringBuilder("<itemizedlist" + idAttribute + ">" + titleElement);
@@ -735,7 +735,7 @@ public class DocBookUtilities {
         final Element xrefItem = xmlDoc.createElement("ulink");
         xrefItem.setAttribute("url", url);
         paraItem.appendChild(xrefItem);
-        
+
         // Attempt to parse the title as XML. If this fails then just set the title as plain text.
         try {
             final Document doc = XMLUtilities.convertStringToDocument("<title>" + title + "</title>");
@@ -785,19 +785,32 @@ public class DocBookUtilities {
 
     public static Document wrapDocument(final Document doc, final String elementName) {
         if (!doc.getDocumentElement().getNodeName().equals(elementName)) {
-            final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            Document newDoc = null;
-            try {
-                final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                newDoc = dBuilder.newDocument();
-            } catch (ParserConfigurationException ex) {
-                LOG.debug("Unable to create a new DOM Document", ex);
-                return null;
+            final Element originalDocumentElement = doc.getDocumentElement();
+            final Element newDocumentElement;
+            if (doc.getDocumentElement().getNamespaceURI() != null) {
+                newDocumentElement = doc.createElementNS(doc.getDocumentElement().getNamespaceURI(), elementName);
+            } else {
+                newDocumentElement = doc.createElement(elementName);
             }
-            final Element section = newDoc.createElement(elementName);
-            section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
-            newDoc.appendChild(section);
-            return newDoc;
+
+            // Copy all children
+            NodeList children = originalDocumentElement.getChildNodes();
+            while (children.getLength() != 0) {
+                newDocumentElement.appendChild(children.item(0));
+            }
+
+            // Copy all the attributes
+            NamedNodeMap attrs = originalDocumentElement.getAttributes();
+            for (int i = 0; i < attrs.getLength(); i++) {
+                final Attr attr = (Attr) attrs.item(i);
+                originalDocumentElement.removeAttributeNode(attr);
+                newDocumentElement.setAttributeNode(attr);
+            }
+
+            // Replace the original element
+            doc.replaceChild(newDocumentElement, originalDocumentElement);
+
+            return doc;
         } else {
             return doc;
         }
@@ -1026,10 +1039,10 @@ public class DocBookUtilities {
      * matches the passed condition string. If they don't match
      * then remove the nodes.
      *
-     * @param condition        The condition regex to be tested against.
-     * @param doc              The Document to check for conditional statements.
-     * @param defaultCondition The default condition to allow a default block when processing conditions.
-     * @param removeConditionAttr  Remove the condition attribute from any matching/leftover nodes.
+     * @param condition           The condition regex to be tested against.
+     * @param doc                 The Document to check for conditional statements.
+     * @param defaultCondition    The default condition to allow a default block when processing conditions.
+     * @param removeConditionAttr Remove the condition attribute from any matching/leftover nodes.
      */
     public static void processConditions(final String condition, final Document doc, final String defaultCondition,
             boolean removeConditionAttr) {
@@ -1045,7 +1058,7 @@ public class DocBookUtilities {
             for (final String nodeCondition : nodeConditions) {
                 if (condition != null && nodeCondition.matches(condition)) {
                     matched = true;
-                } else if (condition == null && defaultCondition!= null && nodeCondition.matches(defaultCondition)) {
+                } else if (condition == null && defaultCondition != null && nodeCondition.matches(defaultCondition)) {
                     matched = true;
                 }
             }

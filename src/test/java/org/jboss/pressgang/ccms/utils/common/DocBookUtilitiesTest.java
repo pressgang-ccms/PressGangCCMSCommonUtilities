@@ -29,4 +29,16 @@ public class DocBookUtilitiesTest {
         assertEquals(output3, "<title>Product A &amp; Product B<phrase condition=\"beta\">-Beta</phrase></title>");
         assertEquals(output4, test4);
     }
+
+    @Test
+    public void shouldAddDocBook5Namespace() {
+        // Given a basic xml document
+        final String xml = "<section>\n<title>Test</title>\n<para>Some section content</para>\n</section>";
+
+        // When
+        final String fixedXML = DocBookUtilities.addDocBook50Namespace(xml, "section");
+
+        // Then
+        assert fixedXML.contains("xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"5.0\"");
+    }
 }
