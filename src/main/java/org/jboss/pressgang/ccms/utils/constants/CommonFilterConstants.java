@@ -455,6 +455,22 @@ public class CommonFilterConstants {
      */
     public static final String TOPIC_MIN_HASH_VAR_DESC = "Topic Minimum Hash";
     /**
+     * The URL variable that defines the topics format
+     */
+    public static final String TOPIC_FORMAT_VAR = "topicFormat";
+    /**
+     * The description of the topic format search field
+     */
+    public static final String TOPIC_FORMAT_VAR_DESC = "Topic Format";
+    /**
+     * The URL variable that defines the topics format
+     */
+    public static final String TOPIC_NOT_FORMAT_VAR = "topicNotFormat";
+    /**
+     * The description of the topic format search field
+     */
+    public static final String TOPIC_NOT_FORMAT_VAR_DESC = "Topic Not Format";
+    /**
      * The URL variable that defines the created by search field
      */
     public static final String CREATED_BY_VAR = "createdBy";
@@ -707,9 +723,10 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_PUBLICAN_CFG_MATCHES_FILTER_VAR = CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR_DESC = "Content Specification publican.cfg";
 
-    public static final String CONTENT_SPEC_DTD_FILTER_VAR = "contentSpecDTD";
-    public static final String CONTENT_SPEC_DTD_MATCHES_FILTER_VAR = CONTENT_SPEC_DTD_FILTER_VAR + STRING_MATCHES_SUFFIX;
-    public static final String CONTENT_SPEC_DTD_FILTER_VAR_DESC = "Content Specification DTD";
+    public static final String CONTENT_SPEC_FORMAT_FILTER_VAR = "contentSpecFormat";
+    public static final String CONTENT_SPEC_FORMAT_FILTER_VAR_DESC = "Content Specification Format";
+    public static final String CONTENT_SPEC_NOT_FORMAT_FILTER_VAR = "contentSpecNotFormat";
+    public static final String CONTENT_SPEC_NOT_FORMAT_FILTER_VAR_DESC = "Content Specification Not Format";
 
     public static final String HAS_ERRORS_FILTER_VAR = "hasErrors";
     public static final String HAS_ERRORS_FILTER_VAR_DESC = "Has Errors";
