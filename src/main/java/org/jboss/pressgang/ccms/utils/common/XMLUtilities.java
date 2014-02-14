@@ -706,11 +706,20 @@ public class XMLUtilities {
                 /*
                  * Allow for spaces between nodes. i.e. <literal>Test</literal> <literal>Test2</literal>
                  */
-                else if (node.getNodeValue() != null && node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null) {
-                    return " ";
-                }
+                else {
+                    // is this text node only whitespace
+                    final boolean thisTextNodeIsWhiteSpace = node.getNodeValue() != null && node.getNodeValue().matches("^\\s+$");
+                    // is the next node going to be placed on the same line
+                    final boolean thisTextNodeHasInlineSibling = node.getNextSibling() != null && inlineElements.contains(node.getNextSibling().getNodeName());
+                    // is the parent node closing element going to be placed on the same line
+                    final boolean thisTextNodeHasInlineParent = node.getParentNode() != null && inlineElements.contains(node.getParentNode().getNodeName());
 
-                return "";
+                    if (thisTextNodeIsWhiteSpace && (thisTextNodeHasInlineSibling || thisTextNodeHasInlineParent)) {
+                        return " ";
+                    } else {
+                        return "";
+                    }
+                }
             } else {
                 return node.getNodeValue();
             }

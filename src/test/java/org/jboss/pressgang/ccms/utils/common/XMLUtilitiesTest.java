@@ -152,4 +152,34 @@ public class XMLUtilitiesTest {
                 "</section>";
         assertEquals(expectedXml, convertedXml);
     }
+
+    @Test
+    public void shouldMaintainWhitespaceWhenConvertingNode2() throws SAXException {
+        // Given some XML that is converted into a dom.
+        String xml = "<section>\n" +
+                "\t<title>Configuring Fence Devices</title>\n"+
+                "\t<para>\n"+
+                "\t\tChoose <guimenu>File</guimenu> =&gt;\n" +
+                "\t\t<guimenuitem>Save</guimenuitem> to save the changes to the cluster configuration.\n" +
+                "\t</para>\n" +
+                "</section>";
+        Document doc = XMLUtilities.convertStringToDocument(xml);
+
+        final List<String> inline = Arrays.asList("code","prompt","command","firstterm","ulink","guilabel","filename","replaceable","parameter","literal","classname","sgmltag","guibutton","guimenuitem","guimenu","menuchoice","citetitle","systemitem","application","acronym","keycap","emphasis","package","quote","trademark","abbrev","phrase","anchor","citation","glossterm","link","xref","markup","tag","keycode","keycombo","accel","guisubmenu","keysym","shortcut","mousebutton","constant","errorcode","errorname","errortype","function","msgtext","property","returnvalue","symbol","token","varname","database","email","hardware","option","optional","type","methodname","interfacename","uri","productname","productversion","revnumber","date",
+                "computeroutput","firstname","surname","exceptionname","guiicon","property");
+        final List<String> verbatim = Arrays.asList("screen","programlisting","literallayout","synopsis","address");
+        final List<String> verbatimInline = Arrays.asList("title", "term");
+
+        // When converting the node to a string
+        final String convertedXml = XMLUtilities.convertNodeToString(doc, verbatim, inline, verbatimInline, true);
+
+        // Then
+        final String expectedXml = "<section>\n" +
+            "\t<title>Configuring Fence Devices</title>\n"+
+            "\t<para>\n"+
+            "\t\tChoose <guimenu>File</guimenu> =&gt; <guimenuitem>Save</guimenuitem> to save the changes to the cluster configuration.\n" +
+            "\t</para>\n" +
+            "</section>";
+        assertEquals(expectedXml, convertedXml);
+    }
 }
