@@ -711,7 +711,9 @@ public class XMLUtilities {
                     final boolean thisTextNodeIsWhiteSpace = node.getNodeValue() != null && node.getNodeValue().matches("^\\s+$");
                     // is the next node going to be placed on the same line
                     final boolean thisTextNodeHasInlineSibling = node.getNextSibling() != null &&
-                            (inlineElements.contains(node.getNextSibling().getNodeName()) || node.getNextSibling().getNodeType() == Node.CDATA_SECTION_NODE);
+                            (inlineElements.contains(node.getNextSibling().getNodeName()) ||
+                            node.getNextSibling().getNodeType() == Node.CDATA_SECTION_NODE ||
+                            node.getNextSibling().getNodeType() == Node.ENTITY_REFERENCE_NODE);
                     // is the parent node closing element going to be placed on the same line
                     final boolean thisTextNodeHasInlineParent = node.getParentNode() != null && inlineElements.contains(node.getParentNode().getNodeName());
 
