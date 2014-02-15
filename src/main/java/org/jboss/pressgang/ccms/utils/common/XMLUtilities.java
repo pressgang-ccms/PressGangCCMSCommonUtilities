@@ -710,14 +710,19 @@ public class XMLUtilities {
                     // is this text node only whitespace
                     final boolean thisTextNodeIsWhiteSpace = node.getNodeValue() != null && node.getNodeValue().matches("^\\s+$");
                     // is the next node going to be placed on the same line
-                    final boolean thisTextNodeHasInlineSibling = node.getNextSibling() != null &&
-                            (inlineElements.contains(node.getNextSibling().getNodeName()) ||
-                            node.getNextSibling().getNodeType() == Node.CDATA_SECTION_NODE ||
-                            node.getNextSibling().getNodeType() == Node.ENTITY_REFERENCE_NODE);
+                    final boolean thisTextNodeHasInlineSibling =
+                            node.getNextSibling() != null &&
+                            (
+                                inlineElements.contains(node.getNextSibling().getNodeName()) ||
+                                node.getNextSibling().getNodeType() != Node.ELEMENT_NODE
+                            );
                     // is the parent node closing element going to be placed on the same line
-                    final boolean thisTextNodeHasInlineParent = node.getParentNode() != null && inlineElements.contains(node.getParentNode().getNodeName());
+                    final boolean thisTextNodeIsLastInInlineParent =
+                            node.getNextSibling() == null &&
+                            node.getParentNode() != null &&
+                            inlineElements.contains(node.getParentNode().getNodeName());
 
-                    if (thisTextNodeIsWhiteSpace && (thisTextNodeHasInlineSibling || thisTextNodeHasInlineParent)) {
+                    if (thisTextNodeIsWhiteSpace && (thisTextNodeHasInlineSibling || thisTextNodeIsLastInInlineParent)) {
                         return " ";
                     } else {
                         return "";
@@ -746,9 +751,17 @@ public class XMLUtilities {
         /* open the tag */
         if (includeElementName) {
 
-            if (!verbatim && !documentRoot && ((!inline && !inlineElements.contains(
-                    nodeName)) || previousNodeWasComment || (firstNode && !inline)))
+            if  (
+                    !verbatim &&
+                    !documentRoot &&
+                    (
+                        (!inline && !inlineElements.contains(nodeName)) ||
+                        previousNodeWasComment ||
+                        (firstNode && !inline)
+                    )
+                ) {
                 appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
+            }
 
             stringBuffer.append('<').append(nodeName);
 
