@@ -96,16 +96,29 @@ public class StringUtilities {
     /**
      * Prepares a string to be inserted into xml by escaping any reserved XML symbols.
      * <p/>
-     * The current symbols are: < > & "
+     * The current symbols are: < > & " '
      *
      * @param input The original string
      * @return A string with the reserved xml characters escaped.
      */
     public static String escapeForXML(final String input) {
-        return input.replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;");
+        return input.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&apos;");
+    }
+
+    /**
+     * Prepares a string to be inserted into xml entity declaration by escaping any reserved XML symbols.
+     * <p/>
+     * The current symbols are: < > & "' %
+     *
+     * @param input The original string
+     * @return A string with the reserved xml characters escaped.
+     */
+    public static String escapeForXMLEntity(final String input) {
+        return escapeForXML(input).replace("%", "&percnt;");
     }
 
     /**
