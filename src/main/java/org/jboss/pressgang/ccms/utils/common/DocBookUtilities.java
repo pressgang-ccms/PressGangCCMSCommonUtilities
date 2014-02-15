@@ -210,7 +210,7 @@ public class DocBookUtilities {
          * <title>Product A &gt; Product B<phrase condition="beta">-Beta</phrase></title>
          */
 
-        String fixedContent = content.replaceAll("&(?![#\\w\\d]*?;)", "&amp;");
+        String fixedContent = content.replaceAll("&(?!\\S+?;)", "&amp;");
 
         // Loop over and find all the XML Elements as they should remain untouched.
         final LinkedList<String> elements = new LinkedList<String>();
@@ -361,11 +361,11 @@ public class DocBookUtilities {
         if (matcher.find()) {
             final String element = matcher.group("ELEMENT");
             // Remove any current namespace declaration
-            String fixedElement = element.replaceFirst(" xmlns=\".*?\"", "");
+            String fixedElement = element.replaceFirst(" xmlns\\s*=\\s*('|\").*?('|\")", "");
             // Remove any current version declaration
-            fixedElement = fixedElement.replaceFirst(" version=\".*?\"", "");
+            fixedElement = fixedElement.replaceFirst(" version\\s*=\\s*('|\").*?('|\")", "");
             // Remove any current xlink namespace declaration
-            fixedElement = fixedElement.replaceFirst(" xmlns:xlink=\".*?\"", "");
+            fixedElement = fixedElement.replaceFirst(" xmlns:xlink\\s*=\\s*('|\").*?('|\")", "");
             return xml.replaceFirst(element, fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
                     " version=\"5.0\"");
         } else {
