@@ -37,6 +37,7 @@ import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
@@ -744,6 +745,21 @@ public class XMLUtilities {
             if (includeElementName) retValue.append("&");
             retValue.append(node.getNodeName());
             if (includeElementName) retValue.append(";");
+
+            return retValue.toString();
+        }
+
+        if (Node.PROCESSING_INSTRUCTION_NODE == nodeType) {
+            final StringBuffer retValue = new StringBuffer();
+
+            // Add the indent
+            appendIndent(retValue, tabIndent, indentLevel, indentCount);
+
+            ProcessingInstruction processingInstruction = (ProcessingInstruction) node;
+            retValue.append("<?");
+            retValue.append(processingInstruction.getTarget()).append(" ");
+            retValue.append(processingInstruction.getData());
+            retValue.append("?>");
 
             return retValue.toString();
         }

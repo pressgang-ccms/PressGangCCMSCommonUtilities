@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.utils.common;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -181,5 +182,59 @@ public class XMLUtilitiesTest {
             "\t</para>\n" +
             "</section>";
         assertEquals(expectedXml, convertedXml);
+    }
+
+    @Test
+    public void shouldMaintainProcessingInstructionWhenConvertingNode() throws SAXException {
+        // Given some XML that is converted into a dom.
+        String xml = "<simplesect xmlns=\"http://docbook.org/ns/docbook\">\n" +
+                "    <title>Creating a base profile</title>\n" +
+                "    <para>To create a base profile:</para>\n" +
+                "    <procedure>\n" +
+                "      <step>\n" +
+                "        <para>Optionally create a new profile version using the \n" +
+                "          <command>fabric:version-create</command> command.</para>\n" +
+                "        <para>This will create a new copy of the existing profiles.</para>\n" +
+                "      </step>\n" +
+                "      <step>\n" +
+                "        <para>Import the new XML template into the registry using the \n" +
+                "          <command>fabric:import</command> command as shown in \n" +
+                "          <xref linkend=\"FMQAdminConfigFabricCreateProfile\"/>.</para>\n" +
+                "        <example xml:id=\"FMQAdminConfigFabricImportXML\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\" pgwide=\"1\">\n" +
+                "          <?dbfo pgwide=\"1\"?>\n" +
+                "          <title>Importing an XML Configuration Template</title>\n" +
+                "          <screen><prompt>JBossA-MQ:karaf@root&gt;</prompt> <userinput>fabric:import -t " +
+                "/fabric/configs/versions/<replaceable>version</replaceable>/profiles/mq-base/<replaceable>xmlTemplate</replaceable> " +
+                "<replaceable>xmlTemplatePath</replaceable></userinput></screen>\n" +
+                "        </example>\n" +
+                "      </step>\n" +
+                "      <step>\n" +
+                "        <para>Create a new configuration profile instance to hold the new XML template using the \n" +
+                "          <command>fabric:mq-create</command> command as shown in \n" +
+                "          <xref linkend=\"FMQAdminConfigFabricCreateProfile\"/>.</para>\n" +
+                "        <example xml:id=\"FMQAdminConfigFabricCreateProfile\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\" " +
+                "pgwide=\"1\">\n" +
+                "          <?dbfo pgwide=\"1\"?>\n" +
+                "          <title>Creating a Profile Using an XML Configuration Template</title>\n" +
+                "          <screen><prompt>JBossAMQ:karaf@root&gt;</prompt> <userinput>fabric:mq-create --config " +
+                "<replaceable>xmlTemplate</replaceable> <replaceable>profileName</replaceable></userinput></screen>\n" +
+                "        </example>\n" +
+                "        <para>This will create a new profile that is based on the default broker profile but uses \n" +
+                "          the imported XML template.</para>\n" +
+                "      </step>\n" +
+                "    </procedure>\n" +
+                "  </simplesect>";
+        Document doc = XMLUtilities.convertStringToDocument(xml);
+
+        final List<String> inline = Arrays.asList("code","prompt","command","firstterm","ulink","guilabel","filename","replaceable","parameter","literal","classname","sgmltag","guibutton","guimenuitem","guimenu","menuchoice","citetitle","systemitem","application","acronym","keycap","emphasis","package","quote","trademark","abbrev","phrase","anchor","citation","glossterm","link","xref","markup","tag","keycode","keycombo","accel","guisubmenu","keysym","shortcut","mousebutton","constant","errorcode","errorname","errortype","function","msgtext","property","returnvalue","symbol","token","varname","database","email","hardware","option","optional","type","methodname","interfacename","uri","productname","productversion","revnumber","date",
+                "computeroutput","firstname","surname","exceptionname","guiicon","property");
+        final List<String> verbatim = Arrays.asList("screen","programlisting","literallayout","synopsis","address");
+        final List<String> verbatimInline = Arrays.asList("title", "term");
+
+        // When converting the node to a string
+        final String convertedXml = XMLUtilities.convertNodeToString(doc, verbatim, inline, verbatimInline, true);
+
+        // Then
+        assertThat(convertedXml, containsString("<?dbfo pgwide=\"1\"?>"));
     }
 }
