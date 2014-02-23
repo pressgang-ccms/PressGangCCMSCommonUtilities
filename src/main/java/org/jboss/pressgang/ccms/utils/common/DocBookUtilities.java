@@ -253,20 +253,19 @@ public class DocBookUtilities {
         return escapedTitle;
     }
 
-    public static void setInfo(final DocBookVersion docBookVersion, final Element info, final Document doc) {
-        assert doc != null : "The doc parameter can not be null";
-        assert info != null : "The sectionInfo parameter can not be null";
+    public static void setInfo(final DocBookVersion docBookVersion, final Element info, final Element parentNode) {
+        assert parentNode != null : "The parentNode parameter can not be null";
+        assert info != null : "The info parameter can not be null";
 
-        final Element docElement = doc.getDocumentElement();
-        if (docElement != null) {
-            final NodeList infoNodes = docElement.getElementsByTagName(info.getNodeName());
+        if (parentNode != null) {
+            final NodeList infoNodes = parentNode.getElementsByTagName(info.getNodeName());
             // See if we have an info node whose parent is the section
-            if (infoNodes.getLength() != 0 && infoNodes.item(0).getParentNode().equals(docElement)) {
+            if (infoNodes.getLength() != 0 && infoNodes.item(0).getParentNode().equals(parentNode)) {
                 final Node sectionInfoNode = infoNodes.item(0);
                 sectionInfoNode.getParentNode().replaceChild(info, sectionInfoNode);
             } else {
                 // Find the first node that isn't text or a comment
-                Node firstNode = docElement.getFirstChild();
+                Node firstNode = parentNode.getFirstChild();
                 while (firstNode != null && firstNode.getNodeType() != Node.ELEMENT_NODE) {
                     firstNode = firstNode.getNextSibling();
                 }
@@ -277,20 +276,20 @@ public class DocBookUtilities {
                     if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME)) {
                         final Node nextNode = firstNode.getNextSibling();
                         if (nextNode != null) {
-                            docElement.insertBefore(info, nextNode);
+                            parentNode.insertBefore(info, nextNode);
                         } else {
-                            docElement.appendChild(info);
+                            parentNode.appendChild(info);
                         }
                     } else if (firstNode != null) {
-                        docElement.insertBefore(info, firstNode);
+                        parentNode.insertBefore(info, firstNode);
                     } else {
-                        docElement.appendChild(info);
+                        parentNode.appendChild(info);
                     }
                 } else {
                     if (firstNode != null) {
-                        docElement.insertBefore(info, firstNode);
+                        parentNode.insertBefore(info, firstNode);
                     } else {
-                        docElement.appendChild(info);
+                        parentNode.appendChild(info);
                     }
                 }
             }
