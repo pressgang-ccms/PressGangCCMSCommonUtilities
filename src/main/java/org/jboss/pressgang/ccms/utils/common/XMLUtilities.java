@@ -57,10 +57,10 @@ public class XMLUtilities {
     private static final String DOCTYPE_NAMED_GROUP = "Doctype";
     private static final Pattern DOCTYPE_PATTERN = Pattern.compile(
             "^(\\s*<\\?xml.*?\\?>)?\\s*(?<" + DOCTYPE_NAMED_GROUP + "><\\!DOCTYPE\\s+.*?(\\[.*\\]\\s*)?>)",
-            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+            java.util.regex.Pattern.DOTALL);
     private static final String PREAMBLE_NAMED_GROUP = "Preamble";
     private static final Pattern PREAMBLE_PATTERN = Pattern.compile("^\\s*(?<" + PREAMBLE_NAMED_GROUP + "><\\?xml.*?\\?>)",
-            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+            java.util.regex.Pattern.DOTALL);
     private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
     private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">[\\w\\d\\-\\.]+).*?>");
     /**

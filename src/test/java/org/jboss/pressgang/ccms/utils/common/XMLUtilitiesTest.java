@@ -23,19 +23,32 @@ public class XMLUtilitiesTest {
         // and another string with preamble and a doctype
         String xmlWithDoctype = "\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE section SYSTEM \"docbook" +
                 ".dtd\">\n<section>\n</section>\n";
-        // and another string with no preamble and a program listing that also contains a preamble example
-        String xmlNoPreambleWithExample = "<section>\n<programlisting>\n<![CDATA[<?xml version=\"1.0\" " +
-                "encoding=\"UTF-8\"?>]]>\n</programlisting></section>\n";
 
         // When finding the xml preamble
         String xmlPreamble = XMLUtilities.findPreamble(xml);
         String xmlWithDoctypePreamble = XMLUtilities.findPreamble(xmlWithDoctype);
-        String xmlNoPreambleWithExamplePreamble = XMLUtilities.findPreamble(xmlNoPreambleWithExample);
 
         // Then check that the preamble was found
         assertThat(xmlPreamble, is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertThat(xmlWithDoctypePreamble, is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertNull(xmlNoPreambleWithExamplePreamble);
+    }
+
+    @Test
+    public void shouldNotFindXMLPreamble() {
+        // Given an XML String with preamble used as an example
+        String xml = "<section>\n<programlisting>\n<![CDATA[\n<?xml version=\"1.0\" encoding=\"UTF-8\" " +
+                "standalone=\"yes\"?>\n]]></programlisting></section>\n";
+        // and another string with no preamble and a program listing that also contains a preamble example
+        String xml2 = "<section>\n<programlisting>\n<![CDATA[<?xml version=\"1.0\" " +
+                "encoding=\"UTF-8\"?>]]>\n</programlisting></section>\n";
+
+        // When finding the xml preamble
+        String xmlPreamble = XMLUtilities.findPreamble(xml);
+        String xmlPreamble2 = XMLUtilities.findPreamble(xml);
+
+        // Then check that no preamble was found
+        assertNull(xmlPreamble);
+        assertNull(xmlPreamble2);
     }
 
     @Test
@@ -87,6 +100,20 @@ public class XMLUtilitiesTest {
         assertThat(xmlWithDoctypeDoctype, is("<!DOCTYPE section SYSTEM \"docbook.dtd\">"));
         assertThat(xmlWithPublicDoctypeDoctype, is("<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"docbook.dtd\">"));
         assertThat(xmlWithExampleDoctype, is("<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"docbook.dtd\">"));
+    }
+
+    @Test
+    public void shouldNotFindXMLDoctype() {
+        // Given an XML String with doctype in the example
+        String xmlWithExample = "<section>\n<programlisting>\n<![CDATA[<?xml version=\"1.0\" " +
+                "encoding=\"UTF-8\"?>\n<!DOCTYPE section SYSTEM \"docbook.dtd\" >]]>\n</programlisting></section>\n";
+
+        // When finding the xml preamble
+        String xmlDoctype = XMLUtilities.findDocumentType(xmlWithExample);
+
+
+        // Then check that no doctype was found
+        assertNull(xmlDoctype);
     }
 
     @Test
