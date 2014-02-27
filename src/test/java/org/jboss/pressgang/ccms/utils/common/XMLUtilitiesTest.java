@@ -9,7 +9,6 @@ import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -114,33 +113,6 @@ public class XMLUtilitiesTest {
 
         // Then check that no doctype was found
         assertNull(xmlDoctype);
-    }
-
-    @Test
-    public void shouldFindTranslatableElements() throws SAXException {
-        // Given
-        String xml = "<section>\n" +
-                "\t<title>TLS/SSL Certification</title>\n" +
-                "\t<para>\n" +
-                "\t\tThe API requires Hypertext Transfer Protocol Secure (HTTPS) \n" +
-                "\t\t<footnote>\n" +
-                "\t\t\t<para>\n" +
-                "\t\t\t\tHTTPS is described in <ulink url=\"http://tools.ietf.org/html/rfc2818\">RFC 2818 HTTP Over TLS</ulink>.\n" +
-                "\t\t\t</para>\n" +
-                "\t\t</footnote> for secure transport-level encryption of requests. This involves a process of attaining a certificate " +
-                "from your Red Hat Enterprise Virtualization Manager server and importing it into your client's certificate store.\n" +
-                "\t</para>\n" +
-                "\t<para>\n" +
-                "\t\t<!-- Inject: 3737 -->\n"+
-                "\t</para>\n" +
-                "</section>";
-        final Document doc = XMLUtilities.convertStringToDocument(xml);
-
-        // When
-        List<StringToNodeCollection> nodes = XMLUtilities.getTranslatableStringsV2 (doc, false);
-
-        // Then
-        assertThat(nodes.size(), is(3));
     }
 
     @Test
