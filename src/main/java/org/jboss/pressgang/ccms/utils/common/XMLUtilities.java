@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1013,11 +1014,15 @@ public class XMLUtilities {
      * @return An xi:include element that can be used to include content from another file.
      */
     public static Element createXIInclude(final Document doc, final String file) {
-        final Element xiInclude = doc.createElementNS("http://www.w3.org/2001/XInclude", "xi:include");
-        xiInclude.setAttribute("href", file);
-        xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
+        try {
+            final Element xiInclude = doc.createElementNS("http://www.w3.org/2001/XInclude", "xi:include");
+            xiInclude.setAttribute("href", URLEncoder.encode(file, "UTF-8"));
+            xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
 
-        return xiInclude;
+            return xiInclude;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

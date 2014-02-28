@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.utils.common;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +29,11 @@ import org.w3c.dom.Text;
  */
 public class DocBookUtilities {
     private static final Logger LOG = LoggerFactory.getLogger(DocBookUtilities.class);
+
+    // See http://stackoverflow.com/a/4307261/1330640
+    private static String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
+    private static String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
+
     /**
      * The name of the section tag
      */
@@ -119,7 +126,13 @@ public class DocBookUtilities {
      * @return The escaped title string.
      */
     public static String escapeTitle(final String title) {
-        return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9_.-]", "");
+        final String escapedTitle = title.replaceAll("^[^" + UNICODE_TITLE_START_CHAR +"]*", "").replaceAll("[^" + UNICODE_WORD + ". -]", "");
+        if (isNullOrEmpty(escapedTitle)) {
+            return "";
+        } else {
+            // Remove whitespace
+            return escapedTitle.replaceAll("\\s+", "_").replaceAll("(^_+)|(_+$)", "").replaceAll("__", "_");
+        }
     }
 
     public static void setSectionTitle(final DocBookVersion docBookVersion, final String titleValue, final Document doc) {
