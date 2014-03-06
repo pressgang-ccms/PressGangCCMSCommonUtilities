@@ -105,6 +105,12 @@
             <groupId>com.thaiopensource</groupId>
             <artifactId>jing</artifactId>
             <version>${jing.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sf.saxon</groupId>
+                    <artifactId>saxon</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
