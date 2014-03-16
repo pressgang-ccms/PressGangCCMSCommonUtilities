@@ -767,4 +767,14 @@ public class CommonFilterConstants {
     public static final String FILE_NAME_FILTER_VAR = "fileName";
     public static final String FILE_NAME_MATCHES_FILTER_VAR = FILE_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
     public static final String FILE_NAME_FILTER_VAR_DESC = "File Name";
+
+    /* Process Constants */
+    public static final String PROCESS_IDS_FILTER_VAR = "processIds";
+    public static final String PROCESS_IDS_FILTER_VAR_DESC = "Process IDs";
+
+    public static final String PROCESS_TYPE_FILTER_VAR = "processType";
+    public static final String PROCESS_TYPE_FILTER_VAR_DESC = "Process Type";
+
+    public static final String PROCESS_STATUS_FILTER_VAR = "processStatus";
+    public static final String PROCESS_STATUS_FILTER_VAR_DESC = "Process Status";
 }
