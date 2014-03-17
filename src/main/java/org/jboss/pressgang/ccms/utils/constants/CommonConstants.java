@@ -190,6 +190,7 @@ public class CommonConstants {
     public static final String CS_SPACES_TITLE = "spaces";
     public static final String CS_DEFAULT_PUBLICAN_CFG_TITLE = "Default " + CS_PUBLICAN_CFG_TITLE;
     public static final String CS_INDEX_TITLE = "Index";
+    public static final String CS_LOCALE_TITLE = "Locale";
 
     /**
      * The number of characters that make up a SHA 256 hash
