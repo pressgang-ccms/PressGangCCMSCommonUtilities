@@ -748,6 +748,12 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR = "csNodeEntityRev";
     public static final String CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR_DESC = "Content Specification Node Entity Revision";
 
+    public static final String CONTENT_SPEC_NODE_INFO_TOPIC_ID_FILTER_VAR = "csNodeInfoTopicId";
+    public static final String CONTENT_SPEC_NODE_INFO_TOPIC_ID_FILTER_VAR_DESC = "Content Specification Node Info Topic ID";
+
+    public static final String CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR = "csNodeInfoTopicRev";
+    public static final String CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR_DESC = "Content Specification Node Info Topic Revision";
+
     /* Translated ContentSpec Constants */
     public static final String TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR = "translatedContentSpecIds";
     public static final String TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR_DESC = "Translated Content Specification IDs";

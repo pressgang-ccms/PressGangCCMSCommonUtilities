@@ -12,6 +12,7 @@ import java.util.Map;
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
+import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1664,6 +1665,47 @@ public class DocBookUtilities {
         }
 
         return retValue;
+    }
+
+    /**
+     * Wraps the xml if required so that validation can be performed. An example of where this is required is if you are validating
+     * against Abstracts, Author Groups or Legal Notices for DocBook 5.0.
+     *
+     * @param docBookVersion The DocBook version the document will be validated against.
+     * @param xml            The xml that needs to be validated.
+     * @return A {@link Pair} containing the root element name and the wrapped xml content.
+     */
+    public static Pair<String, String> wrapForValidation(final DocBookVersion docBookVersion, final String xml) {
+        final String rootEleName = XMLUtilities.findRootElementName(xml);
+        if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+            if (rootEleName.equals("abstract") || rootEleName.equals("legalnotice") || rootEleName.equals("authorgroup")) {
+                final String preamble = XMLUtilities.findPreamble(xml);
+
+                final StringBuilder buffer = new StringBuilder("<book><info><title />");
+                if (preamble != null) {
+                    buffer.append(xml.replace(preamble, ""));
+                } else {
+                    buffer.append(xml);
+                }
+                buffer.append("</info></book>");
+
+                return new Pair<String, String>("book", DocBookUtilities.addDocBook50Namespace(buffer.toString()));
+            } else if (rootEleName.equals("info")) {
+                final String preamble = XMLUtilities.findPreamble(xml);
+
+                final StringBuilder buffer = new StringBuilder("<book>");
+                if (preamble != null) {
+                    buffer.append(xml.replace(preamble, ""));
+                } else {
+                    buffer.append(xml);
+                }
+                buffer.append("</book>");
+
+                return new Pair<String, String>("book", DocBookUtilities.addDocBook50Namespace(buffer.toString()));
+            }
+        }
+
+        return new Pair<String, String>(rootEleName, xml);
     }
 
     /**
