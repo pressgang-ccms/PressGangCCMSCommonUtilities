@@ -441,4 +441,18 @@ public class StringUtilities {
 
         return score[source.length() + 1][target.length() + 1];
     }
+
+    /**
+     * Test to see if a String is null or contains only whitespace.
+     *
+     * @param input The String to test
+     * @return true if input is null or contains only whitespace, and false otherwise
+     */
+    public static boolean isStringNullOrEmpty(final String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return true;
+        }
+        return false;
+
+    }
 }
