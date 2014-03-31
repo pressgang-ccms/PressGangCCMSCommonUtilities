@@ -477,6 +477,17 @@ public class XMLUtilities {
         }
     }
 
+    public static void removeChildrenOfType(final Node parent, final String type) {
+        final NodeList children = parent.getChildNodes();
+        for (int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
+            final Node child = children.item(childIndex);
+            if (child.getNodeName().equals("title")) {
+                parent.removeChild(child);
+                break;
+            }
+        }
+    }
+
     /**
      * Converts a Document to a String
      *
@@ -548,6 +559,15 @@ public class XMLUtilities {
         } else {
             return lsSerializer.writeToString(doc);
         }
+    }
+
+    public static String removePreamble(final String xml) {
+        final String preamble = XMLUtilities.findPreamble(xml);
+        if (preamble != null) {
+            return xml.replace(preamble, "");
+        }
+
+        return xml;
     }
 
     private static void appendIndent(final StringBuffer stringBuffer, final boolean tabIndent, final int indentLevel,
