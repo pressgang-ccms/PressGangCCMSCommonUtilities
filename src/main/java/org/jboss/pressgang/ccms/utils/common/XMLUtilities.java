@@ -395,18 +395,21 @@ public class XMLUtilities {
 
     /**
      * @param xml The XML to be converted
+     * @param preserveEntities Whether or not entities should be renamed prior to converting the string to an xml document.
+     *                         This is useful if your xml has entity references that are not defined in the string
+     *                         you are converting
      * @return A Document converted from the supplied XML, or null if the supplied XML was invalid
      * @throws SAXException
      */
     public static Document convertStringToDocument(final String xml, final boolean preserveEntities) throws SAXException {
-        return convertStringToDocument(xml, true, true);
+        return convertStringToDocument(xml, preserveEntities, true);
     }
 
     /**
      * @param xml The XML to be converted
      * @param preserveEntities Whether or not entities should be renamed prior to converting the string to an xml document.
      *                         This is useful if your xml has entity references that are not defined in the string
-     *                         you are convering
+     *                         you are converting
      * @param restoreEntities  Whether or not you want to renamed the entities converted by setting preserveEntities to true
      *                         back to entity references. This would be set to false if you want to validate the XML when it
      *                         has entity references that are not defined.
@@ -436,7 +439,7 @@ public class XMLUtilities {
              * and retain the entities without having to link to any DTDs or implement any EntityResolvers.
              */
             final Map<String, String> replacements = calculateEntityReplacements(xml);
-            final String fixedXML = preserveEntities? replaceEntities(replacements, xml) : xml;
+            final String fixedXML = preserveEntities ? replaceEntities(replacements, xml) : xml;
 
             final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             // This was causing an exception... See below with the EntityResolver for an alternative.

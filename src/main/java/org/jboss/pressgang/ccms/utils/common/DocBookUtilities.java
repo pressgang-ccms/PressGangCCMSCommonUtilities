@@ -11,7 +11,6 @@ import java.util.Map;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
@@ -395,6 +394,55 @@ public class DocBookUtilities {
         return addDocBook50Namespace(xml, rootEleName);
     }
 
+    public static void addNamespaceToDocElement(final DocBookVersion version, final Document doc) {
+        if (version == null) throw new IllegalArgumentException("version cannot be null");
+        if (version == DocBookVersion.DOCBOOK_50) {
+            addDocBook50NamespaceToDocElement(doc);
+        }
+    }
+
+    public static void addDocBook50NamespaceToDocElement(final Document doc) {
+        doc.getDocumentElement().setAttribute("xmlns", "http://docbook.org/ns/docbook");
+        doc.getDocumentElement().setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        doc.getDocumentElement().setAttribute("version", "5.0");
+    }
+
+    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities) {
+        if (version == null) throw new IllegalArgumentException("format cannot be null");
+
+        if (version == DocBookVersion.DOCBOOK_45) {
+            return buildDocBook45Doctype(rootElementName, entities);
+        }
+
+        if (version == DocBookVersion.DOCBOOK_50) {
+            return buildDocBook50Doctype(rootElementName, entities);
+        }
+
+        return "";
+    }
+
+    public static String buildDocBook50Doctype(final String rootElementName, final String entities) {
+        if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
+        final StringBuilder retValue = new StringBuilder();
+        retValue.append("<!DOCTYPE " + rootElementName + " PUBLIC \"-//OASIS//DTD DocBook XML V5.0//EN\" \"http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd\" [\n");
+        if (entities != null) {
+            retValue.append(entities);
+        }
+        retValue.append("]>\n");
+        return retValue.toString();
+    }
+
+    public static String buildDocBook45Doctype(final String rootElementName, final String entities) {
+        if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
+        final StringBuilder retValue = new StringBuilder();
+        retValue.append("<!DOCTYPE " + rootElementName + " PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [\n");
+        if (entities != null) {
+            retValue.append(entities);
+        }
+        retValue.append("]>\n");
+        return retValue.toString();
+    }
+
     public static String addDocBook50Namespace(final String xml, final String rootElementName) {
         if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
         final Pattern pattern = Pattern.compile("(?<ELEMENT><" + rootElementName + ".*?)>");
@@ -412,82 +460,6 @@ public class DocBookUtilities {
         } else {
             return xml;
         }
-    }
-
-    /**
-     * Some docbook elements need to be wrapped up so they can be properly transformed by the docbook XSL.
-     * @param xmlDoc
-     */
-    public static void wrapUpDocbookElementsForRendering(final Document xmlDoc) {
-        /*
-            Some topics need to be wrapped up to be rendered properly
-         */
-        final String documentElementNodeName = xmlDoc.getDocumentElement().getNodeName();
-        if (documentElementNodeName.equals("authorgroup") || documentElementNodeName.equals("legalnotice")) {
-            final Element currentChild = xmlDoc.createElement(documentElementNodeName);
-
-            xmlDoc.renameNode(xmlDoc.getDocumentElement(), null, "book");
-            final Element bookInfo = xmlDoc.createElement("bookinfo");
-            xmlDoc.getDocumentElement().appendChild(bookInfo);
-            bookInfo.appendChild(currentChild);
-
-            final NodeList existingChildren = xmlDoc.getDocumentElement().getChildNodes();
-            for (int childIndex = 0; childIndex < existingChildren.getLength(); ++childIndex) {
-                final Node child = existingChildren.item(childIndex);
-                if (child != bookInfo) {
-                    currentChild.appendChild(child);
-                }
-            }
-        }
-    }
-
-    public static void addNamespaceToDocElement(final Integer format, final Document doc) {
-        if (format == null) throw new IllegalArgumentException("format cannot be null");
-        if (format == CommonConstants.DOCBOOK_50) {
-            addDocBook50NamespaceToDocElement(doc);
-        }
-    }
-
-    public static void addDocBook50NamespaceToDocElement(final Document doc) {
-        doc.getDocumentElement().setAttribute("xmlns", "http://docbook.org/ns/docbook");
-        doc.getDocumentElement().setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-        doc.getDocumentElement().setAttribute("version", "5.0");
-    }
-
-    public static String buildDocbookDoctype(final Integer format, final String rootElementName, final String entities) {
-        if (format == null) throw new IllegalArgumentException("format cannot be null");
-
-        if (format == CommonConstants.DOCBOOK_45) {
-            return buildDocbook45Doctype(rootElementName, entities);
-        }
-
-        if (format == CommonConstants.DOCBOOK_50) {
-            return buildDocbook50Doctype(rootElementName, entities);
-        }
-
-        return "";
-    }
-
-    public static String buildDocbook50Doctype(final String rootElementName, final String entities) {
-        if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
-        final StringBuilder retValue = new StringBuilder();
-        retValue.append("<!DOCTYPE " + rootElementName + " PUBLIC \"-//OASIS//DTD DocBook XML V5.0//EN\" \"http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd\" [\n");
-        if (entities != null) {
-            retValue.append(entities);
-        }
-        retValue.append("]>\n");
-        return retValue.toString();
-    }
-
-    public static String buildDocbook45Doctype(final String rootElementName, final String entities) {
-        if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
-        final StringBuilder retValue = new StringBuilder();
-        retValue.append("<!DOCTYPE " + rootElementName + " PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [\n");
-        if (entities != null) {
-            retValue.append(entities);
-        }
-        retValue.append("]>\n");
-        return retValue.toString();
     }
 
     public static String buildXRefListItem(final String xref, final String role) {
@@ -1783,6 +1755,31 @@ public class DocBookUtilities {
         }
 
         return new Pair<String, String>(rootEleName, xml);
+    }
+
+    /**
+     * Some docbook elements need to be wrapped up so they can be properly transformed by the docbook XSL.
+     * @param xmlDoc
+     */
+    public static void wrapForRendering(final Document xmlDoc) {
+        // Some topics need to be wrapped up to be rendered properly
+        final String documentElementNodeName = xmlDoc.getDocumentElement().getNodeName();
+        if (documentElementNodeName.equals("authorgroup") || documentElementNodeName.equals("legalnotice")) {
+            final Element currentChild = xmlDoc.createElement(documentElementNodeName);
+
+            xmlDoc.renameNode(xmlDoc.getDocumentElement(), xmlDoc.getNamespaceURI(), "book");
+            final Element bookInfo = xmlDoc.createElement("bookinfo");
+            xmlDoc.getDocumentElement().appendChild(bookInfo);
+            bookInfo.appendChild(currentChild);
+
+            final NodeList existingChildren = xmlDoc.getDocumentElement().getChildNodes();
+            for (int childIndex = 0; childIndex < existingChildren.getLength(); ++childIndex) {
+                final Node child = existingChildren.item(childIndex);
+                if (child != bookInfo) {
+                    currentChild.appendChild(child);
+                }
+            }
+        }
     }
 
     /**
