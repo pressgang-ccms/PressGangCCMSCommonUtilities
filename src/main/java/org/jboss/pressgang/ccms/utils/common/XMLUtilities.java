@@ -477,6 +477,11 @@ public class XMLUtilities {
         }
     }
 
+    /**
+     * Removes any child elements that match the type
+     * @param parent The element whose children will be removed
+     * @param type The name of the children elements to remove
+     */
     public static void removeChildrenOfType(final Node parent, final String type) {
         final NodeList children = parent.getChildNodes();
         for (int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
@@ -484,6 +489,25 @@ public class XMLUtilities {
             if (child.getNodeName().equals("title")) {
                 parent.removeChild(child);
                 break;
+            }
+        }
+    }
+
+    /**
+     * Sets the contents of the child elements that match the type
+     * @param parent The element whose children will be updated
+     * @param type The name of the children elements to updated
+     * @param firstOnly True if only the first child of type is to be updated
+     */
+    public static void setChildrenContent(final Node parent, final String type, final String content, final boolean firstOnly) {
+        final NodeList children = parent.getChildNodes();
+        for (int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
+            final Node child = children.item(childIndex);
+            if (child.getNodeName().equals(type)) {
+                child.setTextContent(content);
+                if (firstOnly) {
+                    break;
+                }
             }
         }
     }
