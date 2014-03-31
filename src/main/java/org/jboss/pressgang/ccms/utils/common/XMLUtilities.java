@@ -204,7 +204,7 @@ public class XMLUtilities {
      * @param xml The xml to generate the replacements for
      * @return a map of entity names to unique random strings
      */
-    private static Map<String, String> calculateEntityReplacements(final String xml) {
+    public static Map<String, String> calculateEntityReplacements(final String xml) {
         final Map<String, String> retValue = new HashMap<String, String>();
 
         final Random randomGenerator = new Random();
@@ -238,7 +238,7 @@ public class XMLUtilities {
      * @param xml          The XML string to modify
      * @return The modified XML
      */
-    private static String replaceEntities(final Map<String, String> replacements, final String xml) {
+    public static String replaceEntities(final Map<String, String> replacements, final String xml) {
         String retValue = xml;
         for (final Entry<String, String> entry : replacements.entrySet())
             retValue = retValue.replaceAll("\\&" + entry.getKey() + ";", entry.getValue());
@@ -390,16 +390,30 @@ public class XMLUtilities {
      * @throws SAXException
      */
     public static Document convertStringToDocument(final String xml) throws SAXException {
-        return convertStringToDocument(xml, true);
+        return convertStringToDocument(xml, true, true);
     }
 
     /**
      * @param xml The XML to be converted
-     * @param preserveEntities Whether or not entities should be preserved.
      * @return A Document converted from the supplied XML, or null if the supplied XML was invalid
      * @throws SAXException
      */
     public static Document convertStringToDocument(final String xml, final boolean preserveEntities) throws SAXException {
+        return convertStringToDocument(xml, true, true);
+    }
+
+    /**
+     * @param xml The XML to be converted
+     * @param preserveEntities Whether or not entities should be renamed prior to converting the string to an xml document.
+     *                         This is useful if your xml has entity references that are not defined in the string
+     *                         you are convering
+     * @param restoreEntities  Whether or not you want to renamed the entities converted by setting preserveEntities to true
+     *                         back to entity references. This would be set to false if you want to validate the XML when it
+     *                         has entity references that are not defined.
+     * @return A Document converted from the supplied XML, or null if the supplied XML was invalid
+     * @throws SAXException
+     */
+    public static Document convertStringToDocument(final String xml, final boolean preserveEntities, final boolean restoreEntities) throws SAXException {
         if (xml == null) return null;
 
         try {
@@ -461,7 +475,7 @@ public class XMLUtilities {
 
             final Document document = builder.parse(new org.xml.sax.InputSource(new ByteArrayInputStream(fixedXML.getBytes(encoding))));
 
-            if (preserveEntities) {
+            if (preserveEntities && restoreEntities) {
                 restoreEntities(replacements, document.getDocumentElement());
             }
 
