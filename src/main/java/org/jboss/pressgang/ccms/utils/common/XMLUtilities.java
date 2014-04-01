@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.utils.sort.EntitySubstitutionBoundaryDataBoundaryStartSort;
 import org.jboss.pressgang.ccms.utils.structures.EntitySubstitutionBoundaryData;
+import org.jboss.pressgang.ccms.utils.structures.InjectionError;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +95,19 @@ public class XMLUtilities {
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE,
             java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+
+    /**
+     * A regular expression that identifies a topic id
+     */
+    private static final String INJECT_ID_RE_STRING = "(\\d+|T(\\d+|(\\-[ ]*[A-Za-z][A-Za-z\\d\\-_]*)))";
+    private static final Pattern INJECT_RE = Pattern.compile(
+            "^\\s*(?<TYPE>Inject\\w*)(?<COLON>:?)\\s*(?<IDS>" + INJECT_ID_RE_STRING + ".*)\\s*$",
+            java.util.regex.Pattern.CASE_INSENSITIVE);
+    private static final Pattern INJECT_ID_RE = Pattern.compile("^[\\d ,]+$");
+    private static final Pattern INJECT_SINGLE_ID_RE = Pattern.compile("^[\\d]+$");
+    private static final List<String> VALID_INJECTION_TYPES = Arrays.asList("Inject", "InjectList", "InjectListItems",
+            "InjectListAlphaSort", "InjectSequence");
+
 
     public static String findEncoding(final String xml) {
         // Find the preamble first so we can dissect it to find the encoding.
@@ -1137,6 +1152,70 @@ public class XMLUtilities {
                 }
             } catch (Exception e) {
                 return retValue;
+            }
+        }
+
+        return retValue;
+    }
+
+    /**
+     * Checks for instances of PressGang Injections that are invalid. This will check for the following problems:
+     * <ul>
+     * <li>Incorrect Captialisation</li>
+     * <li>Invalid Injection types (eg. InjectListItem)</li>
+     * <li>Missing colons</li>
+     * <li>Incorrect ID list (eg referencing Topic 10 as 10.xml)</li>
+     * </ul>
+     *
+     * @param doc The DOM document to be checked for invalid PressGang injections.
+     * @return A List of {@link InjectionError} objects that contain the invalid injection and the error messages.
+     */
+    public static List<InjectionError> checkForInvalidInjections(final Document doc) {
+        final List<InjectionError> retValue = new ArrayList<InjectionError>();
+
+        final List<Node> comments = getComments(doc.getDocumentElement());
+        for (final Node comment : comments) {
+            final Matcher match = INJECT_RE.matcher(comment.getTextContent());
+            if (match.find()) {
+                final String type = match.group("TYPE");
+                final String colon = match.group("COLON");
+                final String ids = match.group("IDS");
+
+                final InjectionError error = new InjectionError(comment.getTextContent());
+
+                // Check the type
+                if (!VALID_INJECTION_TYPES.contains(type)) {
+                    error.addMessage(
+                            "\"" + type + "\" is not a valid injection type. The valid types are: " + CollectionUtilities.toSeperatedString(
+                                    VALID_INJECTION_TYPES, ", "));
+                }
+
+                // Check that a colon has been specified
+                if (isNullOrEmpty(colon)) {
+                    error.addMessage("No colon specified in the injection.");
+                }
+
+                // Check that the id(s) are valid
+                if (isNullOrEmpty(ids) || !INJECT_ID_RE.matcher(ids).matches()) {
+                    if (type.equalsIgnoreCase("inject")) {
+                        error.addMessage(
+                                "The Topic ID in the injection is invalid. Please ensure that only the Topic ID is used. eg " +
+                                        "\"Inject: 1\"");
+                    } else {
+                        error.addMessage(
+                                "The Topic ID(s) in the injection are invalid. Please ensure that only the Topic ID is used and is " +
+                                        "in a comma separated list. eg \"InjectList: 1, 2, 3\"");
+                    }
+                } else if (type.equalsIgnoreCase("inject") && !INJECT_SINGLE_ID_RE.matcher(ids.trim()).matches()) {
+                    error.addMessage(
+                            "The Topic ID in the injection is invalid. Please ensure that only the Topic ID is used. eg " + "\"Inject: " +
+                                    "1\"");
+                }
+
+                // Some errors were found so add the injection to the retValue
+                if (!error.getMessages().isEmpty()) {
+                    retValue.add(error);
+                }
             }
         }
 

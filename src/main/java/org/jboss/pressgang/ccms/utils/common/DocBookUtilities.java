@@ -4,9 +4,11 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.code.regexp.Matcher;
@@ -32,8 +34,11 @@ public class DocBookUtilities {
     private static final Logger LOG = LoggerFactory.getLogger(DocBookUtilities.class);
 
     // See http://stackoverflow.com/a/4307261/1330640
-    private static String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
-    private static String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
+    private static final String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
+    private static final String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
+
+    private static final Pattern THURSDAY_DATE_RE = Pattern.compile("Thurs?(?!s?day)", java.util.regex.Pattern.CASE_INSENSITIVE);
+    private static final Pattern TUESDAY_DATE_RE = Pattern.compile("Tues(?!day)", java.util.regex.Pattern.CASE_INSENSITIVE);
 
     /**
      * The name of the section tag
@@ -1780,6 +1785,121 @@ public class DocBookUtilities {
                 }
             }
         }
+    }
+
+    /**
+     * Checks to see if the Rows, in XML Tables exceed the maximum number of columns.
+     *
+     * @param doc The XML DOM Document to be validated.
+     * @return True if the XML is valid, otherwise false.
+     */
+    public static boolean validateTables(final Document doc) {
+        final NodeList tables = doc.getElementsByTagName("table");
+        for (int i = 0; i < tables.getLength(); i++) {
+            final Element table = (Element) tables.item(i);
+            if (!validateTableRows(table)) {
+                return false;
+            }
+        }
+
+        final NodeList informalTables = doc.getElementsByTagName("informaltable");
+        for (int i = 0; i < informalTables.getLength(); i++) {
+            final Element informalTable = (Element) informalTables.item(i);
+            if (!validateTableRows(informalTable)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks that the
+     *
+     * @param doc
+     * @return
+     */
+    public static boolean checkForInvalidInfoElements(final Document doc) {
+        final List<Node> invalidElements = XMLUtilities.getDirectChildNodes(doc.getDocumentElement(), "title", "subtitle", "titleabbrev");
+        return invalidElements != null && !invalidElements.isEmpty();
+    }
+
+    /**
+     * Validates a Revision History XML DOM Document to ensure that the content is valid for use with Publican.
+     *
+     * @param doc The DOM Document that represents the XML that is to be validated.
+     * @param dateFormats The valid date formats that can be used.
+     * @return Null if there weren't any errors otherwise an error message that states what is wrong.
+     */
+    public static String validateRevisionHistory(final Document doc, final String[] dateFormats) {
+        final List<String> invalidRevNumbers = new ArrayList<String>();
+
+        // Find each <revnumber> element and make sure it matches the publican regex
+        final NodeList revisions = doc.getElementsByTagName("revision");
+        Date previousDate = null;
+        for (int i = 0; i < revisions.getLength(); i++) {
+            final Element revision = (Element) revisions.item(i);
+            final NodeList revnumbers = revision.getElementsByTagName("revnumber");
+            final Element revnumber = revnumbers.getLength() == 1 ? (Element) revnumbers.item(0) : null;
+            final NodeList dates = revision.getElementsByTagName("date");
+            final Element date = dates.getLength() == 1 ? (Element) dates.item(0) : null;
+
+            // Make sure the rev number is valid and the order is correct
+            if (revnumber != null && !revnumber.getTextContent().matches("^([0-9.]*)-([0-9.]*)$")) {
+                invalidRevNumbers.add(revnumber.getTextContent());
+            } else if (revnumber == null) {
+                return "Invalid revision, missing &lt;revnumber&gt; element.";
+            }
+
+            // Check the dates are in chronological order
+            if (date != null) {
+                try {
+                    final Date revisionDate = DateUtils.parseDateStrictly(cleanDate(date.getTextContent()), Locale.ENGLISH, dateFormats);
+                    if (previousDate != null && revisionDate.after(previousDate)) {
+                        return "The revisions in the Revision History are not in descending chronological order, " +
+                                "starting from \"" + date.getTextContent() + "\".";
+                    }
+
+                    previousDate = revisionDate;
+                } catch (Exception e) {
+                    // Check that it is an invalid format or just an incorrect date (ie the day doesn't match)
+                    try {
+                        DateUtils.parseDate(cleanDate(date.getTextContent()), Locale.ENGLISH, dateFormats);
+                        return "Invalid revision, the name of the day specified in \"" + date.getTextContent() + "\" doesn't match the " +
+                                "date.";
+                    } catch (Exception ex) {
+                        return "Invalid revision, the date \"" + date.getTextContent() + "\" is not in a valid format.";
+                    }
+                }
+            } else {
+                return "Invalid revision, missing &lt;date&gt; element.";
+            }
+        }
+
+        if (!invalidRevNumbers.isEmpty()) {
+            return "Revision History has invalid &lt;revnumber&gt; values: " + CollectionUtilities.toSeperatedString(invalidRevNumbers,
+                    ", ") + ". The revnumber must match \"^([0-9.]*)-([0-9.]*)$\" to be valid.";
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Basic method to clean a date string to fix any partial day names. It currently cleans "Thur", "Thurs" and "Tues".
+     *
+     * @param dateString
+     * @return
+     */
+    private static String cleanDate(final String dateString) {
+        if (dateString == null) {
+            return dateString;
+        }
+
+        String retValue = dateString;
+        retValue = THURSDAY_DATE_RE.matcher(retValue).replaceAll("Thu");
+        retValue = TUESDAY_DATE_RE.matcher(retValue).replaceAll("Tue");
+
+        return retValue;
     }
 
     /**
