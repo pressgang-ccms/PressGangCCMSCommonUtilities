@@ -1092,6 +1092,41 @@ public class XMLUtilities {
         put("wedgeq", "&#x02259;");
     }};
 
+    public static boolean allEntitiesAccountedFor(final String xml, final Integer format, final List<String> entities) {
+        final Pattern pattern = Pattern.compile("&(.*?);");
+        final Matcher matcher = pattern.matcher(xml);
+        while (matcher.find()) {
+            final String entity = matcher.group(1);
+            if (entities == null || entities.indexOf(entity) == -1) {
+                if ((format == CommonConstants.DOCBOOK_50 || format == CommonConstants.DOCBOOK_45) && !DOCBOOK_ENTITIES.containsKey(entity)) {
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean allEntitiesAccountedFor(final String xml, final Integer format, final String entities) {
+        final Pattern pattern = Pattern.compile("&(.*?);");
+        final Matcher matcher = pattern.matcher(xml);
+        while (matcher.find()) {
+            final String entity = matcher.group(1);
+            final Pattern entityPattern = Pattern.compile("<!ENTITY\\s+" + entity + "\\s+");
+            if (entities == null || !entityPattern.matcher(entities).find()) {
+                if ((format == CommonConstants.DOCBOOK_50 || format == CommonConstants.DOCBOOK_45) && !DOCBOOK_ENTITIES.containsKey(entity)) {
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public static String replaceStandardEntities(final Integer format, final String xml) {
         if (format == CommonConstants.DOCBOOK_45 || format == CommonConstants.DOCBOOK_50) {
             return replaceEntities(DOCBOOK_ENTITIES, xml);
