@@ -412,24 +412,28 @@ public class DocBookUtilities {
         doc.getDocumentElement().setAttribute("version", "5.0");
     }
 
-    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities) {
+    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities, final boolean includeDTD) {
         if (version == null) throw new IllegalArgumentException("format cannot be null");
 
         if (version == DocBookVersion.DOCBOOK_45) {
-            return buildDocBook45Doctype(rootElementName, entities);
+            return buildDocBook45Doctype(rootElementName, entities, includeDTD);
         }
 
         if (version == DocBookVersion.DOCBOOK_50) {
-            return buildDocBook50Doctype(rootElementName, entities);
+            return buildDocBook50Doctype(rootElementName, entities, includeDTD);
         }
 
         return "";
     }
 
-    public static String buildDocBook50Doctype(final String rootElementName, final String entities) {
+    public static String buildDocBook50Doctype(final String rootElementName, final String entities, final boolean includeDTD) {
         if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
         final StringBuilder retValue = new StringBuilder();
-        retValue.append("<!DOCTYPE " + rootElementName + " PUBLIC \"-//OASIS//DTD DocBook XML V5.0//EN\" \"http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd\" [\n");
+        retValue.append("<!DOCTYPE " + rootElementName);
+        if (includeDTD) {
+            retValue.append(" PUBLIC \"-//OASIS//DTD DocBook XML V5.0//EN\" \"http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd\"");
+        };
+        retValue.append(" [\n");
         if (entities != null) {
             retValue.append(entities);
         }
@@ -437,10 +441,14 @@ public class DocBookUtilities {
         return retValue.toString();
     }
 
-    public static String buildDocBook45Doctype(final String rootElementName, final String entities) {
+    public static String buildDocBook45Doctype(final String rootElementName, final String entities, final boolean includeDTD) {
         if (rootElementName == null) throw new IllegalArgumentException("rootElementName cannot be null");
         final StringBuilder retValue = new StringBuilder();
-        retValue.append("<!DOCTYPE " + rootElementName + " PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [\n");
+        retValue.append("<!DOCTYPE " + rootElementName);
+        if (includeDTD) {
+            retValue.append(" PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\"");
+        };
+        retValue.append(" [\n");
         if (entities != null) {
             retValue.append(entities);
         }
