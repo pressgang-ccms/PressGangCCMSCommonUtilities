@@ -1463,7 +1463,7 @@ public class XMLUtilities {
         try {
             // find the encoding, defaulting to UTF-8
             String encoding = findEncoding(xml);
-            if (encoding == null) encoding = "UTF-8";
+            if (encoding == null) encoding = "UTF-16";
 
             /*
              * Xerces does not seem to have any way of simply importing entities "as is". It will try to expand them, which we
@@ -1517,7 +1517,10 @@ public class XMLUtilities {
                 }
             });
 
-            final Document document = builder.parse(new org.xml.sax.InputSource(new ByteArrayInputStream(fixedXML.getBytes(encoding))));
+            // http://www.mkyong.com/java/how-to-read-utf-8-xml-file-in-java-sax-parser/
+            final InputSource inputSource = new org.xml.sax.InputSource(new ByteArrayInputStream(fixedXML.getBytes(encoding)));
+            inputSource.setEncoding(encoding);
+            final Document document = builder.parse(inputSource);
 
             if (preserveEntities && restoreEntities) {
                 restoreEntities(replacements, document.getDocumentElement());
