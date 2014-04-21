@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
@@ -82,6 +83,2025 @@ public class DocBookUtilities {
      */
     public static final ArrayList<String> TRANSLATABLE_IF_STANDALONE_ELEMENTS = CollectionUtilities.toArrayList(
             new String[]{"indexterm", "productname", "phrase"});
+
+    /**
+     * The standard DocBook XML entities
+     */
+    public static final Map<String, String> DOCBOOK_ENTITIES = new HashMap<String, String>() {{
+        put("euro", "&#x20AC;");
+        put("cularr", "&#x021B6;");
+        put("curarr", "&#x021B7;");
+        put("dArr", "&#x021D3;");
+        put("darr2", "&#x021CA;");
+        put("dharl", "&#x021C3;");
+        put("dharr", "&#x021C2;");
+        put("dlarr", "&#x02199;");
+        put("drarr", "&#x02198;");
+        put("hArr", "&#x021D4;");
+        put("harr", "&#x02194;");
+        put("harrw", "&#x021AD;");
+        put("lAarr", "&#x021DA;");
+        put("Larr", "&#x0219E;");
+        put("larr2", "&#x021C7;");
+        put("larrhk", "&#x021A9;");
+        put("larrlp", "&#x021AB;");
+        put("larrtl", "&#x021A2;");
+        put("lhard", "&#x021BD;");
+        put("lharu", "&#x021BC;");
+        put("lrarr2", "&#x021C6;");
+        put("lrhar2", "&#x021CB;");
+        put("lsh", "&#x021B0;");
+        put("map", "&#x021A6;");
+        put("mumap", "&#x022B8;");
+        put("nearr", "&#x02197;");
+        put("nhArr", "&#x021CE;");
+        put("nharr", "&#x021AE;");
+        put("nlArr", "&#x021CD;");
+        put("nlarr", "&#x0219A;");
+        put("nrArr", "&#x021CF;");
+        put("nrarr", "&#x0219B;");
+        put("nwarr", "&#x02196;");
+        put("olarr", "&#x021BA;");
+        put("orarr", "&#x021BB;");
+        put("rAarr", "&#x021DB;");
+        put("Rarr", "&#x021A0;");
+        put("rarr2", "&#x021C9;");
+        put("rarrhk", "&#x021AA;");
+        put("rarrlp", "&#x021AC;");
+        put("rarrtl", "&#x021A3;");
+        put("rarrw", "&#x0219D;");
+        put("rhard", "&#x021C1;");
+        put("rharu", "&#x021C0;");
+        put("rlarr2", "&#x021C4;");
+        put("rlhar2", "&#x021CC;");
+        put("rsh", "&#x021B1;");
+        put("uArr", "&#x021D1;");
+        put("uarr2", "&#x021C8;");
+        put("uharl", "&#x021BF;");
+        put("uharr", "&#x021BE;");
+        put("vArr", "&#x021D5;");
+        put("varr", "&#x02195;");
+        put("xhArr", "&#x027FA;");
+        put("xharr", "&#x027F7;");
+        put("xlArr", "&#x027F8;");
+        put("xrArr", "&#x027F9;");
+        put("amalg", "&#x02A3F;");
+        put("Barwed", "&#x02306;");
+        put("barwed", "&#x02305;");
+        put("Cap", "&#x022D2;");
+        put("coprod", "&#x02210;");
+        put("Cup", "&#x022D3;");
+        put("cuvee", "&#x022CE;");
+        put("cuwed", "&#x022CF;");
+        put("diam", "&#x022C4;");
+        put("divonx", "&#x022C7;");
+        put("intcal", "&#x022BA;");
+        put("lthree", "&#x022CB;");
+        put("ltimes", "&#x022C9;");
+        put("minusb", "&#x0229F;");
+        put("oast", "&#x0229B;");
+        put("ocir", "&#x0229A;");
+        put("odash", "&#x0229D;");
+        put("odot", "&#x02299;");
+        put("ominus", "&#x02296;");
+        put("oplus", "&#x02295;");
+        put("osol", "&#x02298;");
+        put("otimes", "&#x02297;");
+        put("plusb", "&#x0229E;");
+        put("plusdo", "&#x02214;");
+        put("prod", "&#x0220F;");
+        put("rthree", "&#x022CC;");
+        put("rtimes", "&#x022CA;");
+        put("sdot", "&#x022C5;");
+        put("sdotb", "&#x022A1;");
+        put("setmn", "&#x02216;");
+        put("sqcap", "&#x02293;");
+        put("sqcup", "&#x02294;");
+        put("ssetmn", "&#x02216;");
+        put("sstarf", "&#x022C6;");
+        put("sum", "&#x02211;");
+        put("timesb", "&#x022A0;");
+        put("top", "&#x022A4;");
+        put("uplus", "&#x0228E;");
+        put("wreath", "&#x02240;");
+        put("xcirc", "&#x025EF;");
+        put("xdtri", "&#x025BD;");
+        put("xutri", "&#x025B3;");
+        put("dlcorn", "&#x0231E;");
+        put("drcorn", "&#x0231F;");
+        put("lceil", "&#x02308;");
+        put("lfloor", "&#x0230A;");
+        put("lpargt", "&#x029A0;");
+        put("rceil", "&#x02309;");
+        put("rfloor", "&#x0230B;");
+        put("rpargt", "&#x02994;");
+        put("ulcorn", "&#x0231C;");
+        put("urcorn", "&#x0231D;");
+        put("gnap", "&#x02A8A;");
+        put("gnE", "&#x02269;");
+        put("gne", "&#x02A88;");
+        put("gnsim", "&#x022E7;");
+        put("gvnE", "&#x02269;&#x0FE00;");
+        put("lnap", "&#x02A89;");
+        put("lnE", "&#x02268;");
+        put("lne", "&#x02A87;");
+        put("lnsim", "&#x022E6;");
+        put("lvnE", "&#x02268;&#x0FE00;");
+        put("nap", "&#x02249;");
+        put("ncong", "&#x02247;");
+        put("nequiv", "&#x02262;");
+        put("ngE", "&#x02267;&#x00338;");
+        put("nge", "&#x02271;");
+        put("nges", "&#x02A7E;&#x00338;");
+        put("ngt", "&#x0226F;");
+        put("nlE", "&#x02266;&#x00338;");
+        put("nle", "&#x02270;");
+        put("nles", "&#x02A7D;&#x00338;");
+        put("nlt", "&#x0226E;");
+        put("nltri", "&#x022EA;");
+        put("nltrie", "&#x022EC;");
+        put("nmid", "&#x02224;");
+        put("npar", "&#x02226;");
+        put("npr", "&#x02280;");
+        put("npre", "&#x02AAF;&#x00338;");
+        put("nrtri", "&#x022EB;");
+        put("nrtrie", "&#x022ED;");
+        put("nsc", "&#x02281;");
+        put("nsce", "&#x02AB0;&#x00338;");
+        put("nsim", "&#x02241;");
+        put("nsime", "&#x02244;");
+        put("nsmid", "&#x02224;");
+        put("nspar", "&#x02226;");
+        put("nsub", "&#x02284;");
+        put("nsubE", "&#x02AC5;&#x00338;");
+        put("nsube", "&#x02288;");
+        put("nsup", "&#x02285;");
+        put("nsupE", "&#x02AC6;&#x00338;");
+        put("nsupe", "&#x02289;");
+        put("nVDash", "&#x022AF;");
+        put("nVdash", "&#x022AE;");
+        put("nvDash", "&#x022AD;");
+        put("nvdash", "&#x022AC;");
+        put("prnap", "&#x02AB9;");
+        put("prnE", "&#x02AB5;");
+        put("prnsim", "&#x022E8;");
+        put("scnap", "&#x02ABA;");
+        put("scnE", "&#x02AB6;");
+        put("scnsim", "&#x022E9;");
+        put("subnE", "&#x02ACB;");
+        put("subne", "&#x0228A;");
+        put("supnE", "&#x02ACC;");
+        put("supne", "&#x0228B;");
+        put("vsubnE", "&#x02ACB;&#x0FE00;");
+        put("vsubne", "&#x0228A;&#x0FE00;");
+        put("vsupnE", "&#x02ACC;&#x0FE00;");
+        put("vsupne", "&#x0228B;&#x0FE00;");
+        put("ang", "&#x02220;");
+        put("angmsd", "&#x02221;");
+        put("beth", "&#x02136;");
+        put("bprime", "&#x02035;");
+        put("comp", "&#x02201;");
+        put("daleth", "&#x02138;");
+        put("ell", "&#x02113;");
+        put("empty", "&#x02205;");
+        put("gimel", "&#x02137;");
+        put("inodot", "&#x00131;");
+        put("jnodot", "&#x0006A;");
+        put("nexist", "&#x02204;");
+        put("oS", "&#x024C8;");
+        put("planck", "&#x0210F;");
+        put("real", "&#x0211C;");
+        put("sbsol", "&#x0FE68;");
+        put("vprime", "&#x02032;");
+        put("weierp", "&#x02118;");
+        put("ape", "&#x0224A;");
+        put("asymp", "&#x02248;");
+        put("bcong", "&#x0224C;");
+        put("bepsi", "&#x003F6;");
+        put("bowtie", "&#x022C8;");
+        put("bsim", "&#x0223D;");
+        put("bsime", "&#x022CD;");
+        put("bump", "&#x0224E;");
+        put("bumpe", "&#x0224F;");
+        put("cire", "&#x02257;");
+        put("colone", "&#x02254;");
+        put("cuepr", "&#x022DE;");
+        put("cuesc", "&#x022DF;");
+        put("cupre", "&#x0227C;");
+        put("dashv", "&#x022A3;");
+        put("ecir", "&#x02256;");
+        put("ecolon", "&#x02255;");
+        put("eDot", "&#x02251;");
+        put("efDot", "&#x02252;");
+        put("egs", "&#x02A96;");
+        put("els", "&#x02A95;");
+        put("erDot", "&#x02253;");
+        put("esdot", "&#x02250;");
+        put("fork", "&#x022D4;");
+        put("frown", "&#x02322;");
+        put("gap", "&#x02A86;");
+        put("gE", "&#x02267;");
+        put("gEl", "&#x02A8C;");
+        put("gel", "&#x022DB;");
+        put("ges", "&#x02A7E;");
+        put("Gg", "&#x022D9;");
+        put("gl", "&#x02277;");
+        put("gsdot", "&#x022D7;");
+        put("gsim", "&#x02273;");
+        put("Gt", "&#x0226B;");
+        put("lap", "&#x02A85;");
+        put("ldot", "&#x022D6;");
+        put("lE", "&#x02266;");
+        put("lEg", "&#x02A8B;");
+        put("leg", "&#x022DA;");
+        put("les", "&#x02A7D;");
+        put("lg", "&#x02276;");
+        put("Ll", "&#x022D8;");
+        put("lsim", "&#x02272;");
+        put("Lt", "&#x0226A;");
+        put("ltrie", "&#x022B4;");
+        put("mid", "&#x02223;");
+        put("models", "&#x022A7;");
+        put("pr", "&#x0227A;");
+        put("prap", "&#x02AB7;");
+        put("pre", "&#x02AAF;");
+        put("prsim", "&#x0227E;");
+        put("rtrie", "&#x022B5;");
+        put("samalg", "&#x02210;");
+        put("sc", "&#x0227B;");
+        put("scap", "&#x02AB8;");
+        put("sccue", "&#x0227D;");
+        put("sce", "&#x02AB0;");
+        put("scsim", "&#x0227F;");
+        put("sfrown", "&#x02322;");
+        put("smid", "&#x02223;");
+        put("smile", "&#x02323;");
+        put("spar", "&#x02225;");
+        put("sqsub", "&#x0228F;");
+        put("sqsube", "&#x02291;");
+        put("sqsup", "&#x02290;");
+        put("sqsupe", "&#x02292;");
+        put("ssmile", "&#x02323;");
+        put("Sub", "&#x022D0;");
+        put("subE", "&#x02AC5;");
+        put("Sup", "&#x022D1;");
+        put("supE", "&#x02AC6;");
+        put("thkap", "&#x02248;");
+        put("thksim", "&#x0223C;");
+        put("trie", "&#x0225C;");
+        put("twixt", "&#x0226C;");
+        put("Vdash", "&#x022A9;");
+        put("vDash", "&#x022A8;");
+        put("vdash", "&#x022A2;");
+        put("veebar", "&#x022BB;");
+        put("vltri", "&#x022B2;");
+        put("vprop", "&#x0221D;");
+        put("vrtri", "&#x022B3;");
+        put("Vvdash", "&#x022AA;");
+        put("boxDL", "&#x02557;");
+        put("boxDl", "&#x02556;");
+        put("boxdL", "&#x02555;");
+        put("boxdl", "&#x02510;");
+        put("boxDR", "&#x02554;");
+        put("boxDr", "&#x02553;");
+        put("boxdR", "&#x02552;");
+        put("boxdr", "&#x0250C;");
+        put("boxH", "&#x02550;");
+        put("boxh", "&#x02500;");
+        put("boxHD", "&#x02566;");
+        put("boxHd", "&#x02564;");
+        put("boxhD", "&#x02565;");
+        put("boxhd", "&#x0252C;");
+        put("boxHU", "&#x02569;");
+        put("boxHu", "&#x02567;");
+        put("boxhU", "&#x02568;");
+        put("boxhu", "&#x02534;");
+        put("boxUL", "&#x0255D;");
+        put("boxUl", "&#x0255C;");
+        put("boxuL", "&#x0255B;");
+        put("boxul", "&#x02518;");
+        put("boxUR", "&#x0255A;");
+        put("boxUr", "&#x02559;");
+        put("boxuR", "&#x02558;");
+        put("boxur", "&#x02514;");
+        put("boxV", "&#x02551;");
+        put("boxv", "&#x02502;");
+        put("boxVH", "&#x0256C;");
+        put("boxVh", "&#x0256B;");
+        put("boxvH", "&#x0256A;");
+        put("boxvh", "&#x0253C;");
+        put("boxVL", "&#x02563;");
+        put("boxVl", "&#x02562;");
+        put("boxvL", "&#x02561;");
+        put("boxvl", "&#x02524;");
+        put("boxVR", "&#x02560;");
+        put("boxVr", "&#x0255F;");
+        put("boxvR", "&#x0255E;");
+        put("boxvr", "&#x0251C;");
+        put("Acy", "&#x00410;");
+        put("acy", "&#x00430;");
+        put("Bcy", "&#x00411;");
+        put("bcy", "&#x00431;");
+        put("CHcy", "&#x00427;");
+        put("chcy", "&#x00447;");
+        put("Dcy", "&#x00414;");
+        put("dcy", "&#x00434;");
+        put("Ecy", "&#x0042D;");
+        put("ecy", "&#x0044D;");
+        put("Fcy", "&#x00424;");
+        put("fcy", "&#x00444;");
+        put("Gcy", "&#x00413;");
+        put("gcy", "&#x00433;");
+        put("HARDcy", "&#x0042A;");
+        put("hardcy", "&#x0044A;");
+        put("Icy", "&#x00418;");
+        put("icy", "&#x00438;");
+        put("IEcy", "&#x00415;");
+        put("iecy", "&#x00435;");
+        put("IOcy", "&#x00401;");
+        put("iocy", "&#x00451;");
+        put("Jcy", "&#x00419;");
+        put("jcy", "&#x00439;");
+        put("Kcy", "&#x0041A;");
+        put("kcy", "&#x0043A;");
+        put("KHcy", "&#x00425;");
+        put("khcy", "&#x00445;");
+        put("Lcy", "&#x0041B;");
+        put("lcy", "&#x0043B;");
+        put("Mcy", "&#x0041C;");
+        put("mcy", "&#x0043C;");
+        put("Ncy", "&#x0041D;");
+        put("ncy", "&#x0043D;");
+        put("numero", "&#x02116;");
+        put("Ocy", "&#x0041E;");
+        put("ocy", "&#x0043E;");
+        put("Pcy", "&#x0041F;");
+        put("pcy", "&#x0043F;");
+        put("Rcy", "&#x00420;");
+        put("rcy", "&#x00440;");
+        put("Scy", "&#x00421;");
+        put("scy", "&#x00441;");
+        put("SHCHcy", "&#x00429;");
+        put("shchcy", "&#x00449;");
+        put("SHcy", "&#x00428;");
+        put("shcy", "&#x00448;");
+        put("SOFTcy", "&#x0042C;");
+        put("softcy", "&#x0044C;");
+        put("Tcy", "&#x00422;");
+        put("tcy", "&#x00442;");
+        put("TScy", "&#x00426;");
+        put("tscy", "&#x00446;");
+        put("Ucy", "&#x00423;");
+        put("ucy", "&#x00443;");
+        put("Vcy", "&#x00412;");
+        put("vcy", "&#x00432;");
+        put("YAcy", "&#x0042F;");
+        put("yacy", "&#x0044F;");
+        put("Ycy", "&#x0042B;");
+        put("ycy", "&#x0044B;");
+        put("YUcy", "&#x0042E;");
+        put("yucy", "&#x0044E;");
+        put("Zcy", "&#x00417;");
+        put("zcy", "&#x00437;");
+        put("ZHcy", "&#x00416;");
+        put("zhcy", "&#x00436;");
+        put("DJcy", "&#x00402;");
+        put("djcy", "&#x00452;");
+        put("DScy", "&#x00405;");
+        put("dscy", "&#x00455;");
+        put("DZcy", "&#x0040F;");
+        put("dzcy", "&#x0045F;");
+        put("GJcy", "&#x00403;");
+        put("gjcy", "&#x00453;");
+        put("Iukcy", "&#x00406;");
+        put("iukcy", "&#x00456;");
+        put("Jsercy", "&#x00408;");
+        put("jsercy", "&#x00458;");
+        put("Jukcy", "&#x00404;");
+        put("jukcy", "&#x00454;");
+        put("KJcy", "&#x0040C;");
+        put("kjcy", "&#x0045C;");
+        put("LJcy", "&#x00409;");
+        put("ljcy", "&#x00459;");
+        put("NJcy", "&#x0040A;");
+        put("njcy", "&#x0045A;");
+        put("TSHcy", "&#x0040B;");
+        put("tshcy", "&#x0045B;");
+        put("Ubrcy", "&#x0040E;");
+        put("ubrcy", "&#x0045E;");
+        put("YIcy", "&#x00407;");
+        put("yicy", "&#x00457;");
+        put("acute", "&#x000B4;");
+        put("breve", "&#x002D8;");
+        put("caron", "&#x002C7;");
+        put("cedil", "&#x000B8;");
+        put("circ", "&#x002C6;");
+        put("dblac", "&#x002DD;");
+        put("die", "&#x000A8;");
+        put("dot", "&#x002D9;");
+        put("grave", "&#x00060;");
+        put("macr", "&#x000AF;");
+        put("ogon", "&#x002DB;");
+        put("ring", "&#x002DA;");
+        put("tilde", "&#x002DC;");
+        put("uml", "&#x000A8;");
+        put("Agr", "&#x00391;");
+        put("agr", "&#x003B1;");
+        put("Bgr", "&#x00392;");
+        put("bgr", "&#x003B2;");
+        put("Dgr", "&#x00394;");
+        put("dgr", "&#x003B4;");
+        put("EEgr", "&#x00397;");
+        put("eegr", "&#x003B7;");
+        put("Egr", "&#x00395;");
+        put("egr", "&#x003B5;");
+        put("Ggr", "&#x00393;");
+        put("ggr", "&#x003B3;");
+        put("Igr", "&#x00399;");
+        put("igr", "&#x003B9;");
+        put("Kgr", "&#x0039A;");
+        put("kgr", "&#x003BA;");
+        put("KHgr", "&#x003A7;");
+        put("khgr", "&#x003C7;");
+        put("Lgr", "&#x0039B;");
+        put("lgr", "&#x003BB;");
+        put("Mgr", "&#x0039C;");
+        put("mgr", "&#x003BC;");
+        put("Ngr", "&#x0039D;");
+        put("ngr", "&#x003BD;");
+        put("Ogr", "&#x0039F;");
+        put("ogr", "&#x003BF;");
+        put("OHgr", "&#x003A9;");
+        put("ohgr", "&#x003C9;");
+        put("Pgr", "&#x003A0;");
+        put("pgr", "&#x003C0;");
+        put("PHgr", "&#x003A6;");
+        put("phgr", "&#x003C6;");
+        put("PSgr", "&#x003A8;");
+        put("psgr", "&#x003C8;");
+        put("Rgr", "&#x003A1;");
+        put("rgr", "&#x003C1;");
+        put("sfgr", "&#x003C2;");
+        put("Sgr", "&#x003A3;");
+        put("sgr", "&#x003C3;");
+        put("Tgr", "&#x003A4;");
+        put("tgr", "&#x003C4;");
+        put("THgr", "&#x00398;");
+        put("thgr", "&#x003B8;");
+        put("Ugr", "&#x003A5;");
+        put("ugr", "&#x003C5;");
+        put("Xgr", "&#x0039E;");
+        put("xgr", "&#x003BE;");
+        put("Zgr", "&#x00396;");
+        put("zgr", "&#x003B6;");
+        put("Aacgr", "&#x00386;");
+        put("aacgr", "&#x003AC;");
+        put("Eacgr", "&#x00388;");
+        put("eacgr", "&#x003AD;");
+        put("EEacgr", "&#x00389;");
+        put("eeacgr", "&#x003AE;");
+        put("Iacgr", "&#x0038A;");
+        put("iacgr", "&#x003AF;");
+        put("idiagr", "&#x00390;");
+        put("Idigr", "&#x003AA;");
+        put("idigr", "&#x003CA;");
+        put("Oacgr", "&#x0038C;");
+        put("oacgr", "&#x003CC;");
+        put("OHacgr", "&#x0038F;");
+        put("ohacgr", "&#x003CE;");
+        put("Uacgr", "&#x0038E;");
+        put("uacgr", "&#x003CD;");
+        put("udiagr", "&#x003B0;");
+        put("Udigr", "&#x003AB;");
+        put("udigr", "&#x003CB;");
+        put("alpha", "&#x003B1;");
+        put("beta", "&#x003B2;");
+        put("chi", "&#x003C7;");
+        put("Delta", "&#x00394;");
+        put("delta", "&#x003B4;");
+        put("epsi", "&#x003F5;");
+        put("epsis", "&#x003F5;");
+        put("epsiv", "&#x003B5;");
+        put("eta", "&#x003B7;");
+        put("Gamma", "&#x00393;");
+        put("gamma", "&#x003B3;");
+        put("gammad", "&#x003DD;");
+        put("iota", "&#x003B9;");
+        put("kappa", "&#x003BA;");
+        put("kappav", "&#x003F0;");
+        put("Lambda", "&#x0039B;");
+        put("lambda", "&#x003BB;");
+        put("mu", "&#x003BC;");
+        put("nu", "&#x003BD;");
+        put("Omega", "&#x003A9;");
+        put("omega", "&#x003C9;");
+        put("Phi", "&#x003A6;");
+        put("phis", "&#x003D5;");
+        put("phiv", "&#x003C6;");
+        put("Pi", "&#x003A0;");
+        put("pi", "&#x003C0;");
+        put("piv", "&#x003D6;");
+        put("Psi", "&#x003A8;");
+        put("psi", "&#x003C8;");
+        put("rho", "&#x003C1;");
+        put("rhov", "&#x003F1;");
+        put("Sigma", "&#x003A3;");
+        put("sigma", "&#x003C3;");
+        put("sigmav", "&#x003C2;");
+        put("tau", "&#x003C4;");
+        put("Theta", "&#x00398;");
+        put("thetas", "&#x003B8;");
+        put("thetav", "&#x003D1;");
+        put("Upsi", "&#x003D2;");
+        put("upsi", "&#x003C5;");
+        put("Xi", "&#x0039E;");
+        put("xi", "&#x003BE;");
+        put("zeta", "&#x003B6;");
+        put("b.alpha", "&#x1D6C2;");
+        put("b.beta", "&#x1D6C3;");
+        put("b.chi", "&#x1D6D8;");
+        put("b.Delta", "&#x1D6AB;");
+        put("b.delta", "&#x1D6C5;");
+        put("b.epsi", "&#x1D6C6;");
+        put("b.epsiv", "&#x1D6DC;");
+        put("b.eta", "&#x1D6C8;");
+        put("b.Gamma", "&#x1D6AA;");
+        put("b.gamma", "&#x1D6C4;");
+        put("b.Gammad", "&#x003DC;");
+        put("b.gammad", "&#x003DD;");
+        put("b.iota", "&#x1D6CA;");
+        put("b.kappa", "&#x1D6CB;");
+        put("b.kappav", "&#x1D6DE;");
+        put("b.Lambda", "&#x1D6B2;");
+        put("b.lambda", "&#x1D6CC;");
+        put("b.mu", "&#x1D6CD;");
+        put("b.nu", "&#x1D6CE;");
+        put("b.Omega", "&#x1D6C0;");
+        put("b.omega", "&#x1D6DA;");
+        put("b.Phi", "&#x1D6BD;");
+        put("b.phi", "&#x1D6D7;");
+        put("b.phiv", "&#x1D6DF;");
+        put("b.Pi", "&#x1D6B7;");
+        put("b.pi", "&#x1D6D1;");
+        put("b.piv", "&#x1D6E1;");
+        put("b.Psi", "&#x1D6BF;");
+        put("b.psi", "&#x1D6D9;");
+        put("b.rho", "&#x1D6D2;");
+        put("b.rhov", "&#x1D6E0;");
+        put("b.Sigma", "&#x1D6BA;");
+        put("b.sigma", "&#x1D6D4;");
+        put("b.sigmav", "&#x1D6D3;");
+        put("b.tau", "&#x1D6D5;");
+        put("b.Theta", "&#x1D6AF;");
+        put("b.thetas", "&#x1D6C9;");
+        put("b.thetav", "&#x1D6DD;");
+        put("b.Upsi", "&#x1D6BC;");
+        put("b.upsi", "&#x1D6D6;");
+        put("b.Xi", "&#x1D6B5;");
+        put("b.xi", "&#x1D6CF;");
+        put("b.zeta", "&#x1D6C7;");
+        put("Aacute", "&#x000C1;");
+        put("aacute", "&#x000E1;");
+        put("Acirc", "&#x000C2;");
+        put("acirc", "&#x000E2;");
+        put("AElig", "&#x000C6;");
+        put("aelig", "&#x000E6;");
+        put("Agrave", "&#x000C0;");
+        put("agrave", "&#x000E0;");
+        put("Aring", "&#x000C5;");
+        put("aring", "&#x000E5;");
+        put("Atilde", "&#x000C3;");
+        put("atilde", "&#x000E3;");
+        put("Auml", "&#x000C4;");
+        put("auml", "&#x000E4;");
+        put("Ccedil", "&#x000C7;");
+        put("ccedil", "&#x000E7;");
+        put("Eacute", "&#x000C9;");
+        put("eacute", "&#x000E9;");
+        put("Ecirc", "&#x000CA;");
+        put("ecirc", "&#x000EA;");
+        put("Egrave", "&#x000C8;");
+        put("egrave", "&#x000E8;");
+        put("ETH", "&#x000D0;");
+        put("eth", "&#x000F0;");
+        put("Euml", "&#x000CB;");
+        put("euml", "&#x000EB;");
+        put("Iacute", "&#x000CD;");
+        put("iacute", "&#x000ED;");
+        put("Icirc", "&#x000CE;");
+        put("icirc", "&#x000EE;");
+        put("Igrave", "&#x000CC;");
+        put("igrave", "&#x000EC;");
+        put("Iuml", "&#x000CF;");
+        put("iuml", "&#x000EF;");
+        put("Ntilde", "&#x000D1;");
+        put("ntilde", "&#x000F1;");
+        put("Oacute", "&#x000D3;");
+        put("oacute", "&#x000F3;");
+        put("Ocirc", "&#x000D4;");
+        put("ocirc", "&#x000F4;");
+        put("Ograve", "&#x000D2;");
+        put("ograve", "&#x000F2;");
+        put("Oslash", "&#x000D8;");
+        put("oslash", "&#x000F8;");
+        put("Otilde", "&#x000D5;");
+        put("otilde", "&#x000F5;");
+        put("Ouml", "&#x000D6;");
+        put("ouml", "&#x000F6;");
+        put("szlig", "&#x000DF;");
+        put("THORN", "&#x000DE;");
+        put("thorn", "&#x000FE;");
+        put("Uacute", "&#x000DA;");
+        put("uacute", "&#x000FA;");
+        put("Ucirc", "&#x000DB;");
+        put("ucirc", "&#x000FB;");
+        put("Ugrave", "&#x000D9;");
+        put("ugrave", "&#x000F9;");
+        put("Uuml", "&#x000DC;");
+        put("uuml", "&#x000FC;");
+        put("Yacute", "&#x000DD;");
+        put("yacute", "&#x000FD;");
+        put("yuml", "&#x000FF;");
+        put("Abreve", "&#x00102;");
+        put("abreve", "&#x00103;");
+        put("Amacr", "&#x00100;");
+        put("amacr", "&#x00101;");
+        put("Aogon", "&#x00104;");
+        put("aogon", "&#x00105;");
+        put("Cacute", "&#x00106;");
+        put("cacute", "&#x00107;");
+        put("Ccaron", "&#x0010C;");
+        put("ccaron", "&#x0010D;");
+        put("Ccirc", "&#x00108;");
+        put("ccirc", "&#x00109;");
+        put("Cdot", "&#x0010A;");
+        put("cdot", "&#x0010B;");
+        put("Dcaron", "&#x0010E;");
+        put("dcaron", "&#x0010F;");
+        put("Dstrok", "&#x00110;");
+        put("dstrok", "&#x00111;");
+        put("Ecaron", "&#x0011A;");
+        put("ecaron", "&#x0011B;");
+        put("Edot", "&#x00116;");
+        put("edot", "&#x00117;");
+        put("Emacr", "&#x00112;");
+        put("emacr", "&#x00113;");
+        put("ENG", "&#x0014A;");
+        put("eng", "&#x0014B;");
+        put("Eogon", "&#x00118;");
+        put("eogon", "&#x00119;");
+        put("gacute", "&#x001F5;");
+        put("Gbreve", "&#x0011E;");
+        put("gbreve", "&#x0011F;");
+        put("Gcedil", "&#x00122;");
+        put("Gcirc", "&#x0011C;");
+        put("gcirc", "&#x0011D;");
+        put("Gdot", "&#x00120;");
+        put("gdot", "&#x00121;");
+        put("Hcirc", "&#x00124;");
+        put("hcirc", "&#x00125;");
+        put("Hstrok", "&#x00126;");
+        put("hstrok", "&#x00127;");
+        put("Idot", "&#x00130;");
+        put("IJlig", "&#x00132;");
+        put("ijlig", "&#x00133;");
+        put("Imacr", "&#x0012A;");
+        put("imacr", "&#x0012B;");
+        put("inodot", "&#x00131;");
+        put("Iogon", "&#x0012E;");
+        put("iogon", "&#x0012F;");
+        put("Itilde", "&#x00128;");
+        put("itilde", "&#x00129;");
+        put("Jcirc", "&#x00134;");
+        put("jcirc", "&#x00135;");
+        put("Kcedil", "&#x00136;");
+        put("kcedil", "&#x00137;");
+        put("kgreen", "&#x00138;");
+        put("Lacute", "&#x00139;");
+        put("lacute", "&#x0013A;");
+        put("Lcaron", "&#x0013D;");
+        put("lcaron", "&#x0013E;");
+        put("Lcedil", "&#x0013B;");
+        put("lcedil", "&#x0013C;");
+        put("Lmidot", "&#x0013F;");
+        put("lmidot", "&#x00140;");
+        put("Lstrok", "&#x00141;");
+        put("lstrok", "&#x00142;");
+        put("Nacute", "&#x00143;");
+        put("nacute", "&#x00144;");
+        put("napos", "&#x00149;");
+        put("Ncaron", "&#x00147;");
+        put("ncaron", "&#x00148;");
+        put("Ncedil", "&#x00145;");
+        put("ncedil", "&#x00146;");
+        put("Odblac", "&#x00150;");
+        put("odblac", "&#x00151;");
+        put("OElig", "&#x00152;");
+        put("oelig", "&#x00153;");
+        put("Omacr", "&#x0014C;");
+        put("omacr", "&#x0014D;");
+        put("Racute", "&#x00154;");
+        put("racute", "&#x00155;");
+        put("Rcaron", "&#x00158;");
+        put("rcaron", "&#x00159;");
+        put("Rcedil", "&#x00156;");
+        put("rcedil", "&#x00157;");
+        put("Sacute", "&#x0015A;");
+        put("sacute", "&#x0015B;");
+        put("Scaron", "&#x00160;");
+        put("scaron", "&#x00161;");
+        put("Scedil", "&#x0015E;");
+        put("scedil", "&#x0015F;");
+        put("Scirc", "&#x0015C;");
+        put("scirc", "&#x0015D;");
+        put("Tcaron", "&#x00164;");
+        put("tcaron", "&#x00165;");
+        put("Tcedil", "&#x00162;");
+        put("tcedil", "&#x00163;");
+        put("Tstrok", "&#x00166;");
+        put("tstrok", "&#x00167;");
+        put("Ubreve", "&#x0016C;");
+        put("ubreve", "&#x0016D;");
+        put("Udblac", "&#x00170;");
+        put("udblac", "&#x00171;");
+        put("Umacr", "&#x0016A;");
+        put("umacr", "&#x0016B;");
+        put("Uogon", "&#x00172;");
+        put("uogon", "&#x00173;");
+        put("Uring", "&#x0016E;");
+        put("uring", "&#x0016F;");
+        put("Utilde", "&#x00168;");
+        put("utilde", "&#x00169;");
+        put("Wcirc", "&#x00174;");
+        put("wcirc", "&#x00175;");
+        put("Ycirc", "&#x00176;");
+        put("ycirc", "&#x00177;");
+        put("Yuml", "&#x00178;");
+        put("Zacute", "&#x00179;");
+        put("zacute", "&#x0017A;");
+        put("Zcaron", "&#x0017D;");
+        put("zcaron", "&#x0017E;");
+        put("Zdot", "&#x0017B;");
+        put("zdot", "&#x0017C;");
+        put("amp", "&#38;#38;");
+        put("apos", "&#x00027;");
+        put("ast", "&#x0002A;");
+        put("brvbar", "&#x000A6;");
+        put("bsol", "&#x0005C;");
+        put("cent", "&#x000A2;");
+        put("colon", "&#x0003A;");
+        put("comma", "&#x0002C;");
+        put("commat", "&#x00040;");
+        put("copy", "&#x000A9;");
+        put("curren", "&#x000A4;");
+        put("darr", "&#x02193;");
+        put("deg", "&#x000B0;");
+        put("divide", "&#x000F7;");
+        put("dollar", "&#x00024;");
+        put("equals", "&#x0003D;");
+        put("excl", "&#x00021;");
+        put("frac12", "&#x000BD;");
+        put("frac14", "&#x000BC;");
+        put("frac18", "&#x0215B;");
+        put("frac34", "&#x000BE;");
+        put("frac38", "&#x0215C;");
+        put("frac58", "&#x0215D;");
+        put("frac78", "&#x0215E;");
+        put("gt", "&#x0003E;");
+        put("half", "&#x000BD;");
+        put("horbar", "&#x02015;");
+        put("hyphen", "&#x02010;");
+        put("iexcl", "&#x000A1;");
+        put("iquest", "&#x000BF;");
+        put("laquo", "&#x000AB;");
+        put("larr", "&#x02190;");
+        put("lcub", "&#x0007B;");
+        put("ldquo", "&#x0201C;");
+        put("lowbar", "&#x0005F;");
+        put("lpar", "&#x00028;");
+        put("lsqb", "&#x0005B;");
+        put("lsquo", "&#x02018;");
+        put("lt", "&#38;#60;");
+        put("micro", "&#x000B5;");
+        put("middot", "&#x000B7;");
+        put("nbsp", "&#x000A0;");
+        put("not", "&#x000AC;");
+        put("num", "&#x00023;");
+        put("ohm", "&#x02126;");
+        put("ordf", "&#x000AA;");
+        put("ordm", "&#x000BA;");
+        put("para", "&#x000B6;");
+        put("percnt", "&#x00025;");
+        put("period", "&#x0002E;");
+        put("plus", "&#x0002B;");
+        put("plusmn", "&#x000B1;");
+        put("pound", "&#x000A3;");
+        put("quest", "&#x0003F;");
+        put("quot", "&#x00022;");
+        put("raquo", "&#x000BB;");
+        put("rarr", "&#x02192;");
+        put("rcub", "&#x0007D;");
+        put("rdquo", "&#x0201D;");
+        put("reg", "&#x000AE;");
+        put("rpar", "&#x00029;");
+        put("rsqb", "&#x0005D;");
+        put("rsquo", "&#x02019;");
+        put("sect", "&#x000A7;");
+        put("semi", "&#x0003B;");
+        put("shy", "&#x000AD;");
+        put("sol", "&#x0002F;");
+        put("sung", "&#x0266A;");
+        put("sup1", "&#x000B9;");
+        put("sup2", "&#x000B2;");
+        put("sup3", "&#x000B3;");
+        put("times", "&#x000D7;");
+        put("trade", "&#x02122;");
+        put("uarr", "&#x02191;");
+        put("verbar", "&#x0007C;");
+        put("yen", "&#x000A5;");
+        put("blank", "&#x02423;");
+        put("blk12", "&#x02592;");
+        put("blk14", "&#x02591;");
+        put("blk34", "&#x02593;");
+        put("block", "&#x02588;");
+        put("bull", "&#x02022;");
+        put("caret", "&#x02041;");
+        put("check", "&#x02713;");
+        put("cir", "&#x025CB;");
+        put("clubs", "&#x02663;");
+        put("copysr", "&#x02117;");
+        put("cross", "&#x02717;");
+        put("Dagger", "&#x02021;");
+        put("dagger", "&#x02020;");
+        put("dash", "&#x02010;");
+        put("diams", "&#x02666;");
+        put("dlcrop", "&#x0230D;");
+        put("drcrop", "&#x0230C;");
+        put("dtri", "&#x025BF;");
+        put("dtrif", "&#x025BE;");
+        put("emsp", "&#x02003;");
+        put("emsp13", "&#x02004;");
+        put("emsp14", "&#x02005;");
+        put("ensp", "&#x02002;");
+        put("female", "&#x02640;");
+        put("ffilig", "&#x0FB03;");
+        put("fflig", "&#x0FB00;");
+        put("ffllig", "&#x0FB04;");
+        put("filig", "&#x0FB01;");
+        put("flat", "&#x0266D;");
+        put("fllig", "&#x0FB02;");
+        put("frac13", "&#x02153;");
+        put("frac15", "&#x02155;");
+        put("frac16", "&#x02159;");
+        put("frac23", "&#x02154;");
+        put("frac25", "&#x02156;");
+        put("frac35", "&#x02157;");
+        put("frac45", "&#x02158;");
+        put("frac56", "&#x0215A;");
+        put("hairsp", "&#x0200A;");
+        put("hearts", "&#x02665;");
+        put("hellip", "&#x02026;");
+        put("hybull", "&#x02043;");
+        put("incare", "&#x02105;");
+        put("ldquor", "&#x0201E;");
+        put("lhblk", "&#x02584;");
+        put("loz", "&#x025CA;");
+        put("lozf", "&#x029EB;");
+        put("lsquor", "&#x0201A;");
+        put("ltri", "&#x025C3;");
+        put("ltrif", "&#x025C2;");
+        put("male", "&#x02642;");
+        put("malt", "&#x02720;");
+        put("marker", "&#x025AE;");
+        put("mdash", "&#x02014;");
+        put("mldr", "&#x02026;");
+        put("natur", "&#x0266E;");
+        put("ndash", "&#x02013;");
+        put("nldr", "&#x02025;");
+        put("numsp", "&#x02007;");
+        put("phone", "&#x0260E;");
+        put("puncsp", "&#x02008;");
+        put("rdquor", "&#x0201D;");
+        put("rect", "&#x025AD;");
+        put("rsquor", "&#x02019;");
+        put("rtri", "&#x025B9;");
+        put("rtrif", "&#x025B8;");
+        put("rx", "&#x0211E;");
+        put("sext", "&#x02736;");
+        put("sharp", "&#x0266F;");
+        put("spades", "&#x02660;");
+        put("squ", "&#x025A1;");
+        put("squf", "&#x025AA;");
+        put("star", "&#x02606;");
+        put("starf", "&#x02605;");
+        put("target", "&#x02316;");
+        put("telrec", "&#x02315;");
+        put("thinsp", "&#x02009;");
+        put("uhblk", "&#x02580;");
+        put("ulcrop", "&#x0230F;");
+        put("urcrop", "&#x0230E;");
+        put("utri", "&#x025B5;");
+        put("utrif", "&#x025B4;");
+        put("vellip", "&#x022EE;");
+        put("aleph", "&#x02135;");
+        put("and", "&#x02227;");
+        put("ang90", "&#x0221F;");
+        put("angsph", "&#x02222;");
+        put("angst", "&#x0212B;");
+        put("ap", "&#x02248;");
+        put("becaus", "&#x02235;");
+        put("bernou", "&#x0212C;");
+        put("bottom", "&#x022A5;");
+        put("cap", "&#x02229;");
+        put("compfn", "&#x02218;");
+        put("cong", "&#x02245;");
+        put("conint", "&#x0222E;");
+        put("cup", "&#x0222A;");
+        put("Dot", "&#x000A8;");
+        put("DotDot", " &#x020DC;");
+        put("equiv", "&#x02261;");
+        put("exist", "&#x02203;");
+        put("fnof", "&#x00192;");
+        put("forall", "&#x02200;");
+        put("ge", "&#x02265;");
+        put("hamilt", "&#x0210B;");
+        put("iff", "&#x021D4;");
+        put("infin", "&#x0221E;");
+        put("int", "&#x0222B;");
+        put("isin", "&#x02208;");
+        put("lagran", "&#x02112;");
+        put("lang", "&#x02329;");
+        put("lArr", "&#x021D0;");
+        put("le", "&#x02264;");
+        put("lowast", "&#x02217;");
+        put("minus", "&#x02212;");
+        put("mnplus", "&#x02213;");
+        put("nabla", "&#x02207;");
+        put("ne", "&#x02260;");
+        put("ni", "&#x0220B;");
+        put("notin", "&#x02209;");
+        put("or", "&#x02228;");
+        put("order", "&#x02134;");
+        put("par", "&#x02225;");
+        put("part", "&#x02202;");
+        put("permil", "&#x02030;");
+        put("perp", "&#x022A5;");
+        put("phmmat", "&#x02133;");
+        put("Prime", "&#x02033;");
+        put("prime", "&#x02032;");
+        put("prop", "&#x0221D;");
+        put("radic", "&#x0221A;");
+        put("rang", "&#x0232A;");
+        put("rArr", "&#x021D2;");
+        put("sim", "&#x0223C;");
+        put("sime", "&#x02243;");
+        put("square", "&#x025A1;");
+        put("sub", "&#x02282;");
+        put("sube", "&#x02286;");
+        put("sup", "&#x02283;");
+        put("supe", "&#x02287;");
+        put("tdot", " &#x020DB;");
+        put("there4", "&#x02234;");
+        put("tprime", "&#x02034;");
+        put("Verbar", "&#x02016;");
+        put("wedgeq", "&#x02259;");
+    }};
+
+    public static final String DOCBOOK_ENTITIES_STRING =
+            "<!ENTITY euro \"&#x20AC;\">\n" +
+            "<!ENTITY cularr \"&#x021B6;\">\n" +
+            "<!ENTITY curarr \"&#x021B7;\">\n" +
+            "<!ENTITY dArr \"&#x021D3;\">\n" +
+            "<!ENTITY darr2 \"&#x021CA;\">\n" +
+            "<!ENTITY dharl \"&#x021C3;\">\n" +
+            "<!ENTITY dharr \"&#x021C2;\">\n" +
+            "<!ENTITY dlarr \"&#x02199;\">\n" +
+            "<!ENTITY drarr \"&#x02198;\">\n" +
+            "<!ENTITY hArr \"&#x021D4;\">\n" +
+            "<!ENTITY harr \"&#x02194;\">\n" +
+            "<!ENTITY harrw \"&#x021AD;\">\n" +
+            "<!ENTITY lAarr \"&#x021DA;\">\n" +
+            "<!ENTITY Larr \"&#x0219E;\">\n" +
+            "<!ENTITY larr2 \"&#x021C7;\">\n" +
+            "<!ENTITY larrhk \"&#x021A9;\">\n" +
+            "<!ENTITY larrlp \"&#x021AB;\">\n" +
+            "<!ENTITY larrtl \"&#x021A2;\">\n" +
+            "<!ENTITY lhard \"&#x021BD;\">\n" +
+            "<!ENTITY lharu \"&#x021BC;\">\n" +
+            "<!ENTITY lrarr2 \"&#x021C6;\">\n" +
+            "<!ENTITY lrhar2 \"&#x021CB;\">\n" +
+            "<!ENTITY lsh \"&#x021B0;\">\n" +
+            "<!ENTITY map \"&#x021A6;\">\n" +
+            "<!ENTITY mumap \"&#x022B8;\">\n" +
+            "<!ENTITY nearr \"&#x02197;\">\n" +
+            "<!ENTITY nhArr \"&#x021CE;\">\n" +
+            "<!ENTITY nharr \"&#x021AE;\">\n" +
+            "<!ENTITY nlArr \"&#x021CD;\">\n" +
+            "<!ENTITY nlarr \"&#x0219A;\">\n" +
+            "<!ENTITY nrArr \"&#x021CF;\">\n" +
+            "<!ENTITY nrarr \"&#x0219B;\">\n" +
+            "<!ENTITY nwarr \"&#x02196;\">\n" +
+            "<!ENTITY olarr \"&#x021BA;\">\n" +
+            "<!ENTITY orarr \"&#x021BB;\">\n" +
+            "<!ENTITY rAarr \"&#x021DB;\">\n" +
+            "<!ENTITY Rarr \"&#x021A0;\">\n" +
+            "<!ENTITY rarr2 \"&#x021C9;\">\n" +
+            "<!ENTITY rarrhk \"&#x021AA;\">\n" +
+            "<!ENTITY rarrlp \"&#x021AC;\">\n" +
+            "<!ENTITY rarrtl \"&#x021A3;\">\n" +
+            "<!ENTITY rarrw \"&#x0219D;\">\n" +
+            "<!ENTITY rhard \"&#x021C1;\">\n" +
+            "<!ENTITY rharu \"&#x021C0;\">\n" +
+            "<!ENTITY rlarr2 \"&#x021C4;\">\n" +
+            "<!ENTITY rlhar2 \"&#x021CC;\">\n" +
+            "<!ENTITY rsh \"&#x021B1;\">\n" +
+            "<!ENTITY uArr \"&#x021D1;\">\n" +
+            "<!ENTITY uarr2 \"&#x021C8;\">\n" +
+            "<!ENTITY uharl \"&#x021BF;\">\n" +
+            "<!ENTITY uharr \"&#x021BE;\">\n" +
+            "<!ENTITY vArr \"&#x021D5;\">\n" +
+            "<!ENTITY varr \"&#x02195;\">\n" +
+            "<!ENTITY xhArr \"&#x027FA;\">\n" +
+            "<!ENTITY xharr \"&#x027F7;\">\n" +
+            "<!ENTITY xlArr \"&#x027F8;\">\n" +
+            "<!ENTITY xrArr \"&#x027F9;\">\n" +
+            "<!ENTITY amalg \"&#x02A3F;\">\n" +
+            "<!ENTITY Barwed \"&#x02306;\">\n" +
+            "<!ENTITY barwed \"&#x02305;\">\n" +
+            "<!ENTITY Cap \"&#x022D2;\">\n" +
+            "<!ENTITY coprod \"&#x02210;\">\n" +
+            "<!ENTITY Cup \"&#x022D3;\">\n" +
+            "<!ENTITY cuvee \"&#x022CE;\">\n" +
+            "<!ENTITY cuwed \"&#x022CF;\">\n" +
+            "<!ENTITY diam \"&#x022C4;\">\n" +
+            "<!ENTITY divonx \"&#x022C7;\">\n" +
+            "<!ENTITY intcal \"&#x022BA;\">\n" +
+            "<!ENTITY lthree \"&#x022CB;\">\n" +
+            "<!ENTITY ltimes \"&#x022C9;\">\n" +
+            "<!ENTITY minusb \"&#x0229F;\">\n" +
+            "<!ENTITY oast \"&#x0229B;\">\n" +
+            "<!ENTITY ocir \"&#x0229A;\">\n" +
+            "<!ENTITY odash \"&#x0229D;\">\n" +
+            "<!ENTITY odot \"&#x02299;\">\n" +
+            "<!ENTITY ominus \"&#x02296;\">\n" +
+            "<!ENTITY oplus \"&#x02295;\">\n" +
+            "<!ENTITY osol \"&#x02298;\">\n" +
+            "<!ENTITY otimes \"&#x02297;\">\n" +
+            "<!ENTITY plusb \"&#x0229E;\">\n" +
+            "<!ENTITY plusdo \"&#x02214;\">\n" +
+            "<!ENTITY prod \"&#x0220F;\">\n" +
+            "<!ENTITY rthree \"&#x022CC;\">\n" +
+            "<!ENTITY rtimes \"&#x022CA;\">\n" +
+            "<!ENTITY sdot \"&#x022C5;\">\n" +
+            "<!ENTITY sdotb \"&#x022A1;\">\n" +
+            "<!ENTITY setmn \"&#x02216;\">\n" +
+            "<!ENTITY sqcap \"&#x02293;\">\n" +
+            "<!ENTITY sqcup \"&#x02294;\">\n" +
+            "<!ENTITY ssetmn \"&#x02216;\">\n" +
+            "<!ENTITY sstarf \"&#x022C6;\">\n" +
+            "<!ENTITY sum \"&#x02211;\">\n" +
+            "<!ENTITY timesb \"&#x022A0;\">\n" +
+            "<!ENTITY top \"&#x022A4;\">\n" +
+            "<!ENTITY uplus \"&#x0228E;\">\n" +
+            "<!ENTITY wreath \"&#x02240;\">\n" +
+            "<!ENTITY xcirc \"&#x025EF;\">\n" +
+            "<!ENTITY xdtri \"&#x025BD;\">\n" +
+            "<!ENTITY xutri \"&#x025B3;\">\n" +
+            "<!ENTITY dlcorn \"&#x0231E;\">\n" +
+            "<!ENTITY drcorn \"&#x0231F;\">\n" +
+            "<!ENTITY lceil \"&#x02308;\">\n" +
+            "<!ENTITY lfloor \"&#x0230A;\">\n" +
+            "<!ENTITY lpargt \"&#x029A0;\">\n" +
+            "<!ENTITY rceil \"&#x02309;\">\n" +
+            "<!ENTITY rfloor \"&#x0230B;\">\n" +
+            "<!ENTITY rpargt \"&#x02994;\">\n" +
+            "<!ENTITY ulcorn \"&#x0231C;\">\n" +
+            "<!ENTITY urcorn \"&#x0231D;\">\n" +
+            "<!ENTITY gnap \"&#x02A8A;\">\n" +
+            "<!ENTITY gnE \"&#x02269;\">\n" +
+            "<!ENTITY gne \"&#x02A88;\">\n" +
+            "<!ENTITY gnsim \"&#x022E7;\">\n" +
+            "<!ENTITY gvnE \"&#x02269;&#x0FE00;\">\n" +
+            "<!ENTITY lnap \"&#x02A89;\">\n" +
+            "<!ENTITY lnE \"&#x02268;\">\n" +
+            "<!ENTITY lne \"&#x02A87;\">\n" +
+            "<!ENTITY lnsim \"&#x022E6;\">\n" +
+            "<!ENTITY lvnE \"&#x02268;&#x0FE00;\">\n" +
+            "<!ENTITY nap \"&#x02249;\">\n" +
+            "<!ENTITY ncong \"&#x02247;\">\n" +
+            "<!ENTITY nequiv \"&#x02262;\">\n" +
+            "<!ENTITY ngE \"&#x02267;&#x00338;\">\n" +
+            "<!ENTITY nge \"&#x02271;\">\n" +
+            "<!ENTITY nges \"&#x02A7E;&#x00338;\">\n" +
+            "<!ENTITY ngt \"&#x0226F;\">\n" +
+            "<!ENTITY nlE \"&#x02266;&#x00338;\">\n" +
+            "<!ENTITY nle \"&#x02270;\">\n" +
+            "<!ENTITY nles \"&#x02A7D;&#x00338;\">\n" +
+            "<!ENTITY nlt \"&#x0226E;\">\n" +
+            "<!ENTITY nltri \"&#x022EA;\">\n" +
+            "<!ENTITY nltrie \"&#x022EC;\">\n" +
+            "<!ENTITY nmid \"&#x02224;\">\n" +
+            "<!ENTITY npar \"&#x02226;\">\n" +
+            "<!ENTITY npr \"&#x02280;\">\n" +
+            "<!ENTITY npre \"&#x02AAF;&#x00338;\">\n" +
+            "<!ENTITY nrtri \"&#x022EB;\">\n" +
+            "<!ENTITY nrtrie \"&#x022ED;\">\n" +
+            "<!ENTITY nsc \"&#x02281;\">\n" +
+            "<!ENTITY nsce \"&#x02AB0;&#x00338;\">\n" +
+            "<!ENTITY nsim \"&#x02241;\">\n" +
+            "<!ENTITY nsime \"&#x02244;\">\n" +
+            "<!ENTITY nsmid \"&#x02224;\">\n" +
+            "<!ENTITY nspar \"&#x02226;\">\n" +
+            "<!ENTITY nsub \"&#x02284;\">\n" +
+            "<!ENTITY nsubE \"&#x02AC5;&#x00338;\">\n" +
+            "<!ENTITY nsube \"&#x02288;\">\n" +
+            "<!ENTITY nsup \"&#x02285;\">\n" +
+            "<!ENTITY nsupE \"&#x02AC6;&#x00338;\">\n" +
+            "<!ENTITY nsupe \"&#x02289;\">\n" +
+            "<!ENTITY nVDash \"&#x022AF;\">\n" +
+            "<!ENTITY nVdash \"&#x022AE;\">\n" +
+            "<!ENTITY nvDash \"&#x022AD;\">\n" +
+            "<!ENTITY nvdash \"&#x022AC;\">\n" +
+            "<!ENTITY prnap \"&#x02AB9;\">\n" +
+            "<!ENTITY prnE \"&#x02AB5;\">\n" +
+            "<!ENTITY prnsim \"&#x022E8;\">\n" +
+            "<!ENTITY scnap \"&#x02ABA;\">\n" +
+            "<!ENTITY scnE \"&#x02AB6;\">\n" +
+            "<!ENTITY scnsim \"&#x022E9;\">\n" +
+            "<!ENTITY subnE \"&#x02ACB;\">\n" +
+            "<!ENTITY subne \"&#x0228A;\">\n" +
+            "<!ENTITY supnE \"&#x02ACC;\">\n" +
+            "<!ENTITY supne \"&#x0228B;\">\n" +
+            "<!ENTITY vsubnE \"&#x02ACB;&#x0FE00;\">\n" +
+            "<!ENTITY vsubne \"&#x0228A;&#x0FE00;\">\n" +
+            "<!ENTITY vsupnE \"&#x02ACC;&#x0FE00;\">\n" +
+            "<!ENTITY vsupne \"&#x0228B;&#x0FE00;\">\n" +
+            "<!ENTITY ang \"&#x02220;\">\n" +
+            "<!ENTITY angmsd \"&#x02221;\">\n" +
+            "<!ENTITY beth \"&#x02136;\">\n" +
+            "<!ENTITY bprime \"&#x02035;\">\n" +
+            "<!ENTITY comp \"&#x02201;\">\n" +
+            "<!ENTITY daleth \"&#x02138;\">\n" +
+            "<!ENTITY ell \"&#x02113;\">\n" +
+            "<!ENTITY empty \"&#x02205;\">\n" +
+            "<!ENTITY gimel \"&#x02137;\">\n" +
+            "<!ENTITY inodot \"&#x00131;\">\n" +
+            "<!ENTITY jnodot \"&#x0006A;\">\n" +
+            "<!ENTITY nexist \"&#x02204;\">\n" +
+            "<!ENTITY oS \"&#x024C8;\">\n" +
+            "<!ENTITY planck \"&#x0210F;\">\n" +
+            "<!ENTITY real \"&#x0211C;\">\n" +
+            "<!ENTITY sbsol \"&#x0FE68;\">\n" +
+            "<!ENTITY vprime \"&#x02032;\">\n" +
+            "<!ENTITY weierp \"&#x02118;\">\n" +
+            "<!ENTITY ape \"&#x0224A;\">\n" +
+            "<!ENTITY asymp \"&#x02248;\">\n" +
+            "<!ENTITY bcong \"&#x0224C;\">\n" +
+            "<!ENTITY bepsi \"&#x003F6;\">\n" +
+            "<!ENTITY bowtie \"&#x022C8;\">\n" +
+            "<!ENTITY bsim \"&#x0223D;\">\n" +
+            "<!ENTITY bsime \"&#x022CD;\">\n" +
+            "<!ENTITY bump \"&#x0224E;\">\n" +
+            "<!ENTITY bumpe \"&#x0224F;\">\n" +
+            "<!ENTITY cire \"&#x02257;\">\n" +
+            "<!ENTITY colone \"&#x02254;\">\n" +
+            "<!ENTITY cuepr \"&#x022DE;\">\n" +
+            "<!ENTITY cuesc \"&#x022DF;\">\n" +
+            "<!ENTITY cupre \"&#x0227C;\">\n" +
+            "<!ENTITY dashv \"&#x022A3;\">\n" +
+            "<!ENTITY ecir \"&#x02256;\">\n" +
+            "<!ENTITY ecolon \"&#x02255;\">\n" +
+            "<!ENTITY eDot \"&#x02251;\">\n" +
+            "<!ENTITY efDot \"&#x02252;\">\n" +
+            "<!ENTITY egs \"&#x02A96;\">\n" +
+            "<!ENTITY els \"&#x02A95;\">\n" +
+            "<!ENTITY erDot \"&#x02253;\">\n" +
+            "<!ENTITY esdot \"&#x02250;\">\n" +
+            "<!ENTITY fork \"&#x022D4;\">\n" +
+            "<!ENTITY frown \"&#x02322;\">\n" +
+            "<!ENTITY gap \"&#x02A86;\">\n" +
+            "<!ENTITY gE \"&#x02267;\">\n" +
+            "<!ENTITY gEl \"&#x02A8C;\">\n" +
+            "<!ENTITY gel \"&#x022DB;\">\n" +
+            "<!ENTITY ges \"&#x02A7E;\">\n" +
+            "<!ENTITY Gg \"&#x022D9;\">\n" +
+            "<!ENTITY gl \"&#x02277;\">\n" +
+            "<!ENTITY gsdot \"&#x022D7;\">\n" +
+            "<!ENTITY gsim \"&#x02273;\">\n" +
+            "<!ENTITY Gt \"&#x0226B;\">\n" +
+            "<!ENTITY lap \"&#x02A85;\">\n" +
+            "<!ENTITY ldot \"&#x022D6;\">\n" +
+            "<!ENTITY lE \"&#x02266;\">\n" +
+            "<!ENTITY lEg \"&#x02A8B;\">\n" +
+            "<!ENTITY leg \"&#x022DA;\">\n" +
+            "<!ENTITY les \"&#x02A7D;\">\n" +
+            "<!ENTITY lg \"&#x02276;\">\n" +
+            "<!ENTITY Ll \"&#x022D8;\">\n" +
+            "<!ENTITY lsim \"&#x02272;\">\n" +
+            "<!ENTITY Lt \"&#x0226A;\">\n" +
+            "<!ENTITY ltrie \"&#x022B4;\">\n" +
+            "<!ENTITY mid \"&#x02223;\">\n" +
+            "<!ENTITY models \"&#x022A7;\">\n" +
+            "<!ENTITY pr \"&#x0227A;\">\n" +
+            "<!ENTITY prap \"&#x02AB7;\">\n" +
+            "<!ENTITY pre \"&#x02AAF;\">\n" +
+            "<!ENTITY prsim \"&#x0227E;\">\n" +
+            "<!ENTITY rtrie \"&#x022B5;\">\n" +
+            "<!ENTITY samalg \"&#x02210;\">\n" +
+            "<!ENTITY sc \"&#x0227B;\">\n" +
+            "<!ENTITY scap \"&#x02AB8;\">\n" +
+            "<!ENTITY sccue \"&#x0227D;\">\n" +
+            "<!ENTITY sce \"&#x02AB0;\">\n" +
+            "<!ENTITY scsim \"&#x0227F;\">\n" +
+            "<!ENTITY sfrown \"&#x02322;\">\n" +
+            "<!ENTITY smid \"&#x02223;\">\n" +
+            "<!ENTITY smile \"&#x02323;\">\n" +
+            "<!ENTITY spar \"&#x02225;\">\n" +
+            "<!ENTITY sqsub \"&#x0228F;\">\n" +
+            "<!ENTITY sqsube \"&#x02291;\">\n" +
+            "<!ENTITY sqsup \"&#x02290;\">\n" +
+            "<!ENTITY sqsupe \"&#x02292;\">\n" +
+            "<!ENTITY ssmile \"&#x02323;\">\n" +
+            "<!ENTITY Sub \"&#x022D0;\">\n" +
+            "<!ENTITY subE \"&#x02AC5;\">\n" +
+            "<!ENTITY Sup \"&#x022D1;\">\n" +
+            "<!ENTITY supE \"&#x02AC6;\">\n" +
+            "<!ENTITY thkap \"&#x02248;\">\n" +
+            "<!ENTITY thksim \"&#x0223C;\">\n" +
+            "<!ENTITY trie \"&#x0225C;\">\n" +
+            "<!ENTITY twixt \"&#x0226C;\">\n" +
+            "<!ENTITY Vdash \"&#x022A9;\">\n" +
+            "<!ENTITY vDash \"&#x022A8;\">\n" +
+            "<!ENTITY vdash \"&#x022A2;\">\n" +
+            "<!ENTITY veebar \"&#x022BB;\">\n" +
+            "<!ENTITY vltri \"&#x022B2;\">\n" +
+            "<!ENTITY vprop \"&#x0221D;\">\n" +
+            "<!ENTITY vrtri \"&#x022B3;\">\n" +
+            "<!ENTITY Vvdash \"&#x022AA;\">\n" +
+            "<!ENTITY boxDL \"&#x02557;\">\n" +
+            "<!ENTITY boxDl \"&#x02556;\">\n" +
+            "<!ENTITY boxdL \"&#x02555;\">\n" +
+            "<!ENTITY boxdl \"&#x02510;\">\n" +
+            "<!ENTITY boxDR \"&#x02554;\">\n" +
+            "<!ENTITY boxDr \"&#x02553;\">\n" +
+            "<!ENTITY boxdR \"&#x02552;\">\n" +
+            "<!ENTITY boxdr \"&#x0250C;\">\n" +
+            "<!ENTITY boxH \"&#x02550;\">\n" +
+            "<!ENTITY boxh \"&#x02500;\">\n" +
+            "<!ENTITY boxHD \"&#x02566;\">\n" +
+            "<!ENTITY boxHd \"&#x02564;\">\n" +
+            "<!ENTITY boxhD \"&#x02565;\">\n" +
+            "<!ENTITY boxhd \"&#x0252C;\">\n" +
+            "<!ENTITY boxHU \"&#x02569;\">\n" +
+            "<!ENTITY boxHu \"&#x02567;\">\n" +
+            "<!ENTITY boxhU \"&#x02568;\">\n" +
+            "<!ENTITY boxhu \"&#x02534;\">\n" +
+            "<!ENTITY boxUL \"&#x0255D;\">\n" +
+            "<!ENTITY boxUl \"&#x0255C;\">\n" +
+            "<!ENTITY boxuL \"&#x0255B;\">\n" +
+            "<!ENTITY boxul \"&#x02518;\">\n" +
+            "<!ENTITY boxUR \"&#x0255A;\">\n" +
+            "<!ENTITY boxUr \"&#x02559;\">\n" +
+            "<!ENTITY boxuR \"&#x02558;\">\n" +
+            "<!ENTITY boxur \"&#x02514;\">\n" +
+            "<!ENTITY boxV \"&#x02551;\">\n" +
+            "<!ENTITY boxv \"&#x02502;\">\n" +
+            "<!ENTITY boxVH \"&#x0256C;\">\n" +
+            "<!ENTITY boxVh \"&#x0256B;\">\n" +
+            "<!ENTITY boxvH \"&#x0256A;\">\n" +
+            "<!ENTITY boxvh \"&#x0253C;\">\n" +
+            "<!ENTITY boxVL \"&#x02563;\">\n" +
+            "<!ENTITY boxVl \"&#x02562;\">\n" +
+            "<!ENTITY boxvL \"&#x02561;\">\n" +
+            "<!ENTITY boxvl \"&#x02524;\">\n" +
+            "<!ENTITY boxVR \"&#x02560;\">\n" +
+            "<!ENTITY boxVr \"&#x0255F;\">\n" +
+            "<!ENTITY boxvR \"&#x0255E;\">\n" +
+            "<!ENTITY boxvr \"&#x0251C;\">\n" +
+            "<!ENTITY Acy \"&#x00410;\">\n" +
+            "<!ENTITY acy \"&#x00430;\">\n" +
+            "<!ENTITY Bcy \"&#x00411;\">\n" +
+            "<!ENTITY bcy \"&#x00431;\">\n" +
+            "<!ENTITY CHcy \"&#x00427;\">\n" +
+            "<!ENTITY chcy \"&#x00447;\">\n" +
+            "<!ENTITY Dcy \"&#x00414;\">\n" +
+            "<!ENTITY dcy \"&#x00434;\">\n" +
+            "<!ENTITY Ecy \"&#x0042D;\">\n" +
+            "<!ENTITY ecy \"&#x0044D;\">\n" +
+            "<!ENTITY Fcy \"&#x00424;\">\n" +
+            "<!ENTITY fcy \"&#x00444;\">\n" +
+            "<!ENTITY Gcy \"&#x00413;\">\n" +
+            "<!ENTITY gcy \"&#x00433;\">\n" +
+            "<!ENTITY HARDcy \"&#x0042A;\">\n" +
+            "<!ENTITY hardcy \"&#x0044A;\">\n" +
+            "<!ENTITY Icy \"&#x00418;\">\n" +
+            "<!ENTITY icy \"&#x00438;\">\n" +
+            "<!ENTITY IEcy \"&#x00415;\">\n" +
+            "<!ENTITY iecy \"&#x00435;\">\n" +
+            "<!ENTITY IOcy \"&#x00401;\">\n" +
+            "<!ENTITY iocy \"&#x00451;\">\n" +
+            "<!ENTITY Jcy \"&#x00419;\">\n" +
+            "<!ENTITY jcy \"&#x00439;\">\n" +
+            "<!ENTITY Kcy \"&#x0041A;\">\n" +
+            "<!ENTITY kcy \"&#x0043A;\">\n" +
+            "<!ENTITY KHcy \"&#x00425;\">\n" +
+            "<!ENTITY khcy \"&#x00445;\">\n" +
+            "<!ENTITY Lcy \"&#x0041B;\">\n" +
+            "<!ENTITY lcy \"&#x0043B;\">\n" +
+            "<!ENTITY Mcy \"&#x0041C;\">\n" +
+            "<!ENTITY mcy \"&#x0043C;\">\n" +
+            "<!ENTITY Ncy \"&#x0041D;\">\n" +
+            "<!ENTITY ncy \"&#x0043D;\">\n" +
+            "<!ENTITY numero \"&#x02116;\">\n" +
+            "<!ENTITY Ocy \"&#x0041E;\">\n" +
+            "<!ENTITY ocy \"&#x0043E;\">\n" +
+            "<!ENTITY Pcy \"&#x0041F;\">\n" +
+            "<!ENTITY pcy \"&#x0043F;\">\n" +
+            "<!ENTITY Rcy \"&#x00420;\">\n" +
+            "<!ENTITY rcy \"&#x00440;\">\n" +
+            "<!ENTITY Scy \"&#x00421;\">\n" +
+            "<!ENTITY scy \"&#x00441;\">\n" +
+            "<!ENTITY SHCHcy \"&#x00429;\">\n" +
+            "<!ENTITY shchcy \"&#x00449;\">\n" +
+            "<!ENTITY SHcy \"&#x00428;\">\n" +
+            "<!ENTITY shcy \"&#x00448;\">\n" +
+            "<!ENTITY SOFTcy \"&#x0042C;\">\n" +
+            "<!ENTITY softcy \"&#x0044C;\">\n" +
+            "<!ENTITY Tcy \"&#x00422;\">\n" +
+            "<!ENTITY tcy \"&#x00442;\">\n" +
+            "<!ENTITY TScy \"&#x00426;\">\n" +
+            "<!ENTITY tscy \"&#x00446;\">\n" +
+            "<!ENTITY Ucy \"&#x00423;\">\n" +
+            "<!ENTITY ucy \"&#x00443;\">\n" +
+            "<!ENTITY Vcy \"&#x00412;\">\n" +
+            "<!ENTITY vcy \"&#x00432;\">\n" +
+            "<!ENTITY YAcy \"&#x0042F;\">\n" +
+            "<!ENTITY yacy \"&#x0044F;\">\n" +
+            "<!ENTITY Ycy \"&#x0042B;\">\n" +
+            "<!ENTITY ycy \"&#x0044B;\">\n" +
+            "<!ENTITY YUcy \"&#x0042E;\">\n" +
+            "<!ENTITY yucy \"&#x0044E;\">\n" +
+            "<!ENTITY Zcy \"&#x00417;\">\n" +
+            "<!ENTITY zcy \"&#x00437;\">\n" +
+            "<!ENTITY ZHcy \"&#x00416;\">\n" +
+            "<!ENTITY zhcy \"&#x00436;\">\n" +
+            "<!ENTITY DJcy \"&#x00402;\">\n" +
+            "<!ENTITY djcy \"&#x00452;\">\n" +
+            "<!ENTITY DScy \"&#x00405;\">\n" +
+            "<!ENTITY dscy \"&#x00455;\">\n" +
+            "<!ENTITY DZcy \"&#x0040F;\">\n" +
+            "<!ENTITY dzcy \"&#x0045F;\">\n" +
+            "<!ENTITY GJcy \"&#x00403;\">\n" +
+            "<!ENTITY gjcy \"&#x00453;\">\n" +
+            "<!ENTITY Iukcy \"&#x00406;\">\n" +
+            "<!ENTITY iukcy \"&#x00456;\">\n" +
+            "<!ENTITY Jsercy \"&#x00408;\">\n" +
+            "<!ENTITY jsercy \"&#x00458;\">\n" +
+            "<!ENTITY Jukcy \"&#x00404;\">\n" +
+            "<!ENTITY jukcy \"&#x00454;\">\n" +
+            "<!ENTITY KJcy \"&#x0040C;\">\n" +
+            "<!ENTITY kjcy \"&#x0045C;\">\n" +
+            "<!ENTITY LJcy \"&#x00409;\">\n" +
+            "<!ENTITY ljcy \"&#x00459;\">\n" +
+            "<!ENTITY NJcy \"&#x0040A;\">\n" +
+            "<!ENTITY njcy \"&#x0045A;\">\n" +
+            "<!ENTITY TSHcy \"&#x0040B;\">\n" +
+            "<!ENTITY tshcy \"&#x0045B;\">\n" +
+            "<!ENTITY Ubrcy \"&#x0040E;\">\n" +
+            "<!ENTITY ubrcy \"&#x0045E;\">\n" +
+            "<!ENTITY YIcy \"&#x00407;\">\n" +
+            "<!ENTITY yicy \"&#x00457;\">\n" +
+            "<!ENTITY acute \"&#x000B4;\">\n" +
+            "<!ENTITY breve \"&#x002D8;\">\n" +
+            "<!ENTITY caron \"&#x002C7;\">\n" +
+            "<!ENTITY cedil \"&#x000B8;\">\n" +
+            "<!ENTITY circ \"&#x002C6;\">\n" +
+            "<!ENTITY dblac \"&#x002DD;\">\n" +
+            "<!ENTITY die \"&#x000A8;\">\n" +
+            "<!ENTITY dot \"&#x002D9;\">\n" +
+            "<!ENTITY grave \"&#x00060;\">\n" +
+            "<!ENTITY macr \"&#x000AF;\">\n" +
+            "<!ENTITY ogon \"&#x002DB;\">\n" +
+            "<!ENTITY ring \"&#x002DA;\">\n" +
+            "<!ENTITY tilde \"&#x002DC;\">\n" +
+            "<!ENTITY uml \"&#x000A8;\">\n" +
+            "<!ENTITY Agr \"&#x00391;\">\n" +
+            "<!ENTITY agr \"&#x003B1;\">\n" +
+            "<!ENTITY Bgr \"&#x00392;\">\n" +
+            "<!ENTITY bgr \"&#x003B2;\">\n" +
+            "<!ENTITY Dgr \"&#x00394;\">\n" +
+            "<!ENTITY dgr \"&#x003B4;\">\n" +
+            "<!ENTITY EEgr \"&#x00397;\">\n" +
+            "<!ENTITY eegr \"&#x003B7;\">\n" +
+            "<!ENTITY Egr \"&#x00395;\">\n" +
+            "<!ENTITY egr \"&#x003B5;\">\n" +
+            "<!ENTITY Ggr \"&#x00393;\">\n" +
+            "<!ENTITY ggr \"&#x003B3;\">\n" +
+            "<!ENTITY Igr \"&#x00399;\">\n" +
+            "<!ENTITY igr \"&#x003B9;\">\n" +
+            "<!ENTITY Kgr \"&#x0039A;\">\n" +
+            "<!ENTITY kgr \"&#x003BA;\">\n" +
+            "<!ENTITY KHgr \"&#x003A7;\">\n" +
+            "<!ENTITY khgr \"&#x003C7;\">\n" +
+            "<!ENTITY Lgr \"&#x0039B;\">\n" +
+            "<!ENTITY lgr \"&#x003BB;\">\n" +
+            "<!ENTITY Mgr \"&#x0039C;\">\n" +
+            "<!ENTITY mgr \"&#x003BC;\">\n" +
+            "<!ENTITY Ngr \"&#x0039D;\">\n" +
+            "<!ENTITY ngr \"&#x003BD;\">\n" +
+            "<!ENTITY Ogr \"&#x0039F;\">\n" +
+            "<!ENTITY ogr \"&#x003BF;\">\n" +
+            "<!ENTITY OHgr \"&#x003A9;\">\n" +
+            "<!ENTITY ohgr \"&#x003C9;\">\n" +
+            "<!ENTITY Pgr \"&#x003A0;\">\n" +
+            "<!ENTITY pgr \"&#x003C0;\">\n" +
+            "<!ENTITY PHgr \"&#x003A6;\">\n" +
+            "<!ENTITY phgr \"&#x003C6;\">\n" +
+            "<!ENTITY PSgr \"&#x003A8;\">\n" +
+            "<!ENTITY psgr \"&#x003C8;\">\n" +
+            "<!ENTITY Rgr \"&#x003A1;\">\n" +
+            "<!ENTITY rgr \"&#x003C1;\">\n" +
+            "<!ENTITY sfgr \"&#x003C2;\">\n" +
+            "<!ENTITY Sgr \"&#x003A3;\">\n" +
+            "<!ENTITY sgr \"&#x003C3;\">\n" +
+            "<!ENTITY Tgr \"&#x003A4;\">\n" +
+            "<!ENTITY tgr \"&#x003C4;\">\n" +
+            "<!ENTITY THgr \"&#x00398;\">\n" +
+            "<!ENTITY thgr \"&#x003B8;\">\n" +
+            "<!ENTITY Ugr \"&#x003A5;\">\n" +
+            "<!ENTITY ugr \"&#x003C5;\">\n" +
+            "<!ENTITY Xgr \"&#x0039E;\">\n" +
+            "<!ENTITY xgr \"&#x003BE;\">\n" +
+            "<!ENTITY Zgr \"&#x00396;\">\n" +
+            "<!ENTITY zgr \"&#x003B6;\">\n" +
+            "<!ENTITY Aacgr \"&#x00386;\">\n" +
+            "<!ENTITY aacgr \"&#x003AC;\">\n" +
+            "<!ENTITY Eacgr \"&#x00388;\">\n" +
+            "<!ENTITY eacgr \"&#x003AD;\">\n" +
+            "<!ENTITY EEacgr \"&#x00389;\">\n" +
+            "<!ENTITY eeacgr \"&#x003AE;\">\n" +
+            "<!ENTITY Iacgr \"&#x0038A;\">\n" +
+            "<!ENTITY iacgr \"&#x003AF;\">\n" +
+            "<!ENTITY idiagr \"&#x00390;\">\n" +
+            "<!ENTITY Idigr \"&#x003AA;\">\n" +
+            "<!ENTITY idigr \"&#x003CA;\">\n" +
+            "<!ENTITY Oacgr \"&#x0038C;\">\n" +
+            "<!ENTITY oacgr \"&#x003CC;\">\n" +
+            "<!ENTITY OHacgr \"&#x0038F;\">\n" +
+            "<!ENTITY ohacgr \"&#x003CE;\">\n" +
+            "<!ENTITY Uacgr \"&#x0038E;\">\n" +
+            "<!ENTITY uacgr \"&#x003CD;\">\n" +
+            "<!ENTITY udiagr \"&#x003B0;\">\n" +
+            "<!ENTITY Udigr \"&#x003AB;\">\n" +
+            "<!ENTITY udigr \"&#x003CB;\">\n" +
+            "<!ENTITY alpha \"&#x003B1;\">\n" +
+            "<!ENTITY beta \"&#x003B2;\">\n" +
+            "<!ENTITY chi \"&#x003C7;\">\n" +
+            "<!ENTITY Delta \"&#x00394;\">\n" +
+            "<!ENTITY delta \"&#x003B4;\">\n" +
+            "<!ENTITY epsi \"&#x003F5;\">\n" +
+            "<!ENTITY epsis \"&#x003F5;\">\n" +
+            "<!ENTITY epsiv \"&#x003B5;\">\n" +
+            "<!ENTITY eta \"&#x003B7;\">\n" +
+            "<!ENTITY Gamma \"&#x00393;\">\n" +
+            "<!ENTITY gamma \"&#x003B3;\">\n" +
+            "<!ENTITY gammad \"&#x003DD;\">\n" +
+            "<!ENTITY iota \"&#x003B9;\">\n" +
+            "<!ENTITY kappa \"&#x003BA;\">\n" +
+            "<!ENTITY kappav \"&#x003F0;\">\n" +
+            "<!ENTITY Lambda \"&#x0039B;\">\n" +
+            "<!ENTITY lambda \"&#x003BB;\">\n" +
+            "<!ENTITY mu \"&#x003BC;\">\n" +
+            "<!ENTITY nu \"&#x003BD;\">\n" +
+            "<!ENTITY Omega \"&#x003A9;\">\n" +
+            "<!ENTITY omega \"&#x003C9;\">\n" +
+            "<!ENTITY Phi \"&#x003A6;\">\n" +
+            "<!ENTITY phis \"&#x003D5;\">\n" +
+            "<!ENTITY phiv \"&#x003C6;\">\n" +
+            "<!ENTITY Pi \"&#x003A0;\">\n" +
+            "<!ENTITY pi \"&#x003C0;\">\n" +
+            "<!ENTITY piv \"&#x003D6;\">\n" +
+            "<!ENTITY Psi \"&#x003A8;\">\n" +
+            "<!ENTITY psi \"&#x003C8;\">\n" +
+            "<!ENTITY rho \"&#x003C1;\">\n" +
+            "<!ENTITY rhov \"&#x003F1;\">\n" +
+            "<!ENTITY Sigma \"&#x003A3;\">\n" +
+            "<!ENTITY sigma \"&#x003C3;\">\n" +
+            "<!ENTITY sigmav \"&#x003C2;\">\n" +
+            "<!ENTITY tau \"&#x003C4;\">\n" +
+            "<!ENTITY Theta \"&#x00398;\">\n" +
+            "<!ENTITY thetas \"&#x003B8;\">\n" +
+            "<!ENTITY thetav \"&#x003D1;\">\n" +
+            "<!ENTITY Upsi \"&#x003D2;\">\n" +
+            "<!ENTITY upsi \"&#x003C5;\">\n" +
+            "<!ENTITY Xi \"&#x0039E;\">\n" +
+            "<!ENTITY xi \"&#x003BE;\">\n" +
+            "<!ENTITY zeta \"&#x003B6;\">\n" +
+            "<!ENTITY b.alpha \"&#x1D6C2;\">\n" +
+            "<!ENTITY b.beta \"&#x1D6C3;\">\n" +
+            "<!ENTITY b.chi \"&#x1D6D8;\">\n" +
+            "<!ENTITY b.Delta \"&#x1D6AB;\">\n" +
+            "<!ENTITY b.delta \"&#x1D6C5;\">\n" +
+            "<!ENTITY b.epsi \"&#x1D6C6;\">\n" +
+            "<!ENTITY b.epsiv \"&#x1D6DC;\">\n" +
+            "<!ENTITY b.eta \"&#x1D6C8;\">\n" +
+            "<!ENTITY b.Gamma \"&#x1D6AA;\">\n" +
+            "<!ENTITY b.gamma \"&#x1D6C4;\">\n" +
+            "<!ENTITY b.Gammad \"&#x003DC;\">\n" +
+            "<!ENTITY b.gammad \"&#x003DD;\">\n" +
+            "<!ENTITY b.iota \"&#x1D6CA;\">\n" +
+            "<!ENTITY b.kappa \"&#x1D6CB;\">\n" +
+            "<!ENTITY b.kappav \"&#x1D6DE;\">\n" +
+            "<!ENTITY b.Lambda \"&#x1D6B2;\">\n" +
+            "<!ENTITY b.lambda \"&#x1D6CC;\">\n" +
+            "<!ENTITY b.mu \"&#x1D6CD;\">\n" +
+            "<!ENTITY b.nu \"&#x1D6CE;\">\n" +
+            "<!ENTITY b.Omega \"&#x1D6C0;\">\n" +
+            "<!ENTITY b.omega \"&#x1D6DA;\">\n" +
+            "<!ENTITY b.Phi \"&#x1D6BD;\">\n" +
+            "<!ENTITY b.phi \"&#x1D6D7;\">\n" +
+            "<!ENTITY b.phiv \"&#x1D6DF;\">\n" +
+            "<!ENTITY b.Pi \"&#x1D6B7;\">\n" +
+            "<!ENTITY b.pi \"&#x1D6D1;\">\n" +
+            "<!ENTITY b.piv \"&#x1D6E1;\">\n" +
+            "<!ENTITY b.Psi \"&#x1D6BF;\">\n" +
+            "<!ENTITY b.psi \"&#x1D6D9;\">\n" +
+            "<!ENTITY b.rho \"&#x1D6D2;\">\n" +
+            "<!ENTITY b.rhov \"&#x1D6E0;\">\n" +
+            "<!ENTITY b.Sigma \"&#x1D6BA;\">\n" +
+            "<!ENTITY b.sigma \"&#x1D6D4;\">\n" +
+            "<!ENTITY b.sigmav \"&#x1D6D3;\">\n" +
+            "<!ENTITY b.tau \"&#x1D6D5;\">\n" +
+            "<!ENTITY b.Theta \"&#x1D6AF;\">\n" +
+            "<!ENTITY b.thetas \"&#x1D6C9;\">\n" +
+            "<!ENTITY b.thetav \"&#x1D6DD;\">\n" +
+            "<!ENTITY b.Upsi \"&#x1D6BC;\">\n" +
+            "<!ENTITY b.upsi \"&#x1D6D6;\">\n" +
+            "<!ENTITY b.Xi \"&#x1D6B5;\">\n" +
+            "<!ENTITY b.xi \"&#x1D6CF;\">\n" +
+            "<!ENTITY b.zeta \"&#x1D6C7;\">\n" +
+            "<!ENTITY Aacute \"&#x000C1;\">\n" +
+            "<!ENTITY aacute \"&#x000E1;\">\n" +
+            "<!ENTITY Acirc \"&#x000C2;\">\n" +
+            "<!ENTITY acirc \"&#x000E2;\">\n" +
+            "<!ENTITY AElig \"&#x000C6;\">\n" +
+            "<!ENTITY aelig \"&#x000E6;\">\n" +
+            "<!ENTITY Agrave \"&#x000C0;\">\n" +
+            "<!ENTITY agrave \"&#x000E0;\">\n" +
+            "<!ENTITY Aring \"&#x000C5;\">\n" +
+            "<!ENTITY aring \"&#x000E5;\">\n" +
+            "<!ENTITY Atilde \"&#x000C3;\">\n" +
+            "<!ENTITY atilde \"&#x000E3;\">\n" +
+            "<!ENTITY Auml \"&#x000C4;\">\n" +
+            "<!ENTITY auml \"&#x000E4;\">\n" +
+            "<!ENTITY Ccedil \"&#x000C7;\">\n" +
+            "<!ENTITY ccedil \"&#x000E7;\">\n" +
+            "<!ENTITY Eacute \"&#x000C9;\">\n" +
+            "<!ENTITY eacute \"&#x000E9;\">\n" +
+            "<!ENTITY Ecirc \"&#x000CA;\">\n" +
+            "<!ENTITY ecirc \"&#x000EA;\">\n" +
+            "<!ENTITY Egrave \"&#x000C8;\">\n" +
+            "<!ENTITY egrave \"&#x000E8;\">\n" +
+            "<!ENTITY ETH \"&#x000D0;\">\n" +
+            "<!ENTITY eth \"&#x000F0;\">\n" +
+            "<!ENTITY Euml \"&#x000CB;\">\n" +
+            "<!ENTITY euml \"&#x000EB;\">\n" +
+            "<!ENTITY Iacute \"&#x000CD;\">\n" +
+            "<!ENTITY iacute \"&#x000ED;\">\n" +
+            "<!ENTITY Icirc \"&#x000CE;\">\n" +
+            "<!ENTITY icirc \"&#x000EE;\">\n" +
+            "<!ENTITY Igrave \"&#x000CC;\">\n" +
+            "<!ENTITY igrave \"&#x000EC;\">\n" +
+            "<!ENTITY Iuml \"&#x000CF;\">\n" +
+            "<!ENTITY iuml \"&#x000EF;\">\n" +
+            "<!ENTITY Ntilde \"&#x000D1;\">\n" +
+            "<!ENTITY ntilde \"&#x000F1;\">\n" +
+            "<!ENTITY Oacute \"&#x000D3;\">\n" +
+            "<!ENTITY oacute \"&#x000F3;\">\n" +
+            "<!ENTITY Ocirc \"&#x000D4;\">\n" +
+            "<!ENTITY ocirc \"&#x000F4;\">\n" +
+            "<!ENTITY Ograve \"&#x000D2;\">\n" +
+            "<!ENTITY ograve \"&#x000F2;\">\n" +
+            "<!ENTITY Oslash \"&#x000D8;\">\n" +
+            "<!ENTITY oslash \"&#x000F8;\">\n" +
+            "<!ENTITY Otilde \"&#x000D5;\">\n" +
+            "<!ENTITY otilde \"&#x000F5;\">\n" +
+            "<!ENTITY Ouml \"&#x000D6;\">\n" +
+            "<!ENTITY ouml \"&#x000F6;\">\n" +
+            "<!ENTITY szlig \"&#x000DF;\">\n" +
+            "<!ENTITY THORN \"&#x000DE;\">\n" +
+            "<!ENTITY thorn \"&#x000FE;\">\n" +
+            "<!ENTITY Uacute \"&#x000DA;\">\n" +
+            "<!ENTITY uacute \"&#x000FA;\">\n" +
+            "<!ENTITY Ucirc \"&#x000DB;\">\n" +
+            "<!ENTITY ucirc \"&#x000FB;\">\n" +
+            "<!ENTITY Ugrave \"&#x000D9;\">\n" +
+            "<!ENTITY ugrave \"&#x000F9;\">\n" +
+            "<!ENTITY Uuml \"&#x000DC;\">\n" +
+            "<!ENTITY uuml \"&#x000FC;\">\n" +
+            "<!ENTITY Yacute \"&#x000DD;\">\n" +
+            "<!ENTITY yacute \"&#x000FD;\">\n" +
+            "<!ENTITY yuml \"&#x000FF;\">\n" +
+            "<!ENTITY Abreve \"&#x00102;\">\n" +
+            "<!ENTITY abreve \"&#x00103;\">\n" +
+            "<!ENTITY Amacr \"&#x00100;\">\n" +
+            "<!ENTITY amacr \"&#x00101;\">\n" +
+            "<!ENTITY Aogon \"&#x00104;\">\n" +
+            "<!ENTITY aogon \"&#x00105;\">\n" +
+            "<!ENTITY Cacute \"&#x00106;\">\n" +
+            "<!ENTITY cacute \"&#x00107;\">\n" +
+            "<!ENTITY Ccaron \"&#x0010C;\">\n" +
+            "<!ENTITY ccaron \"&#x0010D;\">\n" +
+            "<!ENTITY Ccirc \"&#x00108;\">\n" +
+            "<!ENTITY ccirc \"&#x00109;\">\n" +
+            "<!ENTITY Cdot \"&#x0010A;\">\n" +
+            "<!ENTITY cdot \"&#x0010B;\">\n" +
+            "<!ENTITY Dcaron \"&#x0010E;\">\n" +
+            "<!ENTITY dcaron \"&#x0010F;\">\n" +
+            "<!ENTITY Dstrok \"&#x00110;\">\n" +
+            "<!ENTITY dstrok \"&#x00111;\">\n" +
+            "<!ENTITY Ecaron \"&#x0011A;\">\n" +
+            "<!ENTITY ecaron \"&#x0011B;\">\n" +
+            "<!ENTITY Edot \"&#x00116;\">\n" +
+            "<!ENTITY edot \"&#x00117;\">\n" +
+            "<!ENTITY Emacr \"&#x00112;\">\n" +
+            "<!ENTITY emacr \"&#x00113;\">\n" +
+            "<!ENTITY ENG \"&#x0014A;\">\n" +
+            "<!ENTITY eng \"&#x0014B;\">\n" +
+            "<!ENTITY Eogon \"&#x00118;\">\n" +
+            "<!ENTITY eogon \"&#x00119;\">\n" +
+            "<!ENTITY gacute \"&#x001F5;\">\n" +
+            "<!ENTITY Gbreve \"&#x0011E;\">\n" +
+            "<!ENTITY gbreve \"&#x0011F;\">\n" +
+            "<!ENTITY Gcedil \"&#x00122;\">\n" +
+            "<!ENTITY Gcirc \"&#x0011C;\">\n" +
+            "<!ENTITY gcirc \"&#x0011D;\">\n" +
+            "<!ENTITY Gdot \"&#x00120;\">\n" +
+            "<!ENTITY gdot \"&#x00121;\">\n" +
+            "<!ENTITY Hcirc \"&#x00124;\">\n" +
+            "<!ENTITY hcirc \"&#x00125;\">\n" +
+            "<!ENTITY Hstrok \"&#x00126;\">\n" +
+            "<!ENTITY hstrok \"&#x00127;\">\n" +
+            "<!ENTITY Idot \"&#x00130;\">\n" +
+            "<!ENTITY IJlig \"&#x00132;\">\n" +
+            "<!ENTITY ijlig \"&#x00133;\">\n" +
+            "<!ENTITY Imacr \"&#x0012A;\">\n" +
+            "<!ENTITY imacr \"&#x0012B;\">\n" +
+            "<!ENTITY inodot \"&#x00131;\">\n" +
+            "<!ENTITY Iogon \"&#x0012E;\">\n" +
+            "<!ENTITY iogon \"&#x0012F;\">\n" +
+            "<!ENTITY Itilde \"&#x00128;\">\n" +
+            "<!ENTITY itilde \"&#x00129;\">\n" +
+            "<!ENTITY Jcirc \"&#x00134;\">\n" +
+            "<!ENTITY jcirc \"&#x00135;\">\n" +
+            "<!ENTITY Kcedil \"&#x00136;\">\n" +
+            "<!ENTITY kcedil \"&#x00137;\">\n" +
+            "<!ENTITY kgreen \"&#x00138;\">\n" +
+            "<!ENTITY Lacute \"&#x00139;\">\n" +
+            "<!ENTITY lacute \"&#x0013A;\">\n" +
+            "<!ENTITY Lcaron \"&#x0013D;\">\n" +
+            "<!ENTITY lcaron \"&#x0013E;\">\n" +
+            "<!ENTITY Lcedil \"&#x0013B;\">\n" +
+            "<!ENTITY lcedil \"&#x0013C;\">\n" +
+            "<!ENTITY Lmidot \"&#x0013F;\">\n" +
+            "<!ENTITY lmidot \"&#x00140;\">\n" +
+            "<!ENTITY Lstrok \"&#x00141;\">\n" +
+            "<!ENTITY lstrok \"&#x00142;\">\n" +
+            "<!ENTITY Nacute \"&#x00143;\">\n" +
+            "<!ENTITY nacute \"&#x00144;\">\n" +
+            "<!ENTITY napos \"&#x00149;\">\n" +
+            "<!ENTITY Ncaron \"&#x00147;\">\n" +
+            "<!ENTITY ncaron \"&#x00148;\">\n" +
+            "<!ENTITY Ncedil \"&#x00145;\">\n" +
+            "<!ENTITY ncedil \"&#x00146;\">\n" +
+            "<!ENTITY Odblac \"&#x00150;\">\n" +
+            "<!ENTITY odblac \"&#x00151;\">\n" +
+            "<!ENTITY OElig \"&#x00152;\">\n" +
+            "<!ENTITY oelig \"&#x00153;\">\n" +
+            "<!ENTITY Omacr \"&#x0014C;\">\n" +
+            "<!ENTITY omacr \"&#x0014D;\">\n" +
+            "<!ENTITY Racute \"&#x00154;\">\n" +
+            "<!ENTITY racute \"&#x00155;\">\n" +
+            "<!ENTITY Rcaron \"&#x00158;\">\n" +
+            "<!ENTITY rcaron \"&#x00159;\">\n" +
+            "<!ENTITY Rcedil \"&#x00156;\">\n" +
+            "<!ENTITY rcedil \"&#x00157;\">\n" +
+            "<!ENTITY Sacute \"&#x0015A;\">\n" +
+            "<!ENTITY sacute \"&#x0015B;\">\n" +
+            "<!ENTITY Scaron \"&#x00160;\">\n" +
+            "<!ENTITY scaron \"&#x00161;\">\n" +
+            "<!ENTITY Scedil \"&#x0015E;\">\n" +
+            "<!ENTITY scedil \"&#x0015F;\">\n" +
+            "<!ENTITY Scirc \"&#x0015C;\">\n" +
+            "<!ENTITY scirc \"&#x0015D;\">\n" +
+            "<!ENTITY Tcaron \"&#x00164;\">\n" +
+            "<!ENTITY tcaron \"&#x00165;\">\n" +
+            "<!ENTITY Tcedil \"&#x00162;\">\n" +
+            "<!ENTITY tcedil \"&#x00163;\">\n" +
+            "<!ENTITY Tstrok \"&#x00166;\">\n" +
+            "<!ENTITY tstrok \"&#x00167;\">\n" +
+            "<!ENTITY Ubreve \"&#x0016C;\">\n" +
+            "<!ENTITY ubreve \"&#x0016D;\">\n" +
+            "<!ENTITY Udblac \"&#x00170;\">\n" +
+            "<!ENTITY udblac \"&#x00171;\">\n" +
+            "<!ENTITY Umacr \"&#x0016A;\">\n" +
+            "<!ENTITY umacr \"&#x0016B;\">\n" +
+            "<!ENTITY Uogon \"&#x00172;\">\n" +
+            "<!ENTITY uogon \"&#x00173;\">\n" +
+            "<!ENTITY Uring \"&#x0016E;\">\n" +
+            "<!ENTITY uring \"&#x0016F;\">\n" +
+            "<!ENTITY Utilde \"&#x00168;\">\n" +
+            "<!ENTITY utilde \"&#x00169;\">\n" +
+            "<!ENTITY Wcirc \"&#x00174;\">\n" +
+            "<!ENTITY wcirc \"&#x00175;\">\n" +
+            "<!ENTITY Ycirc \"&#x00176;\">\n" +
+            "<!ENTITY ycirc \"&#x00177;\">\n" +
+            "<!ENTITY Yuml \"&#x00178;\">\n" +
+            "<!ENTITY Zacute \"&#x00179;\">\n" +
+            "<!ENTITY zacute \"&#x0017A;\">\n" +
+            "<!ENTITY Zcaron \"&#x0017D;\">\n" +
+            "<!ENTITY zcaron \"&#x0017E;\">\n" +
+            "<!ENTITY Zdot \"&#x0017B;\">\n" +
+            "<!ENTITY zdot \"&#x0017C;\">\n" +
+            "<!ENTITY amp \"&#38;#38;\">\n" +
+            "<!ENTITY apos \"&#x00027;\">\n" +
+            "<!ENTITY ast \"&#x0002A;\">\n" +
+            "<!ENTITY brvbar \"&#x000A6;\">\n" +
+            "<!ENTITY bsol \"&#x0005C;\">\n" +
+            "<!ENTITY cent \"&#x000A2;\">\n" +
+            "<!ENTITY colon \"&#x0003A;\">\n" +
+            "<!ENTITY comma \"&#x0002C;\">\n" +
+            "<!ENTITY commat \"&#x00040;\">\n" +
+            "<!ENTITY copy \"&#x000A9;\">\n" +
+            "<!ENTITY curren \"&#x000A4;\">\n" +
+            "<!ENTITY darr \"&#x02193;\">\n" +
+            "<!ENTITY deg \"&#x000B0;\">\n" +
+            "<!ENTITY divide \"&#x000F7;\">\n" +
+            "<!ENTITY dollar \"&#x00024;\">\n" +
+            "<!ENTITY equals \"&#x0003D;\">\n" +
+            "<!ENTITY excl \"&#x00021;\">\n" +
+            "<!ENTITY frac12 \"&#x000BD;\">\n" +
+            "<!ENTITY frac14 \"&#x000BC;\">\n" +
+            "<!ENTITY frac18 \"&#x0215B;\">\n" +
+            "<!ENTITY frac34 \"&#x000BE;\">\n" +
+            "<!ENTITY frac38 \"&#x0215C;\">\n" +
+            "<!ENTITY frac58 \"&#x0215D;\">\n" +
+            "<!ENTITY frac78 \"&#x0215E;\">\n" +
+            "<!ENTITY gt \"&#x0003E;\">\n" +
+            "<!ENTITY half \"&#x000BD;\">\n" +
+            "<!ENTITY horbar \"&#x02015;\">\n" +
+            "<!ENTITY hyphen \"&#x02010;\">\n" +
+            "<!ENTITY iexcl \"&#x000A1;\">\n" +
+            "<!ENTITY iquest \"&#x000BF;\">\n" +
+            "<!ENTITY laquo \"&#x000AB;\">\n" +
+            "<!ENTITY larr \"&#x02190;\">\n" +
+            "<!ENTITY lcub \"&#x0007B;\">\n" +
+            "<!ENTITY ldquo \"&#x0201C;\">\n" +
+            "<!ENTITY lowbar \"&#x0005F;\">\n" +
+            "<!ENTITY lpar \"&#x00028;\">\n" +
+            "<!ENTITY lsqb \"&#x0005B;\">\n" +
+            "<!ENTITY lsquo \"&#x02018;\">\n" +
+            "<!ENTITY lt \"&#38;#60;\">\n" +
+            "<!ENTITY micro \"&#x000B5;\">\n" +
+            "<!ENTITY middot \"&#x000B7;\">\n" +
+            "<!ENTITY nbsp \"&#x000A0;\">\n" +
+            "<!ENTITY not \"&#x000AC;\">\n" +
+            "<!ENTITY num \"&#x00023;\">\n" +
+            "<!ENTITY ohm \"&#x02126;\">\n" +
+            "<!ENTITY ordf \"&#x000AA;\">\n" +
+            "<!ENTITY ordm \"&#x000BA;\">\n" +
+            "<!ENTITY para \"&#x000B6;\">\n" +
+            "<!ENTITY percnt \"&#x00025;\">\n" +
+            "<!ENTITY period \"&#x0002E;\">\n" +
+            "<!ENTITY plus \"&#x0002B;\">\n" +
+            "<!ENTITY plusmn \"&#x000B1;\">\n" +
+            "<!ENTITY pound \"&#x000A3;\">\n" +
+            "<!ENTITY quest \"&#x0003F;\">\n" +
+            "<!ENTITY quot \"&#x00022;\">\n" +
+            "<!ENTITY raquo \"&#x000BB;\">\n" +
+            "<!ENTITY rarr \"&#x02192;\">\n" +
+            "<!ENTITY rcub \"&#x0007D;\">\n" +
+            "<!ENTITY rdquo \"&#x0201D;\">\n" +
+            "<!ENTITY reg \"&#x000AE;\">\n" +
+            "<!ENTITY rpar \"&#x00029;\">\n" +
+            "<!ENTITY rsqb \"&#x0005D;\">\n" +
+            "<!ENTITY rsquo \"&#x02019;\">\n" +
+            "<!ENTITY sect \"&#x000A7;\">\n" +
+            "<!ENTITY semi \"&#x0003B;\">\n" +
+            "<!ENTITY shy \"&#x000AD;\">\n" +
+            "<!ENTITY sol \"&#x0002F;\">\n" +
+            "<!ENTITY sung \"&#x0266A;\">\n" +
+            "<!ENTITY sup1 \"&#x000B9;\">\n" +
+            "<!ENTITY sup2 \"&#x000B2;\">\n" +
+            "<!ENTITY sup3 \"&#x000B3;\">\n" +
+            "<!ENTITY times \"&#x000D7;\">\n" +
+            "<!ENTITY trade \"&#x02122;\">\n" +
+            "<!ENTITY uarr \"&#x02191;\">\n" +
+            "<!ENTITY verbar \"&#x0007C;\">\n" +
+            "<!ENTITY yen \"&#x000A5;\">\n" +
+            "<!ENTITY blank \"&#x02423;\">\n" +
+            "<!ENTITY blk12 \"&#x02592;\">\n" +
+            "<!ENTITY blk14 \"&#x02591;\">\n" +
+            "<!ENTITY blk34 \"&#x02593;\">\n" +
+            "<!ENTITY block \"&#x02588;\">\n" +
+            "<!ENTITY bull \"&#x02022;\">\n" +
+            "<!ENTITY caret \"&#x02041;\">\n" +
+            "<!ENTITY check \"&#x02713;\">\n" +
+            "<!ENTITY cir \"&#x025CB;\">\n" +
+            "<!ENTITY clubs \"&#x02663;\">\n" +
+            "<!ENTITY copysr \"&#x02117;\">\n" +
+            "<!ENTITY cross \"&#x02717;\">\n" +
+            "<!ENTITY Dagger \"&#x02021;\">\n" +
+            "<!ENTITY dagger \"&#x02020;\">\n" +
+            "<!ENTITY dash \"&#x02010;\">\n" +
+            "<!ENTITY diams \"&#x02666;\">\n" +
+            "<!ENTITY dlcrop \"&#x0230D;\">\n" +
+            "<!ENTITY drcrop \"&#x0230C;\">\n" +
+            "<!ENTITY dtri \"&#x025BF;\">\n" +
+            "<!ENTITY dtrif \"&#x025BE;\">\n" +
+            "<!ENTITY emsp \"&#x02003;\">\n" +
+            "<!ENTITY emsp13 \"&#x02004;\">\n" +
+            "<!ENTITY emsp14 \"&#x02005;\">\n" +
+            "<!ENTITY ensp \"&#x02002;\">\n" +
+            "<!ENTITY female \"&#x02640;\">\n" +
+            "<!ENTITY ffilig \"&#x0FB03;\">\n" +
+            "<!ENTITY fflig \"&#x0FB00;\">\n" +
+            "<!ENTITY ffllig \"&#x0FB04;\">\n" +
+            "<!ENTITY filig \"&#x0FB01;\">\n" +
+            "<!ENTITY flat \"&#x0266D;\">\n" +
+            "<!ENTITY fllig \"&#x0FB02;\">\n" +
+            "<!ENTITY frac13 \"&#x02153;\">\n" +
+            "<!ENTITY frac15 \"&#x02155;\">\n" +
+            "<!ENTITY frac16 \"&#x02159;\">\n" +
+            "<!ENTITY frac23 \"&#x02154;\">\n" +
+            "<!ENTITY frac25 \"&#x02156;\">\n" +
+            "<!ENTITY frac35 \"&#x02157;\">\n" +
+            "<!ENTITY frac45 \"&#x02158;\">\n" +
+            "<!ENTITY frac56 \"&#x0215A;\">\n" +
+            "<!ENTITY hairsp \"&#x0200A;\">\n" +
+            "<!ENTITY hearts \"&#x02665;\">\n" +
+            "<!ENTITY hellip \"&#x02026;\">\n" +
+            "<!ENTITY hybull \"&#x02043;\">\n" +
+            "<!ENTITY incare \"&#x02105;\">\n" +
+            "<!ENTITY ldquor \"&#x0201E;\">\n" +
+            "<!ENTITY lhblk \"&#x02584;\">\n" +
+            "<!ENTITY loz \"&#x025CA;\">\n" +
+            "<!ENTITY lozf \"&#x029EB;\">\n" +
+            "<!ENTITY lsquor \"&#x0201A;\">\n" +
+            "<!ENTITY ltri \"&#x025C3;\">\n" +
+            "<!ENTITY ltrif \"&#x025C2;\">\n" +
+            "<!ENTITY male \"&#x02642;\">\n" +
+            "<!ENTITY malt \"&#x02720;\">\n" +
+            "<!ENTITY marker \"&#x025AE;\">\n" +
+            "<!ENTITY mdash \"&#x02014;\">\n" +
+            "<!ENTITY mldr \"&#x02026;\">\n" +
+            "<!ENTITY natur \"&#x0266E;\">\n" +
+            "<!ENTITY ndash \"&#x02013;\">\n" +
+            "<!ENTITY nldr \"&#x02025;\">\n" +
+            "<!ENTITY numsp \"&#x02007;\">\n" +
+            "<!ENTITY phone \"&#x0260E;\">\n" +
+            "<!ENTITY puncsp \"&#x02008;\">\n" +
+            "<!ENTITY rdquor \"&#x0201D;\">\n" +
+            "<!ENTITY rect \"&#x025AD;\">\n" +
+            "<!ENTITY rsquor \"&#x02019;\">\n" +
+            "<!ENTITY rtri \"&#x025B9;\">\n" +
+            "<!ENTITY rtrif \"&#x025B8;\">\n" +
+            "<!ENTITY rx \"&#x0211E;\">\n" +
+            "<!ENTITY sext \"&#x02736;\">\n" +
+            "<!ENTITY sharp \"&#x0266F;\">\n" +
+            "<!ENTITY spades \"&#x02660;\">\n" +
+            "<!ENTITY squ \"&#x025A1;\">\n" +
+            "<!ENTITY squf \"&#x025AA;\">\n" +
+            "<!ENTITY star \"&#x02606;\">\n" +
+            "<!ENTITY starf \"&#x02605;\">\n" +
+            "<!ENTITY target \"&#x02316;\">\n" +
+            "<!ENTITY telrec \"&#x02315;\">\n" +
+            "<!ENTITY thinsp \"&#x02009;\">\n" +
+            "<!ENTITY uhblk \"&#x02580;\">\n" +
+            "<!ENTITY ulcrop \"&#x0230F;\">\n" +
+            "<!ENTITY urcrop \"&#x0230E;\">\n" +
+            "<!ENTITY utri \"&#x025B5;\">\n" +
+            "<!ENTITY utrif \"&#x025B4;\">\n" +
+            "<!ENTITY vellip \"&#x022EE;\">\n" +
+            "<!ENTITY aleph \"&#x02135;\">\n" +
+            "<!ENTITY and \"&#x02227;\">\n" +
+            "<!ENTITY ang90 \"&#x0221F;\">\n" +
+            "<!ENTITY angsph \"&#x02222;\">\n" +
+            "<!ENTITY angst \"&#x0212B;\">\n" +
+            "<!ENTITY ap \"&#x02248;\">\n" +
+            "<!ENTITY becaus \"&#x02235;\">\n" +
+            "<!ENTITY bernou \"&#x0212C;\">\n" +
+            "<!ENTITY bottom \"&#x022A5;\">\n" +
+            "<!ENTITY cap \"&#x02229;\">\n" +
+            "<!ENTITY compfn \"&#x02218;\">\n" +
+            "<!ENTITY cong \"&#x02245;\">\n" +
+            "<!ENTITY conint \"&#x0222E;\">\n" +
+            "<!ENTITY cup \"&#x0222A;\">\n" +
+            "<!ENTITY Dot \"&#x000A8;\">\n" +
+            "<!ENTITY DotDot \" &#x020DC;\">\n" +
+            "<!ENTITY equiv \"&#x02261;\">\n" +
+            "<!ENTITY exist \"&#x02203;\">\n" +
+            "<!ENTITY fnof \"&#x00192;\">\n" +
+            "<!ENTITY forall \"&#x02200;\">\n" +
+            "<!ENTITY ge \"&#x02265;\">\n" +
+            "<!ENTITY hamilt \"&#x0210B;\">\n" +
+            "<!ENTITY iff \"&#x021D4;\">\n" +
+            "<!ENTITY infin \"&#x0221E;\">\n" +
+            "<!ENTITY int \"&#x0222B;\">\n" +
+            "<!ENTITY isin \"&#x02208;\">\n" +
+            "<!ENTITY lagran \"&#x02112;\">\n" +
+            "<!ENTITY lang \"&#x02329;\">\n" +
+            "<!ENTITY lArr \"&#x021D0;\">\n" +
+            "<!ENTITY le \"&#x02264;\">\n" +
+            "<!ENTITY lowast \"&#x02217;\">\n" +
+            "<!ENTITY minus \"&#x02212;\">\n" +
+            "<!ENTITY mnplus \"&#x02213;\">\n" +
+            "<!ENTITY nabla \"&#x02207;\">\n" +
+            "<!ENTITY ne \"&#x02260;\">\n" +
+            "<!ENTITY ni \"&#x0220B;\">\n" +
+            "<!ENTITY notin \"&#x02209;\">\n" +
+            "<!ENTITY or \"&#x02228;\">\n" +
+            "<!ENTITY order \"&#x02134;\">\n" +
+            "<!ENTITY par \"&#x02225;\">\n" +
+            "<!ENTITY part \"&#x02202;\">\n" +
+            "<!ENTITY permil \"&#x02030;\">\n" +
+            "<!ENTITY perp \"&#x022A5;\">\n" +
+            "<!ENTITY phmmat \"&#x02133;\">\n" +
+            "<!ENTITY Prime \"&#x02033;\">\n" +
+            "<!ENTITY prime \"&#x02032;\">\n" +
+            "<!ENTITY prop \"&#x0221D;\">\n" +
+            "<!ENTITY radic \"&#x0221A;\">\n" +
+            "<!ENTITY rang \"&#x0232A;\">\n" +
+            "<!ENTITY rArr \"&#x021D2;\">\n" +
+            "<!ENTITY sim \"&#x0223C;\">\n" +
+            "<!ENTITY sime \"&#x02243;\">\n" +
+            "<!ENTITY square \"&#x025A1;\">\n" +
+            "<!ENTITY sub \"&#x02282;\">\n" +
+            "<!ENTITY sube \"&#x02286;\">\n" +
+            "<!ENTITY sup \"&#x02283;\">\n" +
+            "<!ENTITY supe \"&#x02287;\">\n" +
+            "<!ENTITY tdot \" &#x020DB;\">\n" +
+            "<!ENTITY there4 \"&#x02234;\">\n" +
+            "<!ENTITY tprime \"&#x02034;\">\n" +
+            "<!ENTITY Verbar \"&#x02016;\">\n" +
+            "<!ENTITY wedgeq \"&#x02259;\">";
+
+    public static boolean allEntitiesAccountedFor(final Node xmlNode, final DocBookVersion format, final List<String> entities) {
+        final NodeList nodeList = xmlNode.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); ++i) {
+            final Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+                final String nodeName = node.getNodeName();
+                /*
+                    See if this entity has been supplied in the list
+                 */
+                if (entities == null || entities.indexOf(nodeName) == -1) {
+                    /*
+                        See if this entity is a default one
+                     */
+                    if (format == DocBookVersion.DOCBOOK_50 || format == DocBookVersion.DOCBOOK_45) {
+                        if (!DOCBOOK_ENTITIES.containsKey(nodeName)) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                if (!allEntitiesAccountedFor(node, format, entities)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean allEntitiesAccountedFor(final Node xmlNode, final DocBookVersion format, final String entities) {
+        final NodeList nodeList = xmlNode.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); ++i) {
+            final Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+                final String nodeName = node.getNodeName();
+                final Pattern entityPattern = Pattern.compile("<!ENTITY\\s+" + nodeName + "\\s+");
+                if (entities == null || !entityPattern.matcher(entities).find()) {
+                    if (format == DocBookVersion.DOCBOOK_50 || format == DocBookVersion.DOCBOOK_45) {
+                        if (!DOCBOOK_ENTITIES.containsKey(nodeName)) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                if (!allEntitiesAccountedFor(node, format, entities)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     /**
      * Finds the first title element in a DocBook XML file.

@@ -2,10 +2,14 @@ package org.jboss.pressgang.ccms.utils.common;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -74,5 +78,80 @@ public class DocBookUtilitiesTest {
 
         // Then
         assertThat(nodes.size(), is(3));
+    }
+
+    public static Document getXMLEntityTestDoc() throws SAXException {
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<section>\n");
+        stringBuilder.append("	<title>A Title</title>\n");
+        stringBuilder.append("	<para>\n");
+        stringBuilder.append("		This is a standard docbook entity: &nbsp;\n");
+        stringBuilder.append("	</para>\n");
+        stringBuilder.append("	<para>\n");
+        stringBuilder.append("		This is a custom entity: &PRODUCT;\n");
+        stringBuilder.append("	</para>\n");
+        stringBuilder.append("</section>\n");
+
+        return XMLUtilities.convertStringToDocument(stringBuilder.toString(), true);
+    }
+
+    /**
+     * Confirm that custom and default docbook entities are found by allEntitiesAccountedFor
+     * @throws SAXException
+     */
+    @Test
+    public void testAllStringEntitiesAccountedFor() throws SAXException {
+        assertTrue(DocBookUtilities.allEntitiesAccountedFor(
+                getXMLEntityTestDoc(),
+                DocBookVersion.DOCBOOK_45,
+                "<!ENTITY PRODUCT \"A Test\">"));
+    }
+
+    /**
+     * Confirm that custom and default docbook entities are found by allEntitiesAccountedFor
+     * @throws SAXException
+     */
+    @Test
+    public void testAllListEntitiesAccountedFor() throws SAXException {
+        assertTrue(DocBookUtilities.allEntitiesAccountedFor(
+                getXMLEntityTestDoc(),
+                DocBookVersion.DOCBOOK_45,
+                new ArrayList<String>() {{ add("PRODUCT"); }}));
+    }
+
+    /**
+     * Confirm that missing custom entities are found by allEntitiesAccountedFor
+     * @throws SAXException
+     */
+    @Test
+    public void testMissingCustomEntitiesFound() throws SAXException {
+        assertFalse(DocBookUtilities.allEntitiesAccountedFor(
+                getXMLEntityTestDoc(),
+                DocBookVersion.DOCBOOK_45,
+                ""));
+    }
+
+    /**
+     * Confirm that missing custom entities are found by allEntitiesAccountedFor
+     * @throws SAXException
+     */
+    @Test
+    public void testMissingCustomEntitiesFound2() throws SAXException {
+        assertFalse(DocBookUtilities.allEntitiesAccountedFor(
+                getXMLEntityTestDoc(),
+                DocBookVersion.DOCBOOK_45,
+                (String)null));
+    }
+
+    /**
+     * Confirm that missing default entities are found by allEntitiesAccountedFor
+     * @throws SAXException
+     */
+    @Test
+    public void testMissingDefaultEntitiesFound() throws SAXException {
+        assertFalse(DocBookUtilities.allEntitiesAccountedFor(
+                getXMLEntityTestDoc(),
+                null,
+                "<!ENTITY PRODUCT \"A Test\">"));
     }
 }
