@@ -27,7 +27,6 @@ import java.util.Random;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.sort.EntitySubstitutionBoundaryDataBoundaryStartSort;
 import org.jboss.pressgang.ccms.utils.structures.EntitySubstitutionBoundaryData;
 import org.jboss.pressgang.ccms.utils.structures.InjectionError;
@@ -523,7 +522,7 @@ public class XMLUtilities {
         final NodeList children = parent.getChildNodes();
         for (int childIndex = 0; childIndex < children.getLength(); ++childIndex) {
             final Node child = children.item(childIndex);
-            if (child.getNodeName().equals("title")) {
+            if (child.getNodeName().equals(type)) {
                 parent.removeChild(child);
                 break;
             }
