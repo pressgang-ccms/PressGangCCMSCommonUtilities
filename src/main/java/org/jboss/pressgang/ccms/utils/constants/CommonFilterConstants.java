@@ -95,14 +95,15 @@ public class CommonFilterConstants {
     public static final String STRING_MATCHES_SUFFIX = "-matches";
     public static final String STRING_CONTAINS_SUFFIX = "-contains";
 
+    // Removing hibernate search for easier deployment in a cluster (https://bugzilla.redhat.com/show_bug.cgi?id=1090748)
     /**
      * The URL variable that defines the topic text search field
      */
-    public static final String TOPIC_TEXT_SEARCH_FILTER_VAR = "topicTextSearch";
+    //public static final String TOPIC_TEXT_SEARCH_FILTER_VAR = "topicTextSearch";
     /**
      * The description of the topic text search field
      */
-    public static final String TOPIC_TEXT_SEARCH_FILTER_VAR_DESC = "Topic Text Search";
+    //public static final String TOPIC_TEXT_SEARCH_FILTER_VAR_DESC = "Topic Text Search";
     /**
      * The URL variable that defines the topic IDs search field
      */
