@@ -13,7 +13,6 @@ import java.util.Map;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
@@ -61,18 +60,17 @@ public class DocBookUtilities {
     /**
      * The Docbook elements that contain translatable text
      */
-    public static final ArrayList<String> TRANSLATABLE_ELEMENTS = CollectionUtilities.toArrayList(
-            new String[]{"ackno", "bridgehead", "caption", "conftitle", "contrib", "entry", "firstname", "glossterm", "indexterm",
-                    "jobtitle", "keyword", "label", "lastname", "lineannotation", "lotentry", "member", "orgdiv", "orgname", "othername",
-                    "para", "phrase", "productname", "refclass", "refdescriptor", "refentrytitle", "refmiscinfo", "refname",
-                    "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg", "segtitle",
-                    "simpara", "subtitle", "surname", "term", "termdef", "tertiaryie", "title", "titleabbrev", "screen",
-                    "programlisting", "literallayout"});
+    public static final List<String> TRANSLATABLE_ELEMENTS = Arrays.asList("ackno", "bridgehead", "caption", "conftitle", "contrib",
+            "entry", "firstname", "glossentry", "indexterm", "jobtitle", "keyword", "label", "lastname", "lineannotation", "lotentry",
+            "member", "orgdiv", "orgname", "othername", "para", "phrase", "productname", "refclass", "refdescriptor", "refentrytitle",
+            "refmiscinfo", "refname", "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg",
+            "segtitle", "simpara", "subtitle", "surname", "td", "term", "termdef", "tertiaryie", "textobject", "title", "titleabbrev",
+            "screen", "programlisting", "literallayout");
     /**
      * The Docbook elements that contain translatable text, and need to be kept inline
      */
     public static final ArrayList<String> INLINE_ELEMENTS = CollectionUtilities.toArrayList(
-            new String[]{"footnote", "citerefentry", "indexterm", "productname", "phrase"});
+            new String[]{"footnote", "citerefentry", "indexterm", "orgname", "productname", "phrase", "textobject"});
     /**
      * The Docbook elements that should not have their text reformatted
      */
@@ -1067,8 +1065,7 @@ public class DocBookUtilities {
         put("wedgeq", "&#x02259;");
     }};
 
-    public static final String DOCBOOK_ENTITIES_STRING =
-            "<!ENTITY euro \"&#x20AC;\">\n" +
+    public static final String DOCBOOK_ENTITIES_STRING = "<!ENTITY euro \"&#x20AC;\">\n" +
             "<!ENTITY cularr \"&#x021B6;\">\n" +
             "<!ENTITY curarr \"&#x021B7;\">\n" +
             "<!ENTITY dArr \"&#x021D3;\">\n" +
@@ -2152,7 +2149,8 @@ public class DocBookUtilities {
      * @return The escaped title string.
      */
     public static String escapeTitle(final String title) {
-        final String escapedTitle = title.replaceAll("^[^" + UNICODE_TITLE_START_CHAR +"]*", "").replaceAll("[^" + UNICODE_WORD + ". -]", "");
+        final String escapedTitle = title.replaceAll("^[^" + UNICODE_TITLE_START_CHAR + "]*", "").replaceAll("[^" + UNICODE_WORD + ". -]",
+                "");
         if (isNullOrEmpty(escapedTitle)) {
             return "";
         } else {
@@ -2336,7 +2334,8 @@ public class DocBookUtilities {
                     firstNode = firstNode.getNextSibling();
                 }
 
-                // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title, whereas 4.5 has to be before the title.
+                // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title,
+                // whereas 4.5 has to be before the title.
                 if (docBookVersion == DocBookVersion.DOCBOOK_50) {
                     // Set the section title based on if the first node is a info node.
                     if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME)) {
@@ -2432,7 +2431,8 @@ public class DocBookUtilities {
         doc.getDocumentElement().setAttribute("version", "5.0");
     }
 
-    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities, final boolean includeDTD) {
+    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities,
+            final boolean includeDTD) {
         if (version == null) throw new IllegalArgumentException("format cannot be null");
 
         if (version == DocBookVersion.DOCBOOK_45) {
@@ -2452,7 +2452,8 @@ public class DocBookUtilities {
         retValue.append("<!DOCTYPE " + rootElementName);
         if (includeDTD) {
             retValue.append(" PUBLIC \"-//OASIS//DTD DocBook XML V5.0//EN\" \"http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd\"");
-        };
+        }
+        ;
         retValue.append(" [\n");
         if (entities != null) {
             retValue.append(entities);
@@ -2467,7 +2468,8 @@ public class DocBookUtilities {
         retValue.append("<!DOCTYPE " + rootElementName);
         if (includeDTD) {
             retValue.append(" PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\"");
-        };
+        }
+        ;
         retValue.append(" [\n");
         if (entities != null) {
             retValue.append(entities);
@@ -2488,8 +2490,9 @@ public class DocBookUtilities {
             fixedElement = fixedElement.replaceFirst(" version\\s*=\\s*('|\").*?('|\")", "");
             // Remove any current xlink namespace declaration
             fixedElement = fixedElement.replaceFirst(" xmlns:xlink\\s*=\\s*('|\").*?('|\")", "");
-            return xml.replaceFirst(element, fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
-                    " version=\"5.0\"");
+            return xml.replaceFirst(element,
+                    fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
+                            " version=\"5.0\"");
         } else {
             return xml;
         }
@@ -3792,6 +3795,7 @@ public class DocBookUtilities {
 
     /**
      * Some docbook elements need to be wrapped up so they can be properly transformed by the docbook XSL.
+     *
      * @param xmlDoc
      */
     public static void wrapForRendering(final Document xmlDoc) {
@@ -3855,7 +3859,7 @@ public class DocBookUtilities {
     /**
      * Validates a Revision History XML DOM Document to ensure that the content is valid for use with Publican.
      *
-     * @param doc The DOM Document that represents the XML that is to be validated.
+     * @param doc         The DOM Document that represents the XML that is to be validated.
      * @param dateFormats The valid date formats that can be used.
      * @return Null if there weren't any errors otherwise an error message that states what is wrong.
      */
