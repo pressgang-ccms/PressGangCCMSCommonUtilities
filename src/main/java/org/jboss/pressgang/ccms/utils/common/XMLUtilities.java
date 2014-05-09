@@ -652,6 +652,12 @@ public class XMLUtilities {
                 0);
     }
 
+    public static String convertNodeToString(final Node startNode, boolean includeElementName, final List<String> verbatimElements,
+            final List<String> inlineElements, final List<String> contentsInlineElements, final boolean tabIndent) {
+        return convertNodeToString(startNode, includeElementName, false, false, verbatimElements, inlineElements, contentsInlineElements,
+                tabIndent, 1, 0);
+    }
+
     /**
      * Converts a Node to a String.
      *
@@ -663,6 +669,22 @@ public class XMLUtilities {
     public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
             final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
             final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel) {
+        return convertNodeToString(startNode, includeElementName, verbatim, inline, verbatimElements, inlineElements,
+                contentsInlineElements, tabIndent, indentCount, indentLevel, false);
+    }
+
+    /**
+     * Converts a Node to a String.
+     *
+     * @param node               The Node to be converted
+     * @param includeElementName true if the string should include the name of the node, or false if it is just to include the
+     *                           contents of the node
+     * @return The String representation of the Node
+     */
+    public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
+    final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
+    final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
+            boolean treatAsDocumentRoot) {
         /* Find out if this node is a document */
         final Node node = startNode instanceof Document ? ((Document) startNode).getDocumentElement() : startNode;
 
@@ -691,7 +713,7 @@ public class XMLUtilities {
         }
 
         /* Find out of this node is the document root node */
-        final boolean documentRoot = node.getOwnerDocument().getDocumentElement() == node;
+        final boolean documentRoot = node.getOwnerDocument().getDocumentElement() == node || treatAsDocumentRoot;
 
         final boolean firstNode = previousNode == null;
 
@@ -739,7 +761,7 @@ public class XMLUtilities {
                      * if this is the first text node, remove all preceeding whitespace, and then add the indent
                      */
                     final boolean firstNotInlinedTextNode = !inline && firstNode;
-                    if (firstNotInlinedTextNode) {
+                    if (firstNotInlinedTextNode && !treatAsDocumentRoot) {
                         appendIndent(retValue, tabIndent, indentLevel, indentCount);
                     }
 
@@ -857,16 +879,18 @@ public class XMLUtilities {
         if (children.getLength() == 0) {
             final String nodeTextContent = node.getTextContent();
             if (nodeTextContent.length() == 0) {
-                if (includeElementName) stringBuffer.append("/>");
+                if (includeElementName) stringBuffer.append(" />");
             } else {
                 stringBuffer.append(nodeTextContent);
 
-                /* indent */
-                if (!verbatim && !inline && !inlineElements.contains(nodeName))
-                    appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
-
                 /* close that tag */
-                if (includeElementName) stringBuffer.append("</").append(nodeName).append('>');
+                if (includeElementName) {
+                    /* indent */
+                    if (!verbatim && !inline && !inlineElements.contains(nodeName))
+                        appendIndent(stringBuffer, tabIndent, indentLevel, indentCount);
+
+                    stringBuffer.append("</").append(nodeName).append('>');
+                }
             }
         } else {
             if (includeElementName) stringBuffer.append(">");
@@ -875,8 +899,10 @@ public class XMLUtilities {
             final boolean verbatimMyChildren = verbatim || verbatimElements.contains(nodeName);
 
             for (int i = 0; i < children.getLength(); ++i) {
+                final int newIndentLevel = includeElementName ? indentLevel + 1 : indentLevel;
                 final String childToString = convertNodeToString(children.item(i), true, verbatimMyChildren, inlineMyChildren,
-                        verbatimElements, inlineElements, contentsInlineElements, tabIndent, indentCount, indentLevel + 1);
+                        verbatimElements, inlineElements, contentsInlineElements, tabIndent, indentCount, newIndentLevel,
+                        !includeElementName);
                 if (childToString.length() != 0) stringBuffer.append(childToString);
             }
 
