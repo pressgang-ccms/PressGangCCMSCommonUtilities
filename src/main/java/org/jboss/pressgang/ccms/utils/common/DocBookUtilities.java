@@ -3275,6 +3275,7 @@ public class DocBookUtilities {
      * @param allowDuplicates If duplicate translation strings should be created in the returned list.
      * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
      */
+    @Deprecated
     public static List<StringToNodeCollection> getTranslatableStringsV2(final Document xml, final boolean allowDuplicates) {
         if (xml == null) return null;
 
@@ -3284,6 +3285,42 @@ public class DocBookUtilities {
         for (int i = 0; i < nodes.getLength(); ++i) {
             final Node node = nodes.item(i);
             getTranslatableStringsFromNodeV2(node, retValue, allowDuplicates, new XMLProperties());
+        }
+
+        return retValue;
+    }
+
+    /**
+     * Get the Translatable Strings from an XML Document. This method will return of Translation strings to XML DOM nodes within
+     * the XML Document.
+     *
+     * @param xml             The XML to get the translatable strings from.
+     * @param allowDuplicates If duplicate translation strings should be created in the returned list.
+     * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
+     */
+    public static List<StringToNodeCollection> getTranslatableStringsV3(final Document xml, final boolean allowDuplicates) {
+        if (xml == null) return null;
+
+        return getTranslatableStringsV3(xml.getDocumentElement(), allowDuplicates);
+    }
+
+    /**
+     * Get the Translatable Strings from an XML Node. This method will return of Translation strings to XML DOM nodes within
+     * the XML Document.
+     *
+     * @param node             The XML to get the translatable strings from.
+     * @param allowDuplicates If duplicate translation strings should be created in the returned list.
+     * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
+     */
+    public static List<StringToNodeCollection> getTranslatableStringsV3(final Node node, final boolean allowDuplicates) {
+        if (node == null) return null;
+
+        final List<StringToNodeCollection> retValue = new LinkedList<StringToNodeCollection>();
+
+        final NodeList nodes = node.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); ++i) {
+            final Node childNode = nodes.item(i);
+            getTranslatableStringsFromNodeV3(childNode, retValue, allowDuplicates, new XMLProperties());
         }
 
         return retValue;
@@ -3485,6 +3522,7 @@ public class DocBookUtilities {
      * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
      * @param props              A set of XML Properties for the Node.
      */
+    @Deprecated
     private static void getTranslatableStringsFromNodeV2(final Node node, final List<StringToNodeCollection> translationStrings,
             final boolean allowDuplicates, final XMLProperties props) {
         if (node == null || translationStrings == null) return;
@@ -3606,6 +3644,142 @@ public class DocBookUtilities {
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 final Node child = nodeList.item(i);
                 getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperties);
+            }
+        }
+    }
+
+    /**
+     * Get the Translatable String to Node collections from an XML DOM Node.
+     *
+     * @param node               The node to get the translatable elements from.
+     * @param translationStrings The list of translation StringToNodeCollection objects to add to.
+     * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
+     * @param props              A set of XML Properties for the Node.
+     */
+    private static void getTranslatableStringsFromNodeV3(final Node node, final List<StringToNodeCollection> translationStrings,
+            final boolean allowDuplicates, final XMLProperties props) {
+        if (node == null || translationStrings == null) return;
+
+        XMLProperties xmlProperties = new XMLProperties(props);
+
+        final String nodeName = node.getNodeName();
+        final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
+
+        final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
+        final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
+        final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
+        if (!xmlProperties.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperties.setInline(true);
+        if (!xmlProperties.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperties.setVerbatim(true);
+
+        /*
+         * this element has translatable strings if:
+         *
+         * 1. a translatableElement
+         *
+         * OR
+         *
+         * 2. a standaloneElement without a translatableParentElement
+         *
+         * 3. not a standaloneElement and not an inlineElement
+         */
+
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement && !xmlProperties.isInline
+                ())))) {
+            final NodeList children = node.getChildNodes();
+            final boolean hasChildren = children == null || children.getLength() != 0;
+
+            // dump the node if it has no children
+            if (!hasChildren) {
+                final String nodeText = XMLUtilities.convertNodeToString(node, false);
+                final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
+
+                if (xmlProperties.isVerbatim()) {
+                    addTranslationToNodeDetailsToCollection(nodeText, node, allowDuplicates, translationStrings);
+                } else if (!cleanedNodeText.isEmpty() && !cleanedNodeText.matches("^\\s+$")) {
+                    addTranslationToNodeDetailsToCollection(cleanedNodeText, node, allowDuplicates, translationStrings);
+                }
+
+            }
+            /*
+             * dump all child nodes until we hit one that itself contains a translatable element. in effect the translation
+             * strings can contain up to one level of xml elements.
+             */
+            else {
+                ArrayList<Node> nodes = new ArrayList<Node>();
+                String translatableString = "";
+                boolean removeWhitespaceFromStart = true;
+
+                final int childrenLength = children.getLength();
+                for (int i = 0; i < childrenLength; ++i) {
+                    final Node child = children.item(i);
+                    final String childNodeName = child.getNodeName();
+
+                    // does this child have another level of translatable tags?
+                    final boolean containsTranslatableTags = doesElementContainTranslatableContentV2(child);
+                    final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
+                    final boolean childInlineElement = INLINE_ELEMENTS.contains(childNodeName);
+
+                    // if so, save the string we have been building up, process the child, and start building up a new string
+                    if ((containsTranslatableTags || childTranslatableElement) && !childInlineElement) {
+                        if (nodes.size() != 0) {
+                            /*
+                             * We have found a child node that itself contains some translatable children. In this case we
+                             * create a new translatable string. It is possible that the translatableString has some
+                             * insignificant trailing whitespace, because the call to the cleanTranslationText function in the
+                             * else statement below has assumed that the node being processed was not the last one in the
+                             * translatable string, making the trailing whitespace important. So we clean up the trailing
+                             * whitespace here.
+                             */
+
+                            final Matcher matcher = XMLUtilities.TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            if (matcher.matches()) translatableString = matcher.group("content");
+
+                            addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
+
+                            translatableString = "";
+                            nodes = new ArrayList<Node>();
+                            removeWhitespaceFromStart = true;
+                        }
+
+                        getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
+                    } else {
+                        final String childName = child.getNodeName();
+                        final String childText = XMLUtilities.convertNodeToString(child, true);
+
+                        final boolean isVerbatimNode = xmlProperties.isVerbatim() || VERBATIM_ELEMENTS.contains(childName);
+                        final String thisTranslatableString;
+                        if (isVerbatimNode) {
+                            thisTranslatableString = childText;
+                        } else {
+                            thisTranslatableString = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
+                        }
+
+                        if (!thisTranslatableString.isEmpty() && (isVerbatimNode || !thisTranslatableString.matches("^\\s+$"))) {
+                            translatableString += thisTranslatableString;
+                            nodes.add(child);
+
+                            /*
+                             * We've processed the first element in the string so now we don't want to remove whitespace from
+                             * the start of the String
+                             */
+                            removeWhitespaceFromStart = false;
+                        }
+                    }
+                }
+
+                // save the last translated string
+                if (nodes.size() != 0) {
+                    addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
+
+                    translatableString = "";
+                }
+            }
+        } else {
+            // if we hit a non-translatable element, process its children
+            final NodeList nodeList = node.getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); ++i) {
+                final Node child = nodeList.item(i);
+                getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
             }
         }
     }
