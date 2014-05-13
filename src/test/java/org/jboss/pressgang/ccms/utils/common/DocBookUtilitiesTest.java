@@ -68,16 +68,38 @@ public class DocBookUtilitiesTest {
                 "from your Red Hat Enterprise Virtualization Manager server and importing it into your client's certificate store.\n" +
                 "\t</para>\n" +
                 "\t<para>\n" +
-                "\t\t<!-- Inject: 3737 -->\n"+
+                "\t\t<!-- Inject: 3737 -->\n" +
                 "\t</para>\n" +
                 "</section>";
         final Document doc = XMLUtilities.convertStringToDocument(xml);
 
         // When
-        List<StringToNodeCollection> nodes = DocBookUtilities.getTranslatableStringsV2 (doc, false);
+        List<StringToNodeCollection> nodes = DocBookUtilities.getTranslatableStringsV3(doc, false);
 
         // Then
         assertThat(nodes.size(), is(3));
+    }
+
+    @Test
+    public void shouldFindTranslatableElementsWhenCommentsUsed() throws SAXException {
+        // Given
+        String xml = "<section>\n" +
+                "\t<para>\n" +
+                "\t\tOpen the <filename>deploy.cab</filename> \n" +
+                "\t\t<!--filename>WindowsXP-KB838080-SP2-DeployTools-ENU.cab</filename--> file and add its contents to " +
+                "<filename>c:\\sysprep</filename>.\n" +
+                "\t</para>\n" +
+                "</section>";
+        final Document doc = XMLUtilities.convertStringToDocument(xml);
+
+        // When
+        List<StringToNodeCollection> nodes = DocBookUtilities.getTranslatableStringsV3(doc, false);
+
+        // Then
+        assertThat(nodes.size(), is(1));
+        assertThat(nodes.get(0).getTranslationString(),
+                is("Open the <filename>deploy.cab</filename> <!--filename>WindowsXP-KB838080-SP2-DeployTools-ENU.cab</filename--> file " +
+                        "and add its contents to <filename>c:\\sysprep</filename>."));
     }
 
     public static Document getXMLEntityTestDoc() throws SAXException {
@@ -97,61 +119,54 @@ public class DocBookUtilitiesTest {
 
     /**
      * Confirm that custom and default docbook entities are found by allEntitiesAccountedFor
+     *
      * @throws SAXException
      */
     @Test
     public void testAllStringEntitiesAccountedFor() throws SAXException {
-        assertTrue(DocBookUtilities.allEntitiesAccountedFor(
-                getXMLEntityTestDoc(),
-                DocBookVersion.DOCBOOK_45,
-                "<!ENTITY PRODUCT \"A Test\">"));
+        assertTrue(
+                DocBookUtilities.allEntitiesAccountedFor(getXMLEntityTestDoc(), DocBookVersion.DOCBOOK_45, "<!ENTITY PRODUCT \"A Test\">"));
     }
 
     /**
      * Confirm that custom and default docbook entities are found by allEntitiesAccountedFor
+     *
      * @throws SAXException
      */
     @Test
     public void testAllListEntitiesAccountedFor() throws SAXException {
-        assertTrue(DocBookUtilities.allEntitiesAccountedFor(
-                getXMLEntityTestDoc(),
-                DocBookVersion.DOCBOOK_45,
-                new ArrayList<String>() {{ add("PRODUCT"); }}));
+        assertTrue(DocBookUtilities.allEntitiesAccountedFor(getXMLEntityTestDoc(), DocBookVersion.DOCBOOK_45, new ArrayList<String>() {{
+            add("PRODUCT");
+        }}));
     }
 
     /**
      * Confirm that missing custom entities are found by allEntitiesAccountedFor
+     *
      * @throws SAXException
      */
     @Test
     public void testMissingCustomEntitiesFound() throws SAXException {
-        assertFalse(DocBookUtilities.allEntitiesAccountedFor(
-                getXMLEntityTestDoc(),
-                DocBookVersion.DOCBOOK_45,
-                ""));
+        assertFalse(DocBookUtilities.allEntitiesAccountedFor(getXMLEntityTestDoc(), DocBookVersion.DOCBOOK_45, ""));
     }
 
     /**
      * Confirm that missing custom entities are found by allEntitiesAccountedFor
+     *
      * @throws SAXException
      */
     @Test
     public void testMissingCustomEntitiesFound2() throws SAXException {
-        assertFalse(DocBookUtilities.allEntitiesAccountedFor(
-                getXMLEntityTestDoc(),
-                DocBookVersion.DOCBOOK_45,
-                (String)null));
+        assertFalse(DocBookUtilities.allEntitiesAccountedFor(getXMLEntityTestDoc(), DocBookVersion.DOCBOOK_45, (String) null));
     }
 
     /**
      * Confirm that missing default entities are found by allEntitiesAccountedFor
+     *
      * @throws SAXException
      */
     @Test
     public void testMissingDefaultEntitiesFound() throws SAXException {
-        assertFalse(DocBookUtilities.allEntitiesAccountedFor(
-                getXMLEntityTestDoc(),
-                null,
-                "<!ENTITY PRODUCT \"A Test\">"));
+        assertFalse(DocBookUtilities.allEntitiesAccountedFor(getXMLEntityTestDoc(), null, "<!ENTITY PRODUCT \"A Test\">"));
     }
 }

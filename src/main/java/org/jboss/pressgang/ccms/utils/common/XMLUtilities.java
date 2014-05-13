@@ -83,18 +83,8 @@ public class XMLUtilities {
     public static final String ENTITY_END = ">";
     public static final String PREAMBLE_START = "<?xml";
     public static final String PREAMBLE_END = ">";
-    public static final String TRAILING_WHITESPACE_RE = "^(?<content>.*?)\\s+$";
-    public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
-    public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
 
     public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);");
-
-    public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE,
-            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
-    public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE,
-            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
-    public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE,
-            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
 
     /**
      * A regular expression that identifies a topic id

@@ -31,11 +31,20 @@ import org.w3c.dom.Text;
  * with DocBook
  */
 public class DocBookUtilities {
+    public static final String TRAILING_WHITESPACE_RE = "^(?<content>.*?)\\s+$";
+    public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
+    public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
+    public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final Logger LOG = LoggerFactory.getLogger(DocBookUtilities.class);
 
     // See http://stackoverflow.com/a/4307261/1330640
-    private static final String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
-    private static final String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
+    public static final String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
+    public static final String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
 
     private static final Pattern THURSDAY_DATE_RE = Pattern.compile("Thurs?(?!s?day)", java.util.regex.Pattern.CASE_INSENSITIVE);
     private static final Pattern TUESDAY_DATE_RE = Pattern.compile("Tues(?!day)", java.util.regex.Pattern.CASE_INSENSITIVE);
@@ -3473,7 +3482,7 @@ public class DocBookUtilities {
                              * whitespace here.
                              */
 
-                            final Matcher matcher = XMLUtilities.TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
@@ -3598,7 +3607,7 @@ public class DocBookUtilities {
                              * whitespace here.
                              */
 
-                            final Matcher matcher = XMLUtilities.TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
@@ -3731,7 +3740,7 @@ public class DocBookUtilities {
                              * whitespace here.
                              */
 
-                            final Matcher matcher = XMLUtilities.TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
@@ -3754,16 +3763,20 @@ public class DocBookUtilities {
                             thisTranslatableString = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
                         }
 
-                        if (!thisTranslatableString.isEmpty() && (isVerbatimNode || !thisTranslatableString.matches("^\\s+$"))) {
-                            translatableString += thisTranslatableString;
-                            nodes.add(child);
-
-                            /*
-                             * We've processed the first element in the string so now we don't want to remove whitespace from
-                             * the start of the String
-                             */
-                            removeWhitespaceFromStart = false;
+                        if (isVerbatimNode || !thisTranslatableString.isEmpty()) {
+                            if (!isVerbatimNode && thisTranslatableString.matches("^\\s+$")) {
+                                // Pure whitespace nodes should be collapsed down to a single space, unless it is the start or end
+                                if (!(i == 0 || i == childrenLength - 1)) {
+                                    translatableString += " ";
+                                    removeWhitespaceFromStart = false;
+                                }
+                            } else {
+                                translatableString += thisTranslatableString;
+                                removeWhitespaceFromStart = false;
+                            }
                         }
+
+                        nodes.add(child);
                     }
                 }
 
@@ -3906,9 +3919,6 @@ public class DocBookUtilities {
             final boolean removeWhitespaceFromEnd) {
         String retValue = XMLUtilities.cleanText(input);
 
-        final boolean hasStartWhiteSpace = XMLUtilities.PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches();
-        final boolean hasEndWhiteSpace = XMLUtilities.TRAILING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches();
-
         retValue = retValue.trim();
 
         /*
@@ -3916,11 +3926,15 @@ public class DocBookUtilities {
          * When building up a translatable string from a succession of text nodes, whitespace becomes important.
          */
         if (!removeWhitespaceFromStart) {
-            if (hasStartWhiteSpace) retValue = " " + retValue;
+            if (PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches()) {
+                retValue = " " + retValue;
+            }
         }
 
         if (!removeWhitespaceFromEnd) {
-            if (hasEndWhiteSpace) retValue += " ";
+            if (TRAILING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches()) {
+                retValue += " ";
+            }
         }
 
         return retValue;
