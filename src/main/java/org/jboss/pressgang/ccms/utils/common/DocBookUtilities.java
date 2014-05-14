@@ -2539,6 +2539,10 @@ public class DocBookUtilities {
         return "<xref linkend=\"" + xref + "\" xrefstyle=\"" + xrefStyle + "\" />";
     }
 
+    public static String buildLink(final String xref, final String style, final String value) {
+        return "<link linkend=\"" + xref + "\" xrefstyle=\"" + style + "\">" + value + "</link>";
+    }
+
     public static List<Element> buildULink(final Document xmlDoc, final String url, final String label) {
         final List<Element> retValue = new ArrayList<Element>();
 
