@@ -13,7 +13,6 @@ import java.util.Map;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.utils.structures.StringToNodeCollection;
@@ -32,11 +31,20 @@ import org.w3c.dom.Text;
  * with DocBook
  */
 public class DocBookUtilities {
+    public static final String TRAILING_WHITESPACE_RE = "^(?<content>.*?)\\s+$";
+    public static final String TRAILING_WHITESPACE_SIMPLE_RE = ".*?\\s+$";
+    public static final String PRECEEDING_WHITESPACE_SIMPLE_RE = "^\\s+.*";
+    public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
+    public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE,
+            java.util.regex.Pattern.MULTILINE | java.util.regex.Pattern.DOTALL);
     private static final Logger LOG = LoggerFactory.getLogger(DocBookUtilities.class);
 
     // See http://stackoverflow.com/a/4307261/1330640
-    private static final String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
-    private static final String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
+    public static final String UNICODE_WORD = "\\pL\\pM\\p{Nd}\\p{Nl}\\p{Pc}[\\p{InEnclosedAlphanumerics}&&\\p{So}]";
+    public static final String UNICODE_TITLE_START_CHAR = "\\pL\\p{Nd}\\p{Nl}";
 
     private static final Pattern THURSDAY_DATE_RE = Pattern.compile("Thurs?(?!s?day)", java.util.regex.Pattern.CASE_INSENSITIVE);
     private static final Pattern TUESDAY_DATE_RE = Pattern.compile("Tues(?!day)", java.util.regex.Pattern.CASE_INSENSITIVE);
@@ -61,18 +69,17 @@ public class DocBookUtilities {
     /**
      * The Docbook elements that contain translatable text
      */
-    public static final ArrayList<String> TRANSLATABLE_ELEMENTS = CollectionUtilities.toArrayList(
-            new String[]{"ackno", "bridgehead", "caption", "conftitle", "contrib", "entry", "firstname", "glossterm", "indexterm",
-                    "jobtitle", "keyword", "label", "lastname", "lineannotation", "lotentry", "member", "orgdiv", "orgname", "othername",
-                    "para", "phrase", "productname", "refclass", "refdescriptor", "refentrytitle", "refmiscinfo", "refname",
-                    "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg", "segtitle",
-                    "simpara", "subtitle", "surname", "term", "termdef", "tertiaryie", "title", "titleabbrev", "screen",
-                    "programlisting", "literallayout"});
+    public static final List<String> TRANSLATABLE_ELEMENTS = Arrays.asList("ackno", "bridgehead", "caption", "conftitle", "contrib",
+            "entry", "firstname", "glossentry", "indexterm", "jobtitle", "keyword", "label", "lastname", "lineannotation", "lotentry",
+            "member", "orgdiv", "orgname", "othername", "para", "phrase", "productname", "refclass", "refdescriptor", "refentrytitle",
+            "refmiscinfo", "refname", "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg",
+            "segtitle", "simpara", "subtitle", "surname", "td", "term", "termdef", "tertiaryie", "textobject", "title", "titleabbrev",
+            "screen", "programlisting", "literallayout");
     /**
      * The Docbook elements that contain translatable text, and need to be kept inline
      */
     public static final ArrayList<String> INLINE_ELEMENTS = CollectionUtilities.toArrayList(
-            new String[]{"footnote", "citerefentry", "indexterm", "productname", "phrase"});
+            new String[]{"footnote", "citerefentry", "indexterm", "orgname", "productname", "phrase", "textobject"});
     /**
      * The Docbook elements that should not have their text reformatted
      */
@@ -1067,8 +1074,7 @@ public class DocBookUtilities {
         put("wedgeq", "&#x02259;");
     }};
 
-    public static final String DOCBOOK_ENTITIES_STRING =
-            "<!ENTITY euro \"&#x20AC;\">\n" +
+    public static final String DOCBOOK_ENTITIES_STRING = "<!ENTITY euro \"&#x20AC;\">\n" +
             "<!ENTITY cularr \"&#x021B6;\">\n" +
             "<!ENTITY curarr \"&#x021B7;\">\n" +
             "<!ENTITY dArr \"&#x021D3;\">\n" +
@@ -2152,7 +2158,8 @@ public class DocBookUtilities {
      * @return The escaped title string.
      */
     public static String escapeTitle(final String title) {
-        final String escapedTitle = title.replaceAll("^[^" + UNICODE_TITLE_START_CHAR +"]*", "").replaceAll("[^" + UNICODE_WORD + ". -]", "");
+        final String escapedTitle = title.replaceAll("^[^" + UNICODE_TITLE_START_CHAR + "]*", "").replaceAll("[^" + UNICODE_WORD + ". -]",
+                "");
         if (isNullOrEmpty(escapedTitle)) {
             return "";
         } else {
@@ -2336,7 +2343,8 @@ public class DocBookUtilities {
                     firstNode = firstNode.getNextSibling();
                 }
 
-                // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title, whereas 4.5 has to be before the title.
+                // DocBook 5.0+ changed where the info node needs to be. In 5.0+ it is after the title,
+                // whereas 4.5 has to be before the title.
                 if (docBookVersion == DocBookVersion.DOCBOOK_50) {
                     // Set the section title based on if the first node is a info node.
                     if (firstNode != null && firstNode.getNodeName().equals(DocBookUtilities.TOPIC_ROOT_TITLE_NODE_NAME)) {
@@ -2432,7 +2440,8 @@ public class DocBookUtilities {
         doc.getDocumentElement().setAttribute("version", "5.0");
     }
 
-    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities, final boolean includeDTD) {
+    public static String buildDocBookDoctype(final DocBookVersion version, final String rootElementName, final String entities,
+            final boolean includeDTD) {
         if (version == null) throw new IllegalArgumentException("format cannot be null");
 
         if (version == DocBookVersion.DOCBOOK_45) {
@@ -2452,7 +2461,8 @@ public class DocBookUtilities {
         retValue.append("<!DOCTYPE " + rootElementName);
         if (includeDTD) {
             retValue.append(" PUBLIC \"-//OASIS//DTD DocBook XML V5.0//EN\" \"http://www.oasis-open.org/docbook/xml/5.0/docbookx.dtd\"");
-        };
+        }
+        ;
         retValue.append(" [\n");
         if (entities != null) {
             retValue.append(entities);
@@ -2467,7 +2477,8 @@ public class DocBookUtilities {
         retValue.append("<!DOCTYPE " + rootElementName);
         if (includeDTD) {
             retValue.append(" PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\"");
-        };
+        }
+        ;
         retValue.append(" [\n");
         if (entities != null) {
             retValue.append(entities);
@@ -2488,8 +2499,9 @@ public class DocBookUtilities {
             fixedElement = fixedElement.replaceFirst(" version\\s*=\\s*('|\").*?('|\")", "");
             // Remove any current xlink namespace declaration
             fixedElement = fixedElement.replaceFirst(" xmlns:xlink\\s*=\\s*('|\").*?('|\")", "");
-            return xml.replaceFirst(element, fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
-                    " version=\"5.0\"");
+            return xml.replaceFirst(element,
+                    fixedElement + " xmlns=\"http://docbook.org/ns/docbook\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"" +
+                            " version=\"5.0\"");
         } else {
             return xml;
         }
@@ -2525,6 +2537,10 @@ public class DocBookUtilities {
 
     public static String buildXRef(final String xref, final String xrefStyle) {
         return "<xref linkend=\"" + xref + "\" xrefstyle=\"" + xrefStyle + "\" />";
+    }
+
+    public static String buildLink(final String xref, final String style, final String value) {
+        return "<link linkend=\"" + xref + "\" xrefstyle=\"" + style + "\">" + value + "</link>";
     }
 
     public static List<Element> buildULink(final Document xmlDoc, final String url, final String label) {
@@ -3272,6 +3288,7 @@ public class DocBookUtilities {
      * @param allowDuplicates If duplicate translation strings should be created in the returned list.
      * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
      */
+    @Deprecated
     public static List<StringToNodeCollection> getTranslatableStringsV2(final Document xml, final boolean allowDuplicates) {
         if (xml == null) return null;
 
@@ -3281,6 +3298,42 @@ public class DocBookUtilities {
         for (int i = 0; i < nodes.getLength(); ++i) {
             final Node node = nodes.item(i);
             getTranslatableStringsFromNodeV2(node, retValue, allowDuplicates, new XMLProperties());
+        }
+
+        return retValue;
+    }
+
+    /**
+     * Get the Translatable Strings from an XML Document. This method will return of Translation strings to XML DOM nodes within
+     * the XML Document.
+     *
+     * @param xml             The XML to get the translatable strings from.
+     * @param allowDuplicates If duplicate translation strings should be created in the returned list.
+     * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
+     */
+    public static List<StringToNodeCollection> getTranslatableStringsV3(final Document xml, final boolean allowDuplicates) {
+        if (xml == null) return null;
+
+        return getTranslatableStringsV3(xml.getDocumentElement(), allowDuplicates);
+    }
+
+    /**
+     * Get the Translatable Strings from an XML Node. This method will return of Translation strings to XML DOM nodes within
+     * the XML Document.
+     *
+     * @param node             The XML to get the translatable strings from.
+     * @param allowDuplicates If duplicate translation strings should be created in the returned list.
+     * @return A list of StringToNodeCollection objects containing the translation strings and nodes.
+     */
+    public static List<StringToNodeCollection> getTranslatableStringsV3(final Node node, final boolean allowDuplicates) {
+        if (node == null) return null;
+
+        final List<StringToNodeCollection> retValue = new LinkedList<StringToNodeCollection>();
+
+        final NodeList nodes = node.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); ++i) {
+            final Node childNode = nodes.item(i);
+            getTranslatableStringsFromNodeV3(childNode, retValue, allowDuplicates, new XMLProperties());
         }
 
         return retValue;
@@ -3433,7 +3486,7 @@ public class DocBookUtilities {
                              * whitespace here.
                              */
 
-                            final Matcher matcher = XMLUtilities.TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
@@ -3482,6 +3535,7 @@ public class DocBookUtilities {
      * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
      * @param props              A set of XML Properties for the Node.
      */
+    @Deprecated
     private static void getTranslatableStringsFromNodeV2(final Node node, final List<StringToNodeCollection> translationStrings,
             final boolean allowDuplicates, final XMLProperties props) {
         if (node == null || translationStrings == null) return;
@@ -3557,7 +3611,7 @@ public class DocBookUtilities {
                              * whitespace here.
                              */
 
-                            final Matcher matcher = XMLUtilities.TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
                             if (matcher.matches()) translatableString = matcher.group("content");
 
                             addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
@@ -3603,6 +3657,146 @@ public class DocBookUtilities {
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 final Node child = nodeList.item(i);
                 getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperties);
+            }
+        }
+    }
+
+    /**
+     * Get the Translatable String to Node collections from an XML DOM Node.
+     *
+     * @param node               The node to get the translatable elements from.
+     * @param translationStrings The list of translation StringToNodeCollection objects to add to.
+     * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
+     * @param props              A set of XML Properties for the Node.
+     */
+    private static void getTranslatableStringsFromNodeV3(final Node node, final List<StringToNodeCollection> translationStrings,
+            final boolean allowDuplicates, final XMLProperties props) {
+        if (node == null || translationStrings == null) return;
+
+        XMLProperties xmlProperties = new XMLProperties(props);
+
+        final String nodeName = node.getNodeName();
+        final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
+
+        final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
+        final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
+        final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
+        if (!xmlProperties.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperties.setInline(true);
+        if (!xmlProperties.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperties.setVerbatim(true);
+
+        /*
+         * this element has translatable strings if:
+         *
+         * 1. a translatableElement
+         *
+         * OR
+         *
+         * 2. a standaloneElement without a translatableParentElement
+         *
+         * 3. not a standaloneElement and not an inlineElement
+         */
+
+        if ((translatableElement && ((standaloneElement && !translatableParentElement) || (!standaloneElement && !xmlProperties.isInline
+                ())))) {
+            final NodeList children = node.getChildNodes();
+            final boolean hasChildren = children == null || children.getLength() != 0;
+
+            // dump the node if it has no children
+            if (!hasChildren) {
+                final String nodeText = XMLUtilities.convertNodeToString(node, false);
+                final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
+
+                if (xmlProperties.isVerbatim()) {
+                    addTranslationToNodeDetailsToCollection(nodeText, node, allowDuplicates, translationStrings);
+                } else if (!cleanedNodeText.isEmpty() && !cleanedNodeText.matches("^\\s+$")) {
+                    addTranslationToNodeDetailsToCollection(cleanedNodeText, node, allowDuplicates, translationStrings);
+                }
+
+            }
+            /*
+             * dump all child nodes until we hit one that itself contains a translatable element. in effect the translation
+             * strings can contain up to one level of xml elements.
+             */
+            else {
+                ArrayList<Node> nodes = new ArrayList<Node>();
+                String translatableString = "";
+                boolean removeWhitespaceFromStart = true;
+
+                final int childrenLength = children.getLength();
+                for (int i = 0; i < childrenLength; ++i) {
+                    final Node child = children.item(i);
+                    final String childNodeName = child.getNodeName();
+
+                    // does this child have another level of translatable tags?
+                    final boolean containsTranslatableTags = doesElementContainTranslatableContentV2(child);
+                    final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
+                    final boolean childInlineElement = INLINE_ELEMENTS.contains(childNodeName);
+
+                    // if so, save the string we have been building up, process the child, and start building up a new string
+                    if ((containsTranslatableTags || childTranslatableElement) && !childInlineElement) {
+                        if (nodes.size() != 0) {
+                            /*
+                             * We have found a child node that itself contains some translatable children. In this case we
+                             * create a new translatable string. It is possible that the translatableString has some
+                             * insignificant trailing whitespace, because the call to the cleanTranslationText function in the
+                             * else statement below has assumed that the node being processed was not the last one in the
+                             * translatable string, making the trailing whitespace important. So we clean up the trailing
+                             * whitespace here.
+                             */
+
+                            final Matcher matcher = TRAILING_WHITESPACE_RE_PATTERN.matcher(translatableString);
+                            if (matcher.matches()) translatableString = matcher.group("content");
+
+                            addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
+
+                            translatableString = "";
+                            nodes = new ArrayList<Node>();
+                            removeWhitespaceFromStart = true;
+                        }
+
+                        getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
+                    } else {
+                        final String childName = child.getNodeName();
+                        final String childText = XMLUtilities.convertNodeToString(child, true);
+
+                        final boolean isVerbatimNode = xmlProperties.isVerbatim() || VERBATIM_ELEMENTS.contains(childName);
+                        final String thisTranslatableString;
+                        if (isVerbatimNode) {
+                            thisTranslatableString = childText;
+                        } else {
+                            thisTranslatableString = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
+                        }
+
+                        if (isVerbatimNode || !thisTranslatableString.isEmpty()) {
+                            if (!isVerbatimNode && thisTranslatableString.matches("^\\s+$")) {
+                                // Pure whitespace nodes should be collapsed down to a single space, unless it is the start or end
+                                if (!(i == 0 || i == childrenLength - 1)) {
+                                    translatableString += " ";
+                                    removeWhitespaceFromStart = false;
+                                }
+                            } else {
+                                translatableString += thisTranslatableString;
+                                removeWhitespaceFromStart = false;
+                            }
+                        }
+
+                        nodes.add(child);
+                    }
+                }
+
+                // save the last translated string
+                if (nodes.size() != 0) {
+                    addTranslationToNodeDetailsToCollection(translatableString, nodes, allowDuplicates, translationStrings);
+
+                    translatableString = "";
+                }
+            }
+        } else {
+            // if we hit a non-translatable element, process its children
+            final NodeList nodeList = node.getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); ++i) {
+                final Node child = nodeList.item(i);
+                getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
             }
         }
     }
@@ -3729,9 +3923,6 @@ public class DocBookUtilities {
             final boolean removeWhitespaceFromEnd) {
         String retValue = XMLUtilities.cleanText(input);
 
-        final boolean hasStartWhiteSpace = XMLUtilities.PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches();
-        final boolean hasEndWhiteSpace = XMLUtilities.TRAILING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches();
-
         retValue = retValue.trim();
 
         /*
@@ -3739,11 +3930,15 @@ public class DocBookUtilities {
          * When building up a translatable string from a succession of text nodes, whitespace becomes important.
          */
         if (!removeWhitespaceFromStart) {
-            if (hasStartWhiteSpace) retValue = " " + retValue;
+            if (PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches()) {
+                retValue = " " + retValue;
+            }
         }
 
         if (!removeWhitespaceFromEnd) {
-            if (hasEndWhiteSpace) retValue += " ";
+            if (TRAILING_WHITESPACE_SIMPLE_RE_PATTERN.matcher(input).matches()) {
+                retValue += " ";
+            }
         }
 
         return retValue;
@@ -3792,6 +3987,7 @@ public class DocBookUtilities {
 
     /**
      * Some docbook elements need to be wrapped up so they can be properly transformed by the docbook XSL.
+     *
      * @param xmlDoc
      */
     public static void wrapForRendering(final Document xmlDoc) {
@@ -3855,7 +4051,7 @@ public class DocBookUtilities {
     /**
      * Validates a Revision History XML DOM Document to ensure that the content is valid for use with Publican.
      *
-     * @param doc The DOM Document that represents the XML that is to be validated.
+     * @param doc         The DOM Document that represents the XML that is to be validated.
      * @param dateFormats The valid date formats that can be used.
      * @return Null if there weren't any errors otherwise an error message that states what is wrong.
      */
