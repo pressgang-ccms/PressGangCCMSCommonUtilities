@@ -3536,7 +3536,7 @@ public class DocBookUtilities {
      * @param props              A set of XML Properties for the Node.
      */
     @Deprecated
-    private static void getTranslatableStringsFromNodeV2(final Node node, final List<StringToNodeCollection> translationStrings,
+    public static void getTranslatableStringsFromNodeV2(final Node node, final List<StringToNodeCollection> translationStrings,
             final boolean allowDuplicates, final XMLProperties props) {
         if (node == null || translationStrings == null) return;
 
@@ -3669,7 +3669,7 @@ public class DocBookUtilities {
      * @param allowDuplicates    If duplicate translation strings should be created in the translationStrings list.
      * @param props              A set of XML Properties for the Node.
      */
-    private static void getTranslatableStringsFromNodeV3(final Node node, final List<StringToNodeCollection> translationStrings,
+    public static void getTranslatableStringsFromNodeV3(final Node node, final List<StringToNodeCollection> translationStrings,
             final boolean allowDuplicates, final XMLProperties props) {
         if (node == null || translationStrings == null) return;
 
@@ -3905,6 +3905,10 @@ public class DocBookUtilities {
 
     private static void addTranslationToNodeDetailsToCollection(final String text, final ArrayList<Node> nodes,
             final boolean allowDuplicates, final List<StringToNodeCollection> translationStrings) {
+        // Ignore blank or empty string
+        if (text == null || text.length() == 0) {
+            return;
+        }
 
         if (allowDuplicates) {
             translationStrings.add(new StringToNodeCollection(text).addNodeCollection(nodes));
@@ -4194,7 +4198,7 @@ public class DocBookUtilities {
         }
     }
 
-    protected static class XMLProperties {
+    public static class XMLProperties {
         private boolean verbatim = false;
         private boolean inline = false;
 
