@@ -102,6 +102,27 @@ public class DocBookUtilitiesTest {
                         "and add its contents to <filename>c:\\sysprep</filename>."));
     }
 
+    @Test
+    public void shouldFindTranslatableElementsWhenCDATAUsed() throws SAXException {
+        // Given
+        String xml = "<section>\n" +
+                "\t<programlisting>\n" +
+                "<![CDATA[\n" +
+                "This is my content & <blah>.\n" +
+                "]]>\n" +
+                "</programlisting>\n" +
+                "</section>";
+        final Document doc = XMLUtilities.convertStringToDocument(xml);
+
+        // When
+        List<StringToNodeCollection> nodes = DocBookUtilities.getTranslatableStringsV3(doc, false);
+
+        // Then
+        assertThat(nodes.size(), is(1));
+        assertEquals(nodes.get(0).getTranslationString(),
+                "\n\nThis is my content &amp; &lt;blah&gt;.\n\n");
+    }
+
     public static Document getXMLEntityTestDoc() throws SAXException {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<section>\n");
