@@ -3703,12 +3703,7 @@ public class DocBookUtilities {
 
             // dump the node if it has no children
             if (!hasChildren) {
-                final String nodeText;
-                if (node.getNodeType() == Node.CDATA_SECTION_NODE) {
-                    nodeText = escapeForTranslationCDATA(XMLUtilities.convertNodeToString(node, false));
-                } else {
-                    nodeText = XMLUtilities.convertNodeToString(node, false);
-                }
+                final String nodeText = XMLUtilities.convertNodeToString(node, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
 
                 if (xmlProperties.isVerbatim()) {
@@ -3762,12 +3757,7 @@ public class DocBookUtilities {
                         getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
-                        final String childText;
-                        if (child.getNodeType() == Node.CDATA_SECTION_NODE) {
-                            childText = escapeForTranslationCDATA(XMLUtilities.convertNodeToString(child, false));
-                        } else {
-                            childText = XMLUtilities.convertNodeToString(child, true);
-                        }
+                        final String childText = XMLUtilities.convertNodeToString(child, true);
 
                         final boolean isVerbatimNode = xmlProperties.isVerbatim() || VERBATIM_ELEMENTS.contains(childName);
                         final String thisTranslatableString;
@@ -3809,18 +3799,6 @@ public class DocBookUtilities {
                 getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
             }
         }
-    }
-
-    /**
-     * Escapes a string for translation when it has been used in CDATA.
-     *
-     * @param xml
-     * @return
-     */
-    private static String escapeForTranslationCDATA(final String xml) {
-        return xml.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
     }
 
     public static void replaceTranslatedStrings(final Document xml, final Map<String, String> translations,
