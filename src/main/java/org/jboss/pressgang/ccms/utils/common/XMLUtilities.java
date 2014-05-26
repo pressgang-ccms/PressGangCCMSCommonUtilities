@@ -428,7 +428,7 @@ public class XMLUtilities {
         try {
             // find the encoding, defaulting to UTF-8
             String encoding = findEncoding(xml);
-            if (encoding == null) encoding = "UTF-16";
+            if (encoding == null) encoding = "UTF-8";
 
             /*
              * Xerces does not seem to have any way of simply importing entities "as is". It will try to expand them, which we
