@@ -3498,7 +3498,7 @@ public class DocBookUtilities {
                         getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
-                        final String childText = XMLUtilities.convertNodeToString(child, true);
+                        final String childText = XMLUtilities.convertNodeToString(child, true, false);
 
                         final String cleanedChildText = cleanTranslationText(childText, i == 0, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
@@ -3624,7 +3624,7 @@ public class DocBookUtilities {
                         getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
-                        final String childText = XMLUtilities.convertNodeToString(child, true);
+                        final String childText = XMLUtilities.convertNodeToString(child, true, false);
 
                         final String cleanedChildText = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);

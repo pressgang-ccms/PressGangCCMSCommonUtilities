@@ -636,6 +636,12 @@ public class XMLUtilities {
                 new ArrayList<String>(), true, 0, 0);
     }
 
+    public static String convertNodeToString(final Node startNode, final boolean includeElementName,
+            final boolean spaceBeforeSelfClosingElement) {
+        return convertNodeToString(startNode, includeElementName, true, false, new ArrayList<String>(), new ArrayList<String>(),
+                new ArrayList<String>(), true, 0, 0, false, spaceBeforeSelfClosingElement);
+    }
+
     public static String convertNodeToString(final Node startNode, final List<String> verbatimElements, final List<String> inlineElements,
             final List<String> contentsInlineElements, final boolean tabIndent) {
         return convertNodeToString(startNode, true, false, false, verbatimElements, inlineElements, contentsInlineElements, tabIndent, 1,
@@ -672,9 +678,25 @@ public class XMLUtilities {
      * @return The String representation of the Node
      */
     public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
-    final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
-    final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
+            final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
+            final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
             boolean treatAsDocumentRoot) {
+        return convertNodeToString(startNode, includeElementName, verbatim, inline, verbatimElements, inlineElements,
+                contentsInlineElements, tabIndent, indentCount, indentLevel, treatAsDocumentRoot, true);
+    }
+
+    /**
+     * Converts a Node to a String.
+     *
+     * @param node               The Node to be converted
+     * @param includeElementName true if the string should include the name of the node, or false if it is just to include the
+     *                           contents of the node
+     * @return The String representation of the Node
+     */
+    public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
+            final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
+            final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
+            boolean treatAsDocumentRoot, boolean spaceBeforeSelfClosingElement) {
         /* Find out if this node is a document */
         final Node node = startNode instanceof Document ? ((Document) startNode).getDocumentElement() : startNode;
 
@@ -869,7 +891,12 @@ public class XMLUtilities {
         if (children.getLength() == 0) {
             final String nodeTextContent = node.getTextContent();
             if (nodeTextContent.length() == 0) {
-                if (includeElementName) stringBuffer.append(" />");
+                if (includeElementName) {
+                    if (spaceBeforeSelfClosingElement) {
+                        stringBuffer.append(" ");
+                    }
+                    stringBuffer.append("/>");
+                }
             } else {
                 stringBuffer.append(nodeTextContent);
 
@@ -892,7 +919,7 @@ public class XMLUtilities {
                 final int newIndentLevel = includeElementName ? indentLevel + 1 : indentLevel;
                 final String childToString = convertNodeToString(children.item(i), true, verbatimMyChildren, inlineMyChildren,
                         verbatimElements, inlineElements, contentsInlineElements, tabIndent, indentCount, newIndentLevel,
-                        !includeElementName);
+                        !includeElementName, spaceBeforeSelfClosingElement);
                 if (childToString.length() != 0) stringBuffer.append(childToString);
             }
 
