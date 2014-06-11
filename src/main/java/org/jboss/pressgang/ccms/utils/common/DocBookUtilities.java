@@ -66,6 +66,13 @@ public class DocBookUtilities {
      */
     public static final String TOPIC_ROOT_SECTIONINFO_NODE_NAME = "sectioninfo";
 
+    public static final List<String> TRANSLATABLE_ELEMENTS_OLD = Arrays.asList("ackno", "bridgehead", "caption", "conftitle",
+            "contrib", "entry", "firstname", "glossterm", "indexterm", "jobtitle", "keyword", "label", "lastname", "lineannotation",
+            "lotentry", "member", "orgdiv", "orgname", "othername", "para", "phrase", "productname", "refclass", "refdescriptor",
+            "refentrytitle", "refmiscinfo", "refname", "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie",
+            "seealsoie", "seeie", "seg", "segtitle", "simpara", "subtitle", "surname", "term", "termdef", "tertiaryie", "title",
+            "titleabbrev", "screen", "programlisting", "literallayout");
+
     /**
      * The Docbook elements that contain translatable text
      */
@@ -3355,7 +3362,7 @@ public class DocBookUtilities {
                 final String childName = child.getNodeName();
 
                 /* this child node is itself translatable, so return true */
-                if (TRANSLATABLE_ELEMENTS.contains(childName)) return true;
+                if (TRANSLATABLE_ELEMENTS_OLD.contains(childName)) return true;
             }
 
             /*
@@ -3389,10 +3396,37 @@ public class DocBookUtilities {
                 final Node child = children.item(j);
                 final String childName = child.getNodeName();
 
-                if (TRANSLATABLE_ELEMENTS.contains(childName)) {
+                if (TRANSLATABLE_ELEMENTS_OLD.contains(childName)) {
                     // This child node is itself translatable, so return true
                     return true;
                 } else if (doesElementContainTranslatableContentV2(child)) {
+                    // check if this child contains translatable nodes
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if a node has child translatable elements.
+     *
+     * @param node The node to check for child translatable elements.
+     * @return True if the node has translatable child Elements.
+     */
+    private static boolean doesElementContainTranslatableContentV3(final Node node) {
+        final NodeList children = node.getChildNodes();
+        if (children != null) {
+            // check to see if any of the children are translatable nodes
+            for (int j = 0; j < children.getLength(); ++j) {
+                final Node child = children.item(j);
+                final String childName = child.getNodeName();
+
+                if (TRANSLATABLE_ELEMENTS.contains(childName)) {
+                    // This child node is itself translatable, so return true
+                    return true;
+                } else if (doesElementContainTranslatableContentV3(child)) {
                     // check if this child contains translatable nodes
                     return true;
                 }
@@ -3420,9 +3454,9 @@ public class DocBookUtilities {
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
 
-        final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
+        final boolean translatableElement = TRANSLATABLE_ELEMENTS_OLD.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
-        final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
+        final boolean translatableParentElement = TRANSLATABLE_ELEMENTS_OLD.contains(nodeParentName);
         if (!xmlProperties.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperties.setInline(true);
         if (!xmlProperties.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperties.setVerbatim(true);
 
@@ -3545,9 +3579,9 @@ public class DocBookUtilities {
         final String nodeName = node.getNodeName();
         final String nodeParentName = node.getParentNode() != null ? node.getParentNode().getNodeName() : null;
 
-        final boolean translatableElement = TRANSLATABLE_ELEMENTS.contains(nodeName);
+        final boolean translatableElement = TRANSLATABLE_ELEMENTS_OLD.contains(nodeName);
         final boolean standaloneElement = TRANSLATABLE_IF_STANDALONE_ELEMENTS.contains(nodeName);
-        final boolean translatableParentElement = TRANSLATABLE_ELEMENTS.contains(nodeParentName);
+        final boolean translatableParentElement = TRANSLATABLE_ELEMENTS_OLD.contains(nodeParentName);
         if (!xmlProperties.isInline() && INLINE_ELEMENTS.contains(nodeName)) xmlProperties.setInline(true);
         if (!xmlProperties.isVerbatim() && VERBATIM_ELEMENTS.contains(nodeName)) xmlProperties.setVerbatim(true);
 
@@ -3596,7 +3630,7 @@ public class DocBookUtilities {
 
                     // does this child have another level of translatable tags?
                     final boolean containsTranslatableTags = doesElementContainTranslatableContentV2(child);
-                    final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
+                    final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS_OLD.contains(childNodeName);
                     final boolean childInlineElement = INLINE_ELEMENTS.contains(childNodeName);
 
                     // if so, save the string we have been building up, process the child, and start building up a new string
@@ -3728,7 +3762,7 @@ public class DocBookUtilities {
                     final String childNodeName = child.getNodeName();
 
                     // does this child have another level of translatable tags?
-                    final boolean containsTranslatableTags = doesElementContainTranslatableContentV2(child);
+                    final boolean containsTranslatableTags = doesElementContainTranslatableContentV3(child);
                     final boolean childTranslatableElement = TRANSLATABLE_ELEMENTS.contains(childNodeName);
                     final boolean childInlineElement = INLINE_ELEMENTS.contains(childNodeName);
 
