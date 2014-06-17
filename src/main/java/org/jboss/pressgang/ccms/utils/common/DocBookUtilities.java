@@ -3841,6 +3841,16 @@ public class DocBookUtilities {
                 .size() == 0)
             return;
 
+        final StringBuilder globalNamespaces = new StringBuilder();
+        final NamedNodeMap attrs = xml.getDocumentElement().getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            final Attr attr = (Attr) attrs.item(i);
+            if (attr.getName().startsWith("xmlns")) {
+                globalNamespaces.append(" ");
+                globalNamespaces.append(attr.getNodeName()).append("=\"").append(attr.getNodeValue()).append("\"");
+            }
+        }
+
         /*
          * We assume that the xml being provided here is either an exact match, or modified by Zanata in some predictable way
          * (i.e. some padding removed), as supplied to the getTranslatableStrings originally, which we then assume matches the
@@ -3873,7 +3883,8 @@ public class DocBookUtilities {
                             rightTrimPadding.append(" ");
 
                         // wrap the returned translation in a root element
-                        final String wrappedTranslation = "<tempRoot>" + leftTrimPadding + translation + rightTrimPadding + "</tempRoot>";
+                        final String wrappedTranslation = "<tempRoot" + globalNamespaces.toString() + ">" + leftTrimPadding + translation
+                                + rightTrimPadding + "</tempRoot>";
 
                         // convert the wrapped translation into an XML document
                         Document translationDocument = null;
