@@ -18,6 +18,10 @@ public enum DocBookVersion {
         return title;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public static DocBookVersion getVersionFromId(final Integer id) {
         switch (id) {
             case CommonConstants.DOCBOOK_45:
