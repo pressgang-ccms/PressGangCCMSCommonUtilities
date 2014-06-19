@@ -1138,8 +1138,29 @@ public class XMLUtilities {
      */
     public static Element createXIInclude(final Document doc, final String file) {
         try {
+            // Encode the file reference
+            final StringBuilder fixedFileRef = new StringBuilder();
+            final String[] split = file.split("/");
+            for (int i = 0; i < split.length; i++) {
+                if (i != 0) {
+                    fixedFileRef.append("/");
+                }
+
+                final String uriPart = split[i];
+                if (uriPart.isEmpty() || uriPart.equals("..") || uriPart.equals(".")) {
+                    fixedFileRef.append(uriPart);
+                } else {
+                    fixedFileRef.append(URLEncoder.encode(uriPart, "UTF-8"));
+                }
+            }
+
+            // If the file ref ended with "/" then it wouldn't have been added as their was no content after it
+            if (file.endsWith("/")) {
+                fixedFileRef.append("/");
+            }
+
             final Element xiInclude = doc.createElementNS("http://www.w3.org/2001/XInclude", "xi:include");
-            xiInclude.setAttribute("href", URLEncoder.encode(file, "UTF-8"));
+            xiInclude.setAttribute("href", fixedFileRef.toString());
             xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
 
             return xiInclude;
