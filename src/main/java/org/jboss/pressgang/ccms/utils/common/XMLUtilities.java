@@ -84,7 +84,7 @@ public class XMLUtilities {
     public static final String PREAMBLE_START = "<?xml";
     public static final String PREAMBLE_END = ">";
 
-    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);");
+    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?!#)(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);");
 
     /**
      * A regular expression that identifies a topic id
