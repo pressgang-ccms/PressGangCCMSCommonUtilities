@@ -74,6 +74,20 @@ public class XMLUtilitiesTest {
     }
 
     @Test
+    public void shouldEscapeReservedXMLCharacters() throws SAXException {
+        // Given a string with reserved xml characters via character references
+        final String xml = "<section><title></title><para blah=\"&#34;&#38;&#60;&#62;\">This is an " +
+                "&#38;&#60;&#62;&amp;test</para></section>";
+        final Document doc = XMLUtilities.convertStringToDocument(xml);
+
+        // When converting a node to a string
+        final String output = XMLUtilities.convertNodeToString(doc, true);
+
+        // Then the output should have the reserved characters escaped as entities
+        assertThat(output, is("<section><title /><para blah=\"&quot;&amp;&lt;&gt;\">This is an &amp;&lt;&gt;&amp;test</para></section>"));
+    }
+
+    @Test
     public void shouldFindXMLDoctype() {
         // Given an XML String with preamble
         String xml = " <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<section>\n</section>\n";

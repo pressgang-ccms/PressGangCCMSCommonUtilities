@@ -764,7 +764,7 @@ public class XMLUtilities {
 
         if (Node.TEXT_NODE == nodeType) {
             if (!verbatim) {
-                String trimmedNodeValue = cleanText(node.getNodeValue());
+                String trimmedNodeValue = cleanText(escapeElementText(node.getNodeValue()));
 
                 if (!trimmedNodeValue.trim().isEmpty()) {
                     final StringBuffer retValue = new StringBuffer();
@@ -825,7 +825,7 @@ public class XMLUtilities {
                     }
                 }
             } else {
-                return node.getNodeValue();
+                return escapeElementText(node.getNodeValue());
             }
         }
 
@@ -881,7 +881,8 @@ public class XMLUtilities {
             if (attrs != null) {
                 for (int i = 0; i < attrs.getLength(); i++) {
                     final Node attr = attrs.item(i);
-                    stringBuffer.append(' ').append(attr.getNodeName()).append("=\"").append(attr.getNodeValue()).append("\"");
+                    stringBuffer.append(' ').append(attr.getNodeName())
+                            .append("=\"").append(escapeAttributeValue(attr.getNodeValue())).append("\"");
                 }
             }
         }
@@ -898,7 +899,7 @@ public class XMLUtilities {
                     stringBuffer.append("/>");
                 }
             } else {
-                stringBuffer.append(nodeTextContent);
+                stringBuffer.append(escapeElementText(nodeTextContent));
 
                 /* close that tag */
                 if (includeElementName) {
@@ -933,6 +934,32 @@ public class XMLUtilities {
         }
 
         return stringBuffer.toString();
+    }
+
+    /**
+     * Escapes some text by changing certain reserved characters to entities so that it can be used in an XML Element.
+     *
+     * @param text The text to be escaped.
+     * @return The escaped text.
+     */
+    protected static String escapeElementText(final String text) {
+        return text.replaceAll("&(?!\\S+?;)", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
+    }
+
+    /**
+     * Escapes some text by changing certain reserved characters to entities so that it can be used in an XML Attribute value.
+     *
+     * @param text The text to be escaped.
+     * @return The escaped text.
+     */
+    protected static String escapeAttributeValue(final String text) {
+        // Note: we don't need to escape an apostrophe, as the attribute will be wrapped in quotes
+        return text.replaceAll("&(?!\\S+?;)", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;");
     }
 
     /**
