@@ -2290,7 +2290,7 @@ public class DocBookUtilities {
          * <title>Product A &gt; Product B<phrase condition="beta">-Beta</phrase></title>
          */
 
-        String fixedContent = content.replaceAll("&(?!\\S+?;)", "&amp;");
+        String fixedContent = XMLUtilities.STANDALONE_AMPERSAND_PATTERN.matcher(content).replaceAll("&amp;");
 
         // Loop over and find all the XML Elements as they should remain untouched.
         final LinkedList<String> elements = new LinkedList<String>();

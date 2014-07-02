@@ -70,13 +70,14 @@ public class XMLUtilities {
     private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
     private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">[" + NAME_START_CHAR +
             "][" + NAME_END_CHAR + "]*).*?>");
+    protected static final Pattern STANDALONE_AMPERSAND_PATTERN = Pattern.compile("&(?!\\S+?;)");
 
     public static final String ENCODING_START = "encoding=\"";
     public static final String START_CDATA = "<![CDATA[";
     public static final String END_CDATA_RE = "\\]\\]>";
     public static final String END_CDATA_REPLACE = "]]&gt;";
     public static final String XML_ENTITY_NAMED_GROUP = "name";
-    public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);";
+    public static final String XML_ENTITY_RE = "\\&(?!#)(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);";
     public static final String DOCTYPE_START = "<!DOCTYPE";
     public static final String DOCTYPE_END = ">";
     public static final String ENTITY_START = "<!ENTITY";
@@ -943,7 +944,7 @@ public class XMLUtilities {
      * @return The escaped text.
      */
     protected static String escapeElementText(final String text) {
-        return text.replaceAll("&(?!\\S+?;)", "&amp;")
+        return STANDALONE_AMPERSAND_PATTERN.matcher(text).replaceAll("&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;");
     }
@@ -956,7 +957,7 @@ public class XMLUtilities {
      */
     protected static String escapeAttributeValue(final String text) {
         // Note: we don't need to escape an apostrophe, as the attribute will be wrapped in quotes
-        return text.replaceAll("&(?!\\S+?;)", "&amp;")
+        return STANDALONE_AMPERSAND_PATTERN.matcher(text).replaceAll("&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
                 .replace("\"", "&quot;");
