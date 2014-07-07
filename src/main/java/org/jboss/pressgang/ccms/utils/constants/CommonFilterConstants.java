@@ -569,6 +569,8 @@ public class CommonFilterConstants {
     /* Project Filter Constant */
     public static final String PROJECT_IDS_FILTER_VAR = "projectIds";
     public static final String PROJECT_IDS_FILTER_VAR_DESC = "Project IDs";
+    public static final String NOT_PROJECT_IDS_FILTER_VAR = "notProjectIds";
+    public static final String NOT_PROJECT_IDS_FILTER_VAR_DESC = "Not Project IDs";
 
     public static final String PROJECT_NAME_FILTER_VAR = "projectName";
     public static final String PROJECT_NAME_MATCHES_FILTER_VAR = PROJECT_NAME_FILTER_VAR + STRING_MATCHES_SUFFIX;
