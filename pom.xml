@@ -10,7 +10,7 @@
 
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-utils</artifactId>
-    <version>1.8</version>
+    <version>1.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>PressGang CCMS Common Utilities</name>
