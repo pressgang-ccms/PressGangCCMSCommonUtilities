@@ -87,13 +87,14 @@ public class XMLUtilities {
     private static final String ROOT_ELE_NAMED_GROUP = "Doctype";
     private static final Pattern ROOT_ELE_PATTERN = Pattern.compile("^\\s*<\\s*(?<" + ROOT_ELE_NAMED_GROUP + ">[" + NAME_START_CHAR +
             "][" + NAME_END_CHAR + "]*).*?>");
+    protected static final Pattern STANDALONE_AMPERSAND_PATTERN = Pattern.compile("&(?!\\S+?;)");
 
     public static final String ENCODING_START = "encoding=\"";
     public static final String START_CDATA = "<![CDATA[";
     public static final String END_CDATA_RE = "\\]\\]>";
     public static final String END_CDATA_REPLACE = "]]&gt;";
     public static final String XML_ENTITY_NAMED_GROUP = "name";
-    public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);";
+    public static final String XML_ENTITY_RE = "\\&(?!#)(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);";
     public static final String DOCTYPE_START = "<!DOCTYPE";
     public static final String DOCTYPE_END = ">";
     public static final String ENTITY_START = "<!ENTITY";
@@ -101,7 +102,7 @@ public class XMLUtilities {
     public static final String PREAMBLE_START = "<?xml";
     public static final String PREAMBLE_END = ">";
 
-    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);");
+    public static final Pattern XML_ENTITY_PATTERN = Pattern.compile("\\&(?!#)(?<" + XML_ENTITY_NAMED_GROUP + ">\\S+?);");
 
     /**
      * A regular expression that identifies a topic id
@@ -653,6 +654,12 @@ public class XMLUtilities {
                 new ArrayList<String>(), true, 0, 0);
     }
 
+    public static String convertNodeToString(final Node startNode, final boolean includeElementName,
+            final boolean spaceBeforeSelfClosingElement) {
+        return convertNodeToString(startNode, includeElementName, true, false, new ArrayList<String>(), new ArrayList<String>(),
+                new ArrayList<String>(), true, 0, 0, false, spaceBeforeSelfClosingElement);
+    }
+
     public static String convertNodeToString(final Node startNode, final List<String> verbatimElements, final List<String> inlineElements,
             final List<String> contentsInlineElements, final boolean tabIndent) {
         return convertNodeToString(startNode, true, false, false, verbatimElements, inlineElements, contentsInlineElements, tabIndent, 1,
@@ -689,9 +696,25 @@ public class XMLUtilities {
      * @return The String representation of the Node
      */
     public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
-    final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
-    final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
+            final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
+            final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
             boolean treatAsDocumentRoot) {
+        return convertNodeToString(startNode, includeElementName, verbatim, inline, verbatimElements, inlineElements,
+                contentsInlineElements, tabIndent, indentCount, indentLevel, treatAsDocumentRoot, true);
+    }
+
+    /**
+     * Converts a Node to a String.
+     *
+     * @param node               The Node to be converted
+     * @param includeElementName true if the string should include the name of the node, or false if it is just to include the
+     *                           contents of the node
+     * @return The String representation of the Node
+     */
+    public static String convertNodeToString(final Node startNode, final boolean includeElementName, final boolean verbatim,
+            final boolean inline, final List<String> verbatimElements, final List<String> inlineElements,
+            final List<String> contentsInlineElements, final boolean tabIndent, final int indentCount, final int indentLevel,
+            boolean treatAsDocumentRoot, boolean spaceBeforeSelfClosingElement) {
         /* Find out if this node is a document */
         final Node node = startNode instanceof Document ? ((Document) startNode).getDocumentElement() : startNode;
 
@@ -759,7 +782,7 @@ public class XMLUtilities {
 
         if (Node.TEXT_NODE == nodeType) {
             if (!verbatim) {
-                String trimmedNodeValue = cleanText(node.getNodeValue());
+                String trimmedNodeValue = cleanText(escapeElementText(node.getNodeValue()));
 
                 if (!trimmedNodeValue.trim().isEmpty()) {
                     final StringBuffer retValue = new StringBuffer();
@@ -820,7 +843,7 @@ public class XMLUtilities {
                     }
                 }
             } else {
-                return node.getNodeValue();
+                return escapeElementText(node.getNodeValue());
             }
         }
 
@@ -876,7 +899,8 @@ public class XMLUtilities {
             if (attrs != null) {
                 for (int i = 0; i < attrs.getLength(); i++) {
                     final Node attr = attrs.item(i);
-                    stringBuffer.append(' ').append(attr.getNodeName()).append("=\"").append(attr.getNodeValue()).append("\"");
+                    stringBuffer.append(' ').append(attr.getNodeName())
+                            .append("=\"").append(escapeAttributeValue(attr.getNodeValue())).append("\"");
                 }
             }
         }
@@ -886,9 +910,14 @@ public class XMLUtilities {
         if (children.getLength() == 0) {
             final String nodeTextContent = node.getTextContent();
             if (nodeTextContent.length() == 0) {
-                if (includeElementName) stringBuffer.append(" />");
+                if (includeElementName) {
+                    if (spaceBeforeSelfClosingElement) {
+                        stringBuffer.append(" ");
+                    }
+                    stringBuffer.append("/>");
+                }
             } else {
-                stringBuffer.append(nodeTextContent);
+                stringBuffer.append(escapeElementText(nodeTextContent));
 
                 /* close that tag */
                 if (includeElementName) {
@@ -909,7 +938,7 @@ public class XMLUtilities {
                 final int newIndentLevel = includeElementName ? indentLevel + 1 : indentLevel;
                 final String childToString = convertNodeToString(children.item(i), true, verbatimMyChildren, inlineMyChildren,
                         verbatimElements, inlineElements, contentsInlineElements, tabIndent, indentCount, newIndentLevel,
-                        !includeElementName);
+                        !includeElementName, spaceBeforeSelfClosingElement);
                 if (childToString.length() != 0) stringBuffer.append(childToString);
             }
 
@@ -923,6 +952,32 @@ public class XMLUtilities {
         }
 
         return stringBuffer.toString();
+    }
+
+    /**
+     * Escapes some text by changing certain reserved characters to entities so that it can be used in an XML Element.
+     *
+     * @param text The text to be escaped.
+     * @return The escaped text.
+     */
+    protected static String escapeElementText(final String text) {
+        return STANDALONE_AMPERSAND_PATTERN.matcher(text).replaceAll("&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
+    }
+
+    /**
+     * Escapes some text by changing certain reserved characters to entities so that it can be used in an XML Attribute value.
+     *
+     * @param text The text to be escaped.
+     * @return The escaped text.
+     */
+    protected static String escapeAttributeValue(final String text) {
+        // Note: we don't need to escape an apostrophe, as the attribute will be wrapped in quotes
+        return STANDALONE_AMPERSAND_PATTERN.matcher(text).replaceAll("&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;");
     }
 
     /**
@@ -1128,8 +1183,29 @@ public class XMLUtilities {
      */
     public static Element createXIInclude(final Document doc, final String file) {
         try {
+            // Encode the file reference
+            final StringBuilder fixedFileRef = new StringBuilder();
+            final String[] split = file.split("/");
+            for (int i = 0; i < split.length; i++) {
+                if (i != 0) {
+                    fixedFileRef.append("/");
+                }
+
+                final String uriPart = split[i];
+                if (uriPart.isEmpty() || uriPart.equals("..") || uriPart.equals(".")) {
+                    fixedFileRef.append(uriPart);
+                } else {
+                    fixedFileRef.append(URLEncoder.encode(uriPart, "UTF-8"));
+                }
+            }
+
+            // If the file ref ended with "/" then it wouldn't have been added as their was no content after it
+            if (file.endsWith("/")) {
+                fixedFileRef.append("/");
+            }
+
             final Element xiInclude = doc.createElementNS("http://www.w3.org/2001/XInclude", "xi:include");
-            xiInclude.setAttribute("href", URLEncoder.encode(file, "UTF-8"));
+            xiInclude.setAttribute("href", fixedFileRef.toString());
             xiInclude.setAttribute("xmlns:xi", "http://www.w3.org/2001/XInclude");
 
             return xiInclude;

@@ -40,6 +40,7 @@ public class CommonConstants {
     public static final int CS_NODE_META_DATA_TOPIC = 10;
     public static final int CS_NODE_FILE = 11;
     public static final int CS_NODE_INITIAL_CONTENT = 12;
+    public static final int CS_NODE_COMMON_CONTENT = 13;
 
     public static final int CS_RELATIONSHIP_PREREQUISITE = 0;
     public static final int CS_RELATIONSHIP_REFER_TO = 1;
