@@ -1,4 +1,6 @@
 /*
+  Copyright 2011-2014 Red Hat
+
   This file is part of PresGang CCMS.
 
   PresGang CCMS is free software: you can redistribute it and/or modify
@@ -14,7 +16,6 @@
   You should have received a copy of the GNU Lesser General Public License
   along with PresGang CCMS.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 package org.jboss.pressgang.ccms.utils.services;
 
 import org.jboss.pressgang.ccms.utils.common.NotificationUtilities;

@@ -1,4 +1,6 @@
 /*
+  Copyright 2011-2014 Red Hat
+
   This file is part of PresGang CCMS.
 
   PresGang CCMS is free software: you can redistribute it and/or modify
