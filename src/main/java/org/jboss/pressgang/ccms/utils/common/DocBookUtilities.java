@@ -99,8 +99,8 @@ public class DocBookUtilities {
             "entry", "firstname", "glossentry", "indexterm", "jobtitle", "keyword", "label", "lastname", "lineannotation", "lotentry",
             "member", "orgdiv", "orgname", "othername", "para", "phrase", "productname", "refclass", "refdescriptor", "refentrytitle",
             "refmiscinfo", "refname", "refpurpose", "releaseinfo", "revremark", "screeninfo", "secondaryie", "seealsoie", "seeie", "seg",
-            "segtitle", "simpara", "subtitle", "surname", "td", "term", "termdef", "tertiaryie", "textobject", "title", "titleabbrev",
-            "screen", "programlisting", "literallayout");
+            "segtitle", "simpara", "subtitle", "surname", "td", "th", "term", "termdef", "tertiaryie", "textobject", "title",
+            "titleabbrev", "screen", "programlisting", "literallayout");
     /**
      * The Docbook elements that contain translatable text, and need to be kept inline
      */
