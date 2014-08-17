@@ -741,6 +741,9 @@ public class CommonFilterConstants {
     public static final String CONTENT_SPEC_NOT_FORMAT_FILTER_VAR = "contentSpecNotFormat";
     public static final String CONTENT_SPEC_NOT_FORMAT_FILTER_VAR_DESC = "Content Specification Not Format";
 
+    public static final String TRANSLATION_ENABLED_FILTER_VAR = "translationEnabled";
+    public static final String TRANSLATION_ENABLED_FILTER_VAR_DESC = "Translation Enabled";
+
     public static final String HAS_ERRORS_FILTER_VAR = "hasErrors";
     public static final String HAS_ERRORS_FILTER_VAR_DESC = "Has Errors";
 
