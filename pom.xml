@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.jboss.pressgang</groupId>
         <artifactId>pressgang-parent</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
     </parent>
 
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-utils</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>PressGang CCMS Common Utilities</name>
