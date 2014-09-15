@@ -3498,7 +3498,7 @@ public class DocBookUtilities {
 
             /* dump the node if it has no children */
             if (!hasChildren) {
-                final String nodeText = XMLUtilities.convertNodeToString(node, false);
+                final String nodeText = XMLUtilities.convertNodeToString(node, false, false, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
 
                 if (xmlProperties.isVerbatim()) {
@@ -3551,7 +3551,7 @@ public class DocBookUtilities {
                         getTranslatableStringsFromNodeV1(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
-                        final String childText = XMLUtilities.convertNodeToString(child, true, false);
+                        final String childText = XMLUtilities.convertNodeToString(child, true, false, false);
 
                         final String cleanedChildText = cleanTranslationText(childText, i == 0, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
@@ -3623,7 +3623,7 @@ public class DocBookUtilities {
 
             // dump the node if it has no children
             if (!hasChildren) {
-                final String nodeText = XMLUtilities.convertNodeToString(node, false);
+                final String nodeText = XMLUtilities.convertNodeToString(node, false, false, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
 
                 if (xmlProperties.isVerbatim()) {
@@ -3677,7 +3677,7 @@ public class DocBookUtilities {
                         getTranslatableStringsFromNodeV2(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
-                        final String childText = XMLUtilities.convertNodeToString(child, true, false);
+                        final String childText = XMLUtilities.convertNodeToString(child, true, false, false);
 
                         final String cleanedChildText = cleanTranslationText(childText, removeWhitespaceFromStart, i == childrenLength - 1);
                         final boolean isVerbatimNode = VERBATIM_ELEMENTS.contains(childName);
@@ -3756,7 +3756,7 @@ public class DocBookUtilities {
 
             // dump the node if it has no children
             if (!hasChildren) {
-                final String nodeText = XMLUtilities.convertNodeToString(node, false);
+                final String nodeText = XMLUtilities.convertNodeToString(node, false, true, false);
                 final String cleanedNodeText = cleanTranslationText(nodeText, true, true);
 
                 if (xmlProperties.isVerbatim()) {
@@ -3810,7 +3810,7 @@ public class DocBookUtilities {
                         getTranslatableStringsFromNodeV3(child, translationStrings, allowDuplicates, xmlProperties);
                     } else {
                         final String childName = child.getNodeName();
-                        final String childText = XMLUtilities.convertNodeToString(child, true);
+                        final String childText = XMLUtilities.convertNodeToString(child, true, true, false);
 
                         final boolean isVerbatimNode = xmlProperties.isVerbatim() || VERBATIM_ELEMENTS.contains(childName);
                         final String thisTranslatableString;
